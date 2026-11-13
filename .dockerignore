@@ -16,6 +16,5 @@ __pycache__
 .claude
 .idea
 .vscode
-README_1.md
-README_2.md
+README.md
 AGENTS.md

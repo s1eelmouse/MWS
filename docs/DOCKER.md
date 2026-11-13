@@ -11,7 +11,7 @@
 ## 1. Подготовить модель
 
 Docker не обучает и не сливает адаптер. Сначала выполните команды из разделов
-4–5 [README_1.md](../README_1.md), например:
+8–9 [README.md](../README.md), например:
 
     python src/train.py --limit 64 --max-steps 30 --batch-size 1 --output-dir out/smoke-001
     python src/merge.py --adapter-dir out/smoke-001 --output out/merged
