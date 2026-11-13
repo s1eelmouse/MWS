@@ -9,7 +9,8 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from case_io import prediction_row, read_jsonl, validate_gold, write_jsonl
-from schema import CallInput, Facts, as_call, build_messages, parse_answer, source_problems, to_answer
+from schema import (CallInput, Facts, as_call, build_messages, parse_answer,
+                    source_problems, to_answer, check_model_contract, contract_signature)
 
 FACT = {
     "object": {"id": "synthetic:dev0", "type": "device", "name": "роутер"},
@@ -141,6 +142,17 @@ class CaseContractTest(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 write_jsonl(path, [])
             self.assertEqual(before, path.read_bytes())
+
+    def test_old_model_cannot_be_silently_used_with_new_schema(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, 'legacy'):
+                check_model_contract(temp)
+            path = Path(temp) / 'case_contract.json'
+            path.write_text(json.dumps({'signature': 'old'}))
+            with self.assertRaisesRegex(ValueError, 'different'):
+                check_model_contract(temp)
+            path.write_text(json.dumps({'signature': contract_signature()}))
+            check_model_contract(temp)
 
 
 if __name__ == "__main__":

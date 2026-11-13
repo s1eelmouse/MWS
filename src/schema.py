@@ -1,6 +1,8 @@
 """CompactFactExtraction contract shared by training, prediction and HTTP serving."""
 import json
+import hashlib
 from datetime import datetime
+from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -117,6 +119,22 @@ SYSTEM = (
     "Указывай исходный idx реплики, не её позицию в списке. Не выдумывай факты и даты."
 )
 SYSTEM_WITH_SCHEMA = SYSTEM + " JSON-схема: " + json.dumps(Facts.model_json_schema(), ensure_ascii=False)
+
+
+def contract_signature():
+    payload = {'system': SYSTEM, 'schema': Facts.model_json_schema(), 'target_version': 1}
+    return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+
+
+def check_model_contract(model_dir, with_schema=False):
+    path = Path(model_dir)
+    if not path.is_dir() or with_schema:
+        return
+    manifest = path / 'case_contract.json'
+    if not manifest.is_file():
+        raise ValueError('Local model lacks case_contract.json; it may use the legacy schema')
+    if json.loads(manifest.read_text(encoding='utf-8')).get('signature') != contract_signature():
+        raise ValueError('Model was trained with a different case contract')
 
 
 def as_call(row: dict | CallInput) -> CallInput:

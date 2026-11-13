@@ -6,7 +6,7 @@
 import os
 import sys
 
-# Модель-кандидат с HuggingFace: Qwen/Qwen3-1.7B, Qwen/Qwen3-0.6B, MTSAIR/Cotype-Nano
+# Стартовая модель; альтернативы проверяются по полному числу параметров <= 1.5B.
 BASE_MODEL = os.getenv("BASE_MODEL", "Qwen/Qwen3-0.6B")
 ADAPTER_DIR = os.getenv("ADAPTER_DIR", "out/adapter")  # сюда train.py сохраняет адаптер LoRA
 MERGED_DIR = os.getenv("MERGED_DIR", "out/merged")     # сюда merge.py сохраняет готовую модель
