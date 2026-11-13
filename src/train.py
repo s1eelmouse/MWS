@@ -1,40 +1,22 @@
-"""Дообучение малой модели методом QLoRA.
-
-    python src/train.py                           # data/train.jsonl и data/val.jsonl, 3 эпохи
-    python src/train.py --limit 200 --epochs 1    # быстрая проба: доходит ли скрипт до конца
-    python src/train.py --batch-size 2            # если не хватает видеопамяти
-
-Какую модель учить, задаёт BASE_MODEL в config.py или одноимённая переменная окружения.
-Результат — адаптер LoRA в out/adapter. Следующий шаг: python src/merge.py
-"""
+"""QLoRA on organizer calls, with resumable checkpoints and explicit token budgets."""
 import os
-
-# Работаем на одной видеокарте: так проще и предсказуемее (в Kaggle их две).
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
 
-import argparse  # noqa: E402
-import inspect  # noqa: E402
-import json  # noqa: E402
-import math  # noqa: E402
+import argparse
+import inspect
+import json
+import math
+import time
+from pathlib import Path
 
-import torch  # noqa: E402
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training  # noqa: E402
-from torch.utils.data import Dataset  # noqa: E402
-from transformers import (AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig,  # noqa: E402
-                          Trainer, TrainingArguments)
-
-from config import ADAPTER_DIR, BASE_MODEL, MAX_NEW_TOKENS  # noqa: E402
-from schema import build_messages, to_answer  # noqa: E402
-
-LEARNING_RATE = 2e-4
-BATCH_SIZE = 4        # примеров за один проход по видеокарте; меняется ключом --batch-size
-EFFECTIVE_BATCH = 16  # примеров на один шаг обучения: при меньшем BATCH_SIZE градиент копится дольше
-LORA_RANK = 16        # ошибка на train не падает — поднимите до 32
+from case_io import read_jsonl, validate_gold
+from config import ADAPTER_DIR, BASE_MODEL, MAX_SEQUENCE_TOKENS
+from training_data import (check_output_directory, encode_row, ensure_training_splits,
+                           file_digest, save_manifest)
+from schema import contract_signature
 
 
-class Rows(Dataset):
-    """Готовые примеры в виде, который принимает Trainer."""
-
+class Rows:
     def __init__(self, rows):
         self.rows = rows
 
@@ -45,11 +27,6 @@ class Rows(Dataset):
         return self.rows[index]
 
 
-def read_jsonl(path, limit=None) -> list:
-    with open(path, encoding="utf-8") as f:
-        return [json.loads(line) for line in f if line.strip()][:limit]
-
-
 def make_batch(rows: list, pad_id: int, tail_only: bool = True) -> dict:
     """Собирает пачку из примеров разной длины.
 
@@ -58,6 +35,7 @@ def make_batch(rows: list, pad_id: int, tail_only: bool = True) -> dict:
     перед ним). Считать их для всех позиций запроса — в разы больше видеопамяти при том
     же результате. tail_only=False оставляет все позиции: для моделей без logits_to_keep.
     """
+    import torch
     width = max(len(row["input_ids"]) for row in rows)
     keep = width
     if tail_only:
@@ -75,104 +53,131 @@ def make_batch(rows: list, pad_id: int, tail_only: bool = True) -> dict:
     return batch
 
 
+
 def main():
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--train", default="data/train.jsonl")
-    parser.add_argument("--val", default="data/val.jsonl")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--train", default="data/organizer/train.jsonl")
+    parser.add_argument("--val", default="data/organizer/val.jsonl")
     parser.add_argument("--epochs", type=int, default=3)
-    parser.add_argument("--limit", type=int, help="взять только первые N примеров (для пробы)")
-    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE,
-                        help="примеров за один проход; не хватает видеопамяти — поставьте 2 или 1")
-    parser.add_argument("--no-4bit", action="store_true",
-                        help="обычная LoRA без 4-битной загрузки: быстрее, но нужно больше видеопамяти")
+    parser.add_argument("--limit", type=int)
+    parser.add_argument("--batch-size", type=int, default=1)
+    parser.add_argument("--no-4bit", action="store_true")
+    parser.add_argument("--max-steps", type=int, default=-1)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--save-steps", type=int, default=10)
+    parser.add_argument("--max-sequence-tokens", type=int, default=MAX_SEQUENCE_TOKENS)
+    parser.add_argument("--output-dir", default=ADAPTER_DIR)
+    parser.add_argument("--resume-from-checkpoint")
+    parser.add_argument("--check-data", action="store_true",
+                        help="validate data and split isolation without GPU or model downloads")
     args = parser.parse_args()
-
+    if min(args.epochs, args.batch_size, args.save_steps, args.max_sequence_tokens) <= 0:
+        parser.error("epochs, batch size, save steps and sequence budget must be positive")
+    if args.max_steps == 0 or args.max_steps < -1:
+        parser.error("--max-steps must be positive or -1")
+    train_rows = read_jsonl(args.train, args.limit)
+    val_rows = read_jsonl(args.val, args.limit)
+    ensure_training_splits(train_rows, val_rows)
+    for row in train_rows + val_rows:
+        validate_gold(row)
+    if args.check_data:
+        print(json.dumps({"train_calls": len(train_rows), "val_calls": len(val_rows),
+                          "model": BASE_MODEL, "gpu_run": False}, ensure_ascii=False, indent=2))
+        return
+    output = check_output_directory(args.output_dir, args.resume_from_checkpoint)
+    try:
+        import torch
+        from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+        from transformers import (AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig,
+                                  Trainer, TrainingArguments, set_seed)
+    except ImportError as exc:
+        raise SystemExit("Install GPU dependencies from requirements.txt and CUDA-enabled PyTorch first") from exc
     if not torch.cuda.is_available():
-        raise SystemExit("PyTorch не видит видеокарту с CUDA. Поставьте PyTorch с поддержкой CUDA "
-                         "или обучайте в Kaggle либо Colab.")
-
-    # bfloat16 умеют видеокарты NVIDIA 30-й серии и новее; у T4 и более старых — float16.
-    bf16 = torch.cuda.get_device_capability(0)[0] >= 8
+        raise SystemExit("CUDA GPU is unavailable. Data validation works here; training must run on the RTX PC.")
+    set_seed(args.seed)
+    bf16 = torch.cuda.is_bf16_supported()
     dtype = torch.bfloat16 if bf16 else torch.float16
-
     tok = AutoTokenizer.from_pretrained(BASE_MODEL)
     if tok.pad_token is None:
         tok.pad_token = tok.eos_token
-
-    if args.no_4bit:
-        model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, dtype=dtype, device_map={"": 0})
-    else:
-        quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
-                                   bnb_4bit_use_double_quant=True, bnb_4bit_compute_dtype=dtype)
-        model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, quantization_config=quant, device_map={"": 0})
+    encoded_train = [encode_row(tok, row, args.max_sequence_tokens) for row in train_rows]
+    encoded_val = [encode_row(tok, row, args.max_sequence_tokens) for row in val_rows]
+    load_options = {"dtype": dtype, "device_map": {"": 0}}
+    if not args.no_4bit:
+        load_options["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=dtype)
+    model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, **load_options)
+    context_limit = getattr(model.config, 'max_position_embeddings', args.max_sequence_tokens)
+    if any(len(row['input_ids']) > context_limit for row in encoded_train + encoded_val):
+        raise SystemExit('An example exceeds the model context window; no examples were truncated')
+    parameter_count = model.num_parameters()
+    if parameter_count > 1_500_000_000:
+        raise SystemExit(f"Base model has {parameter_count} parameters, above the 1.5B case budget")
+    if not args.no_4bit:
         model = prepare_model_for_kbit_training(model)
-    # "all-linear" — адаптеры на все линейные слои, кроме выходного: подходит любой модели.
-    model = get_peft_model(model, LoraConfig(r=LORA_RANK, lora_alpha=2 * LORA_RANK, lora_dropout=0.05,
-                                             task_type="CAUSAL_LM", target_modules="all-linear"))
+    model.config.use_cache = False
+    model = get_peft_model(model, LoraConfig(
+        r=16, lora_alpha=32, lora_dropout=.05,
+        task_type="CAUSAL_LM", target_modules="all-linear"))
     model.print_trainable_parameters()
-
-    # Умеет ли модель считать предсказания только для конца последовательности (Qwen умеет).
     tail_only = "logits_to_keep" in inspect.signature(model.get_base_model().forward).parameters
-
-    def prompt_for(text):
-        # Тот же запрос, что в сервисе (extractor.py). Расхождение здесь портит качество.
-        return tok.apply_chat_template(build_messages(text), tokenize=False,
-                                       add_generation_prompt=True, enable_thinking=False)
-
-    def encode(row):
-        question = tok(prompt_for(row["text"]), add_special_tokens=False)["input_ids"]
-        # Для моделей не из семейства Qwen проверьте, что eos_token — это конец ответа в их шаблоне.
-        answer = tok(to_answer(row["facts"]) + tok.eos_token, add_special_tokens=False)["input_ids"]
-        # -100 означает «здесь ошибку не считать»: модель учится только на ответе.
-        # Имена полей совпадают с аргументами модели: поля с другими именами Trainer отбрасывает.
-        return {"input_ids": question + answer, "labels": [-100] * len(question) + answer}
-
-    train_rows, val_rows = read_jsonl(args.train, args.limit), read_jsonl(args.val, args.limit)
-    if not train_rows:
-        raise SystemExit(f"В файле {args.train} нет примеров")
-    print(f"Модель: {BASE_MODEL}; примеров train: {len(train_rows)}, val: {len(val_rows)}")
-
-    accumulate = max(1, EFFECTIVE_BATCH // args.batch_size)
-    steps = math.ceil(len(train_rows) / (args.batch_size * accumulate)) * args.epochs
+    manifest = {
+        "model": BASE_MODEL, "base_parameters": parameter_count, "seed": args.seed,
+        "train_sha256": file_digest(args.train), "val_sha256": file_digest(args.val),
+        "schema_sha256": file_digest(Path(__file__).with_name("schema.py")),
+        "train_limit": args.limit, "max_sequence_tokens": args.max_sequence_tokens,
+        "batch_size": args.batch_size, "four_bit": not args.no_4bit,
+    }
+    save_manifest(output / "experiment.json", manifest)
+    save_manifest(output / 'case_contract.json', {'signature': contract_signature()})
+    accumulate = max(1, 16 // args.batch_size)
+    steps = args.max_steps if args.max_steps > 0 else math.ceil(
+        len(train_rows) / (args.batch_size * accumulate)) * args.epochs
     trainer = Trainer(
         model=model,
         args=TrainingArguments(
-            output_dir="out/run", num_train_epochs=args.epochs, learning_rate=LEARNING_RATE,
-            per_device_train_batch_size=args.batch_size, per_device_eval_batch_size=args.batch_size,
-            gradient_accumulation_steps=accumulate, lr_scheduler_type="cosine",
-            warmup_steps=max(1, steps // 20), bf16=bf16, fp16=not bf16,
-            logging_steps=max(1, min(10, steps // 10)),
-            eval_strategy="epoch" if val_rows else "no", save_strategy="no",
-            label_names=["labels"], report_to="none"),
-        train_dataset=Rows([encode(row) for row in train_rows]),
-        eval_dataset=Rows([encode(row) for row in val_rows]) if val_rows else None,
+            output_dir=str(output / "checkpoints"), num_train_epochs=args.epochs,
+            max_steps=args.max_steps, learning_rate=2e-4,
+            per_device_train_batch_size=args.batch_size, per_device_eval_batch_size=1,
+            gradient_accumulation_steps=accumulate, gradient_checkpointing=True,
+            gradient_checkpointing_kwargs={"use_reentrant": False},
+            lr_scheduler_type="cosine", warmup_steps=max(1, steps // 20),
+            bf16=bf16, fp16=not bf16, seed=args.seed, data_seed=args.seed,
+            logging_steps=1 if args.max_steps > 0 else 10,
+            eval_strategy="epoch" if encoded_val else "no",
+            save_strategy="steps", save_steps=args.save_steps, save_total_limit=2,
+            label_names=["labels"], prediction_loss_only=True, report_to="none"),
+        train_dataset=Rows(encoded_train),
+        eval_dataset=Rows(encoded_val) if encoded_val else None,
         data_collator=lambda rows: make_batch(rows, tok.pad_token_id, tail_only),
     )
+    torch.cuda.reset_peak_memory_stats()
+    torch.cuda.synchronize()
+    start = time.perf_counter()
     try:
-        trainer.train()
-    except RuntimeError as err:
-        if "out of memory" not in str(err).lower():
-            raise
-        raise SystemExit("Не хватило памяти. Запустите с меньшим пакетом, например --batch-size 2, и закройте "
-                         "тяжёлые программы (браузер, IDE): в Windows видеопамять расходует и общую память.") from None
-    print(f"Пик видеопамяти при обучении: {torch.cuda.max_memory_allocated() / 2**30:.1f} ГБ")
-    model.save_pretrained(ADAPTER_DIR)
-    print(f"Адаптер сохранён в {ADAPTER_DIR}. Дальше: python src/merge.py")
-
-    # Проверка глазами: ответ модели на одно обращение, которого она не видела при обучении.
-    sample = (val_rows or train_rows)[0]
-    torch.cuda.empty_cache()
-    model.eval()
-    try:
-        enc = tok(prompt_for(sample["text"]), return_tensors="pt", add_special_tokens=False).to(model.device)
-        with torch.inference_mode():
-            out = model.generate(**enc, max_new_tokens=MAX_NEW_TOKENS, do_sample=False, use_cache=True)
-    except RuntimeError as err:  # адаптер уже сохранён, поэтому сбой здесь обучение не портит
-        print("Пробный ответ получить не удалось:", str(err).splitlines()[0])
-        return
-    print("Обращение:   ", sample["text"])
-    print("Ответ модели:", tok.decode(out[0, enc["input_ids"].shape[1]:], skip_special_tokens=True))
-    print("Эталон:      ", to_answer(sample["facts"]))
+        trainer.train(resume_from_checkpoint=args.resume_from_checkpoint)
+    except RuntimeError as exc:
+        if "out of memory" in str(exc).lower():
+            raise SystemExit("CUDA memory exhausted. Checkpoints are retained; reduce batch size "
+                             "or use a larger GPU. No transcript was silently truncated.") from exc
+        raise
+    torch.cuda.synchronize()
+    seconds = time.perf_counter() - start
+    model.save_pretrained(output)
+    tok.save_pretrained(output)
+    stats = {
+        "elapsed_seconds": seconds, "completed_global_steps": trainer.state.global_step,
+        "peak_allocated_gib": torch.cuda.max_memory_allocated() / 2**30,
+        "peak_reserved_gib": torch.cuda.max_memory_reserved() / 2**30,
+        "gpu": torch.cuda.get_device_name(0), "base_parameters": parameter_count,
+        "torch": torch.__version__,
+    }
+    stats_path = output / f"training_stats_step_{trainer.state.global_step}_{time.time_ns()}.json"
+    with stats_path.open("x", encoding="utf-8") as stream:
+        json.dump(stats, stream, ensure_ascii=False, indent=2)
+    print(json.dumps(stats, ensure_ascii=False, indent=2))
+    print(f"Adapter and checkpoints saved in {output}")
 
 
 if __name__ == "__main__":

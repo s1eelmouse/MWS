@@ -1,0 +1,6 @@
+# CPU contract, evaluation and HTTP tests. No model weights or CUDA packages.
+pydantic>=2.7,<3
+fastapi>=0.115,<1
+requests>=2.31,<3
+httpx>=0.27,<1
+uvicorn>=0.30,<1

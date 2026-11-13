@@ -17,10 +17,10 @@ mcp = MCPServer("extractor")
 
 
 @mcp.tool()
-def extract_facts(text: str) -> dict:
-    """Извлечь факты из обращения в техподдержку: продукт, проблема, запрос, номера, срочность."""
+def extract_facts(call: dict) -> dict:
+    """Extract case facts from a call with call_id, started_at and speaker-labelled turns."""
     try:
-        reply = requests.post(SERVICE_URL + "/extract", json={"text": text}, timeout=60)
+        reply = requests.post(SERVICE_URL + "/extract", json=call, timeout=60)
         reply.raise_for_status()
         return reply.json()
     except (requests.RequestException, ValueError) as err:

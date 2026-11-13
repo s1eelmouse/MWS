@@ -6,8 +6,10 @@ __pycache__/
 
 # данные организаторов могут быть закрытыми: в git попадает только учебный пример
 data/*
-!data/sample.jsonl
+!data/sample_case.jsonl
 
 # ключи и локальные настройки
 .env
 .claude/settings.local.json
+.DS_Store
+.pytest_cache/

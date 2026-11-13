@@ -1,88 +1,75 @@
-"""Микросервис извлечения фактов на FastAPI и Transformers.
-
-Запуск из корня репозитория:
-    uvicorn serve:app --app-dir src --port 8000
-
-Проверка в браузере: http://127.0.0.1:8000/docs
-Чтобы сервис был виден с других машин, добавьте --host 0.0.0.0.
-
-Модель без дообучения (строка «до» в таблице результатов), PowerShell:
-    $env:MODEL_DIR = "Qwen/Qwen3-0.6B"; $env:WITH_SCHEMA = "1"
-    uvicorn serve:app --app-dir src --port 8000
-"""
+"""HTTP interface for organizer calls; model is loaded at application startup."""
 import os
-import queue
-import threading
-from concurrent.futures import Future
+from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
-from pydantic import BaseModel
+from pydantic import Field
 
+from case_io import prediction_row
 from config import MERGED_DIR
-from extractor import Extractor
+from schema import CallInput, Fact, StrictModel
 
 MODEL_DIR = os.getenv("MODEL_DIR", MERGED_DIR)
-MAX_BATCH = 16  # сколько одновременных запросов склеивать в одну пачку
-extractor = Extractor(MODEL_DIR, with_schema=os.getenv("WITH_SCHEMA") == "1")
-app = FastAPI(title="CompactFactExtraction")
+MAX_BATCH = int(os.getenv("MAX_BATCH", "1"))
 
 
-class Ticket(BaseModel):
-    text: str
+class CallPrediction(StrictModel):
+    call_id: str
+    facts: list[Fact]
 
 
-class Batch(BaseModel):
-    texts: list[str]
+class Batch(StrictModel):
+    calls: list[CallInput] = Field(min_length=1, max_length=32)
 
 
-def safe_extract(texts: list) -> list:
-    """Сервис отвечает всегда: сбой модели превращается в запасной ответ, а не в ошибку 500."""
-    try:
-        return extractor.extract(texts, MAX_BATCH)
-    except Exception as err:  # noqa: BLE001
-        return [{"error": "internal_error", "raw": str(err)} for _ in texts]
+def create_app(backend=None):
+    @asynccontextmanager
+    async def lifespan(app):
+        if app.state.extractor is None:
+            from extractor import Extractor
+            app.state.extractor = Extractor(MODEL_DIR, with_schema=os.getenv("WITH_SCHEMA") == "1")
+        yield
+
+    app = FastAPI(title="CompactFactExtraction", lifespan=lifespan)
+    app.state.extractor = backend
+
+    def run(calls):
+        if app.state.extractor is None:
+            raise HTTPException(503, "Model is not loaded")
+        try:
+            results = app.state.extractor.extract(calls, MAX_BATCH)
+            if len(results) != len(calls):
+                raise ValueError("Backend returned a different result count")
+            predictions = [prediction_row(call.model_dump(mode="json"), result)
+                           for call, result in zip(calls, results)]
+        except Exception as exc:
+            raise HTTPException(503, "Extraction backend failed") from exc
+        failures = [{"call_id": row["call_id"], "error": row["error"]}
+                    for row in predictions if "error" in row]
+        if failures:
+            raise HTTPException(502, detail=failures)
+        return predictions
+
+    @app.post("/extract", response_model=CallPrediction)
+    def extract(call: CallInput):
+        return run([call])[0]
+
+    @app.post("/extract_batch", response_model=list[CallPrediction])
+    def extract_batch(batch: Batch):
+        return run(batch.calls)
+
+    @app.get("/health")
+    def health():
+        if app.state.extractor is None:
+            raise HTTPException(503, "Model is not loaded")
+        return {"status": "ok", "model": MODEL_DIR, "schema": "organizer-call-v1"}
+
+    @app.get("/", include_in_schema=False)
+    def root():
+        return RedirectResponse("/docs")
+
+    return app
 
 
-# Запросы, пришедшие одновременно, обрабатываются одной пачкой: видеокарта тратит на пачку
-# почти столько же времени, сколько на одно обращение. Запросы ждут в очереди, а фоновый
-# поток забирает из неё всё, что накопилось, пока модель была занята.
-waiting = queue.Queue()
-
-
-def serve_queue():
-    while True:
-        items = [waiting.get()]  # ждём первый запрос
-        while len(items) < MAX_BATCH:
-            try:
-                items.append(waiting.get_nowait())  # и забираем остальные, если они уже есть
-            except queue.Empty:
-                break
-        results = safe_extract([text for text, _ in items])
-        for (_, answer), result in zip(items, results):
-            answer.set_result(result)
-
-
-threading.Thread(target=serve_queue, daemon=True).start()
-
-
-@app.post("/extract")
-def extract(ticket: Ticket):
-    answer = Future()
-    waiting.put((ticket.text, answer))
-    return answer.result()
-
-
-@app.post("/extract_batch")
-def extract_batch(batch: Batch):
-    return safe_extract(batch.texts)
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok", "model": MODEL_DIR}
-
-
-@app.get("/", include_in_schema=False)
-def root():
-    return RedirectResponse("/docs")  # корневой адрес открывает страницу с описанием сервиса
+app = create_app()
