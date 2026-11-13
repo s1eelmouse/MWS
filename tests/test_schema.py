@@ -6,8 +6,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from config import MAX_TEXT_CHARS  # noqa: E402
-from schema import SYSTEM, Facts, build_messages, parse_answer, to_answer  # noqa: E402
+from legacy_schema import MAX_TEXT_CHARS  # noqa: E402
+from legacy_schema import SYSTEM, Facts, build_messages, parse_answer, to_answer  # noqa: E402
 
 FULL = {
     "product": "личный кабинет", "category": "сбой", "problem": "не открывается",

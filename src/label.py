@@ -21,7 +21,7 @@ from pathlib import Path
 
 import config  # noqa: F401  (настраивает печать в консоль)
 from llm_api import chat
-from schema import build_messages, parse_answer
+from legacy_schema import build_messages, parse_answer
 
 ENV = ("TEACHER_URL", "TEACHER_KEY", "TEACHER_MODEL")
 
