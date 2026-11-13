@@ -1,0 +1,21 @@
+# The build context must never contain organizer gold, checkpoints or weights.
+.git
+.gitignore
+.github
+.venv
+venv
+.env
+out
+data
+docs
+tests
+__pycache__
+**/__pycache__
+*.py[cod]
+.pytest_cache
+.claude
+.idea
+.vscode
+README_1.md
+README_2.md
+AGENTS.md
