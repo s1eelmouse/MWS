@@ -1,0 +1,3 @@
+# Файл организаторов сверяется по контрольной сумме (tests/test_case_evaluation.py):
+# git не должен менять в нём концы строк, иначе на Windows сумма не сходится.
+src/official_case_metrics.py -text
