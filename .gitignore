@@ -11,3 +11,6 @@ data/*
 # ключи и локальные настройки
 .env
 .claude/settings.local.json
+!data/sample_case.jsonl
+.DS_Store
+.pytest_cache/
