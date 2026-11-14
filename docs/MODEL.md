@@ -25,6 +25,7 @@ export MAX_SEQUENCE_TOKENS=16384
 export JSON_CONSTRAINED=1
 export JSON_GRAMMAR_BACKEND=torch_native   # если Triton JIT не собирается
 export TEMPORAL_NORMALIZATION=task         # по умолчанию
+export TEMPORAL_SERIES_HISTORY=1           # явно включить новую историю; default 0
 python -u src/benchmark.py \
   --input data/organizer/val.jsonl \
   --model out/merged-4090-continue-002 \
@@ -32,11 +33,15 @@ python -u src/benchmark.py \
   --output-dir out/json-constrained-continue-002-full-001
 ```
 
-`benchmark.py` после генерации сам применяет пакетный шаг `task`: переносит
-даты внутри серий и пересчитывает официальные метрики по уже исправленным
-предсказаниям. В каталоге прогона появляется `temporal-audit.jsonl`, а в
-`report.json` — `temporal_postprocess`. Поэтому строка «`task` + серии» в таблице
-получается одним запуском benchmark, без ручной операции.
+`task` и новая память выполняются внутри `backend.extract`, входят в измеренную
+задержку и совпадают с обработкой HTTP. После замера предсказания не
+переписываются повторными правилами. Журнал — `temporal-audit.jsonl` и
+`calls.jsonl`; `report.json` сохраняет режим, флаг истории и предел памяти.
+
+Таблица качества ниже сохраняет командные замеры **прежней пакетной политики**,
+а не обещает те же числа для новой истории. На первой модели новая история
+дала 0.4008 → 0.4064; на второй её ещё нужно измерить. Протокол и команды —
+[TEMPORAL_BINDING_V2.md](TEMPORAL_BINDING_V2.md).
 
 Для аудита уже сохранённых предсказаний тот же шаг доступен отдельно:
 
@@ -45,16 +50,18 @@ python src/postprocess_dates.py \
   --input data/organizer/val.jsonl \
   --pred out/json-constrained-continue-002-full-001/predictions.jsonl \
   --output-dir out/continue-002-task \
-  --mode task
+  --mode task --allow-series-history
 python src/eval.py --gold data/organizer/val.jsonl \
   --pred out/continue-002-task/predictions.jsonl --json out/continue-002-task/eval.json
 ```
 
-HTTP-сервис (`src/serve.py`) применяет пофактные правила `task`; перенос дат
-между звонками серии доступен только пакетному benchmark/постобработке, потому
-что сервис обрабатывает один звонок.
+HTTP-сервис применяет тот же календарь и, при `TEMPORAL_SERIES_HISTORY=1`,
+память предыдущих звонков клиента по идентифицированной заявке. Нужны один
+worker, стабильные ID и хронологическая подача запросов. По умолчанию история
+выключена. В Docker переменные необходимо передавать внутрь контейнера через
+`-e` или `environment`; одного `export` на хосте для этого недостаточно.
 
-## Качество на полном val
+## Командные замеры прежней политики на полном val
 
 383 звонка, официальный оценщик:
 
@@ -82,7 +89,7 @@ grounding 0.7806, формат **100 %**. На одном звонке нева�
 - `agreement` использует эвристику «время события при явном будущем времени»;
   на train её точность 0.383, потому что корпус смешивает время события и
   время заявления.
-- Перенос даты «принята» между звонками серии работает только в пакетном
-  режиме и только внутри одного `account_id`.
+- Новая история доступна в файле и HTTP, но ограничена процессом и объёмом
+  кеша; её качество на второй модели пока не измерено.
 - Это измерение на val и локальном шумном стрессе, не на скрытом
   adversarial-срезе.
