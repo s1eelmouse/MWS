@@ -98,7 +98,7 @@ def main():
         'catalog_sha256': hashlib.sha256(Path(args.catalog).read_bytes()).hexdigest() if args.catalog else None,
         'source_sha256': {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
                           for name in ['temporal.py', 'catalog_normalization.py', 'postprocess_dates.py']},
-        'gold_access': False,
+        'gold_fields_passed_to_rules': False,
     }
     output.mkdir(parents=True, exist_ok=False)
     write_jsonl(output / 'predictions.jsonl', results)

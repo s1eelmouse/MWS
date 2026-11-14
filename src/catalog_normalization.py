@@ -24,6 +24,8 @@ class CatalogMatch:
 
 class CatalogResolver:
     def __init__(self, catalog, aliases=None):
+        if not isinstance(catalog, dict):
+            raise ValueError('Catalog must be a JSON object')
         self.index = {}
         for kind, labels in catalog.items():
             if not isinstance(labels, list) or any(not isinstance(x, str) or not x.strip() for x in labels):
@@ -66,7 +68,12 @@ def normalize_catalog_facts(facts, resolver):
     for index, fact in enumerate(facts):
         item = copy.deepcopy(fact)
         kind = {'service': 'services', 'device': 'devices'}.get(item['object'].get('type'))
-        kinds = [kind] if kind else ['services', 'devices'] if item['object'].get('type') is None else []
+        if kind:
+            kinds = [kind]
+        elif item['object'].get('type') is None:
+            kinds = ['services', 'devices']
+        else:
+            kinds = []
         match = resolver.resolve(item['object']['name'], kinds)
         if match.canonical is not None and match.canonical != item['object']['name']:
             decisions.append({'fact_index': index, 'field': 'object.name',

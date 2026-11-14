@@ -5,10 +5,15 @@ from pathlib import Path
 import sys
 import unittest
 from datetime import datetime
+import contextlib
+import io
+import tempfile
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from compare_temporal import compare_date_predictions
 from postprocess_dates import process_predictions
+from postprocess_dates import main as postprocess_main
 from prediction import parse_prediction
 from schema import as_call, contract_signature
 from temporal import extract_time_expressions, normalize_fact_dates, repair_fact_dates, shift_calendar_months
@@ -37,6 +42,14 @@ class CalendarTest(unittest.TestCase):
     def test_year_boundary_and_timezone(self):
         self.assertEqual(self.first('завтра', '2026-12-31T23:30:00+03:00').start, '2027-01-01T00:00:00+03:00')
 
+    def test_datetime_limits_produce_explicit_unresolved_results(self):
+        for text, anchor in [('завтра', '9999-12-31T12:00:00'),
+                             ('в прошлом месяце', '0001-01-01T12:00:00'),
+                             ('на прошлой неделе', '0001-01-01T12:00:00')]:
+            result = self.first(text, anchor)
+            self.assertFalse(result.certain)
+            self.assertEqual(result.reason, 'calendar_overflow')
+
     def test_russian_compound_numbers_and_weeks(self):
         self.assertEqual(self.first('двадцать один день назад').start, '2026-02-08T00:00:00')
         self.assertEqual(self.first('через две недели').start, '2026-03-15T00:00:00')
@@ -61,6 +74,8 @@ class CalendarTest(unittest.TestCase):
     def test_weekday_same_day_is_ambiguous(self):
         self.assertFalse(self.first('в воскресенье', direction='past').certain)
         self.assertEqual(self.first('со вторника').start, '2026-02-24T00:00:00')
+        self.assertEqual(self.first('до понедельника', direction='future').start, '2026-03-02T00:00:00')
+        self.assertEqual(self.first('со вторника', direction='future').start, '2026-03-03T00:00:00')
 
     def test_week_and_month_are_ranges(self):
         week = self.first('на прошлой неделе')
@@ -206,6 +221,20 @@ class FactTimeTest(unittest.TestCase):
 
     def test_existing_model_contract_is_unchanged(self):
         self.assertEqual(contract_signature(), '3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274')
+
+    def test_cli_refuses_to_overwrite_existing_experiment(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / 'existing'
+            target.mkdir()
+            sentinel = target / 'predictions.jsonl'
+            sentinel.write_text('preserve me', encoding='utf-8')
+            args = ['postprocess_dates.py', '--input', 'unused', '--pred', 'unused',
+                    '--output-dir', str(target)]
+            with patch.object(sys, 'argv', args), contextlib.redirect_stderr(io.StringIO()):
+                with self.assertRaises(SystemExit) as failure:
+                    postprocess_main()
+            self.assertEqual(failure.exception.code, 2)
+            self.assertEqual(sentinel.read_text(encoding='utf-8'), 'preserve me')
 
 
 if __name__ == '__main__':

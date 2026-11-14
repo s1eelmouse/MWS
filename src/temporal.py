@@ -132,7 +132,10 @@ def extract_time_expressions(text, started_at, *, direction=None, daytime_hours=
     for match in re.finditer(r'\b(позавчера|послезавтра|вчера|сегодня|завтра|вчерашнего\s+дня|сегодняшнего\s+дня)\b', lower):
         word = match.group()
         offset = -1 if word.startswith('вчерашнего') else 0 if word.startswith('сегодняшнего') else RELATIVE[word]
-        add(match, day + timedelta(days=offset), rule='relative_day')
+        try:
+            add(match, day + timedelta(days=offset), rule='relative_day')
+        except OverflowError:
+            add(match, certain=False, rule='relative_day', reason='calendar_overflow')
 
     patterns = [
         (r'\b(?:через|спустя)\s+(?:(?P<n>' + NUMBER + r')\s+)?(?P<unit>' + UNIT + r')\b', 1),
@@ -153,17 +156,23 @@ def extract_time_expressions(text, started_at, *, direction=None, daytime_hours=
     # A week/month is not reduced to an arbitrary exact day.
     for match in re.finditer(r'\b(?:на\s+|в\s+|до\s+конца\s+)?(?P<which>прошлой|этой|следующей)\s+неделе?и?\b', lower):
         shift = {'прошлой': -7, 'этой': 0, 'следующей': 7}[match['which']]
-        monday = day - timedelta(days=day.weekday()) + timedelta(days=shift)
-        add(match, monday, monday + timedelta(days=6), precision='week', relation='period',
-            certain=False, rule='calendar_week', reason='period_not_single_day')
+        try:
+            monday = day - timedelta(days=day.weekday()) + timedelta(days=shift)
+            add(match, monday, monday + timedelta(days=6), precision='week', relation='period',
+                certain=False, rule='calendar_week', reason='period_not_single_day')
+        except OverflowError:
+            add(match, certain=False, rule='calendar_week', reason='calendar_overflow')
     for match in re.finditer(r'\b(?:в\s+|с\s+|до\s+конца\s+)?(?P<which>прошлом|этом|следующем|прошлого|этого|следующего)\s+месяц(?:е|а)\b', lower):
         shift = -1 if match['which'].startswith('прошл') else 1 if match['which'].startswith('следующ') else 0
         ordinal = anchor.year * 12 + anchor.month - 1 + shift
         year, month0 = divmod(ordinal, 12)
-        first = day.replace(year=year, month=month0 + 1, day=1)
-        last = first.replace(day=calendar.monthrange(year, month0 + 1)[1])
-        add(match, first, last, precision='month', relation='period', certain=False,
-            rule='calendar_month', reason='period_not_single_day')
+        try:
+            first = day.replace(year=year, month=month0 + 1, day=1)
+            last = first.replace(day=calendar.monthrange(year, month0 + 1)[1])
+            add(match, first, last, precision='month', relation='period', certain=False,
+                rule='calendar_month', reason='period_not_single_day')
+        except ValueError:
+            add(match, certain=False, rule='calendar_month', reason='calendar_overflow')
 
     for match in re.finditer(r'\b(?P<n>' + NUMBER + r')\s+(?P<unit>месяц|месяца|месяцев|год|года|лет)\s+назад\b', lower):
         n = _number(match['n']) * (12 if match['unit'] in ('год', 'года', 'лет') else 1)
@@ -176,12 +185,15 @@ def extract_time_expressions(text, started_at, *, direction=None, daytime_hours=
     weekdays = '|'.join(sorted(WEEKDAYS, key=len, reverse=True))
     for match in re.finditer(r'\b(?P<pre>со?|во?|до)\s+(?P<weekday>' + weekdays + r')\b', lower):
         wanted = WEEKDAYS[match['weekday']]
-        inferred = 'past' if match['pre'] in ('с', 'со', 'до') else direction
+        inferred = direction if direction is not None else 'past' if match['pre'] in ('с', 'со') else None
         if inferred is None or wanted == day.weekday():
             add(match, certain=False, rule='weekday', reason='ambiguous_weekday')
         else:
             delta = (wanted - day.weekday()) % 7 if inferred == 'future' else -((day.weekday() - wanted) % 7)
-            add(match, day + timedelta(days=delta), rule='weekday', relation='before' if match['pre'] == 'до' else 'at')
+            try:
+                add(match, day + timedelta(days=delta), rule='weekday', relation='before' if match['pre'] == 'до' else 'at')
+            except OverflowError:
+                add(match, certain=False, rule='weekday', reason='calendar_overflow')
 
     # Only explicit 24-hour clock notation is unambiguous without a business-hours policy.
     for match in re.finditer(r'\b(?P<pre>в|к|после|до)\s+(?P<h>\d{1,2}):(?P<m>\d{2})\b', lower):
