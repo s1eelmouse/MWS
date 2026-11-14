@@ -152,6 +152,31 @@ class TaskModeTest(unittest.TestCase):
         self.assertEqual(empty_counts, {})
         self.assertEqual(empty_audit, [])
 
+    def test_series_carry_separates_accounts_and_sorts_by_call_index(self):
+        def call(call_id, account, index, day):
+            return as_call({'call_id': call_id, 'started_at': f'2026-03-0{day}T12:00:00',
+                            'series': {'account_id': account, 'call_index': index},
+                            'turns': [{'idx': 42, 'speaker': 'operator', 'text': 'Заявка принята.'}]})
+        def fact(date):
+            return {'object': {'name': 'заявка', 'type': 'ticket', 'id': 'ticket:1'},
+                    'attribute': 'ticket_status', 'value': 'принята', 'polarity': 1,
+                    'valid_from': date, 'valid_to': None,
+                    'source': {'turn_idx': 42}, 'speaker': 'operator'}
+        calls = [call('a:1', 'account-a', 1, 5), call('b:1', 'account-b', 1, 9),
+                 call('a:0', 'account-a', 0, 1), call('b:0', 'account-b', 0, 7)]
+        predictions = [{'call_id': c.call_id, 'facts': [fact(date)]}
+                       for c, date in zip(calls, ['2026-02-01T00:00:00', '2026-04-01T00:00:00',
+                                                  '2026-01-05T00:00:00', '2026-03-01T00:00:00'])]
+        processed, counts, audit = apply_temporal_postprocess(calls, predictions, 'task')
+        by_id = {row['call_id']: row for row in processed}
+        self.assertEqual(by_id['a:1']['facts'][0]['valid_from'], '2026-01-05T00:00:00')
+        self.assertEqual(by_id['b:1']['facts'][0]['valid_from'], '2026-03-01T00:00:00')
+        self.assertEqual(by_id['a:0']['facts'][0]['valid_from'], '2026-01-05T00:00:00')
+        self.assertEqual(by_id['b:0']['facts'][0]['valid_from'], '2026-03-01T00:00:00')
+        self.assertEqual(counts.get('series_accepted_carried'), 2)
+        self.assertEqual([row['call_id'] for row in processed], [c.call_id for c in calls])
+        self.assertTrue(any(item.get('component') == 'series' for item in audit))
+
     def test_mode_off_preserves_model_dates(self):
         call, fact = fixture('Вчера заявку приняли.')
         output, _, _ = process_predictions(
