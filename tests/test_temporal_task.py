@@ -7,6 +7,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from benchmark import apply_temporal_postprocess
 from postprocess_dates import process_predictions
 from prediction import parse_prediction
 from schema import as_call
@@ -99,6 +100,31 @@ class TaskModeTest(unittest.TestCase):
         self.assertEqual(by_id['series:2']['facts'][0]['valid_from'], '2026-03-01T00:00:00')
         self.assertEqual(counts.get('series_accepted_carried'), 1)
         self.assertTrue(any(item.get('component') == 'series' for item in audit))
+
+    def test_benchmark_postprocess_applies_series_carry(self):
+        first = as_call({'call_id': 'bench:0', 'started_at': '2026-03-01T12:00:00',
+                         'series': {'account_id': 'account-a', 'call_index': 0},
+                         'turns': [{'idx': 42, 'speaker': 'operator', 'text': 'Заявка принята.'}]})
+        second = as_call({'call_id': 'bench:1', 'started_at': '2026-03-05T12:00:00',
+                          'series': {'account_id': 'account-a', 'call_index': 1},
+                          'turns': [{'idx': 42, 'speaker': 'operator', 'text': 'Заявка принята.'}]})
+        base = {'object': {'name': 'заявка', 'type': 'ticket', 'id': 'ticket:1'},
+                'attribute': 'ticket_status', 'value': 'принята', 'polarity': 1,
+                'valid_from': '2026-01-05T00:00:00', 'valid_to': None,
+                'source': {'turn_idx': 42}, 'speaker': 'operator'}
+        second_fact = {**copy.deepcopy(base), 'valid_from': '2026-02-01T00:00:00'}
+        predictions = [{'call_id': 'bench:0', 'facts': [base]},
+                       {'call_id': 'bench:1', 'facts': [second_fact]}]
+        processed, counts, audit = apply_temporal_postprocess(
+            [first, second], predictions, 'task')
+        self.assertEqual(processed[1]['facts'][0]['valid_from'], '2026-01-05T00:00:00')
+        self.assertEqual(counts.get('series_accepted_carried'), 1)
+        self.assertTrue(any(item.get('component') == 'series' for item in audit))
+        same, empty_counts, empty_audit = apply_temporal_postprocess(
+            [first, second], predictions, 'off')
+        self.assertIs(same, predictions)
+        self.assertEqual(empty_counts, {})
+        self.assertEqual(empty_audit, [])
 
     def test_mode_off_preserves_model_dates(self):
         call, fact = fixture('Вчера заявку приняли.')
