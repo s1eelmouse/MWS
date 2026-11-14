@@ -21,13 +21,13 @@
 
 ## 2. Перед загрузкой
 
-- [ ] `python -m unittest discover -s tests`: **157 тестов, 152 прошли, 5 skipped**.
-- [ ] `python -m compileall -q src tests`.
-- [ ] `sha256sum src/official_case_metrics.py` совпадает с `official_case_metrics.sha256`
+- [x] `python -m unittest discover -s tests`: **157 тестов, 152 прошли, 5 skipped**.
+- [x] `python -m compileall -q src tests`.
+- [x] `sha256sum src/official_case_metrics.py` совпадает с `official_case_metrics.sha256`
       (2.1: `863f8773…59c3`).
-- [ ] Старый контракт `3ee403f3…a274` всё ещё принимается; новый — `40e9c449…2654`.
-- [ ] В `predictions.jsonl`/`report.json` нет gold: `facts` не уходят в prompt и HTTP;
-      `postprocess_dates` получает `CallInput` без gold.
+- [x] Старый контракт `3ee403f3…a274` всё ещё принимается; новый — `40e9c449…2654`.
+- [x] В `predictions.jsonl`/`report.json` нет gold: `facts` не уходят в prompt и HTTP;
+      `postprocess_dates` получает `CallInput` без gold. Проверено на отчёте 003.
 - [x] Полный val 2.1 на сохранённых 003: 0 отказов, `format_valid_rate = 1.0`;
       T 0.4492 / S 0.4350; с recovery — T 0.4663 / S 0.5152.
 - [ ] Свежий end-to-end val 2.1 (003+recovery или 004-v21) на V100: 0 отказов,
@@ -36,7 +36,8 @@
       прогнан; старые шумные числа — пакет 1.
 - [ ] Docker: `/health` 200, `/extract` возвращает `call_id` и валидные `facts`;
       модель смонтирована read-only.
-- [ ] Веса и `experiment.json` скачаны с сервера; SHA256 записаны.
+- [x] Merged-модели 002/003 и их отчёты скачаны локально; SHA256 записаны.
+- [ ] Merged-модель 004-v21 и `experiment.json` забрать после восстановления 4090.
 - [ ] Ссылка на репозиторий и веса доступна всем членам команды и жюри.
 
 ## 3. Что нельзя делать перед сдачей
