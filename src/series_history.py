@@ -89,8 +89,11 @@ class SeriesDateMemory:
                         continue
                     previous = self._entries.get(key)
                     current_time = _time_key(call.started_at)
+                    replay = bool(previous and previous['time'] == current_time
+                                  and previous['call_id'] == call.call_id
+                                  and _time_key(previous['origin_started_at']) < current_time)
                     if previous and (previous['time'][0] != current_time[0]
-                                     or previous['time'][1] >= current_time[1]):
+                                     or (previous['time'][1] >= current_time[1] and not replay)):
                         events.append({'call_id': call.call_id, 'component': 'series',
                                        'status': 'abstained', 'reason': 'history_not_strictly_earlier'})
                         counts['series_out_of_order_abstained'] += 1
@@ -122,6 +125,7 @@ class SeriesDateMemory:
                                 fact['valid_from'] = value
                                 counts['series_accepted_carried'] += 1
                     self._entries[key] = {'date': group[0][1].get('valid_from'), 'time': current_time,
+                                          'call_id': call.call_id,
                                           'origin': origin, 'origin_started_at': origin_started_at,
                                           'observed_at': call.started_at}
                     self._entries.move_to_end(key)

@@ -111,6 +111,21 @@ class SeriesHistoryTest(unittest.TestCase):
         _, events, _ = memory.apply([third_call], [third_row])
         self.assertEqual(events[0]['source_call_id'], self.first[0].call_id)
 
+    def test_latest_request_retry_keeps_date_from_strictly_earlier_origin(self):
+        memory = SeriesDateMemory()
+        memory.apply([self.first[0]], [self.first[1]])
+        expected, _, _ = memory.apply([self.second[0]], [self.second[1]])
+        actual, audit, _ = memory.apply([self.second[0]], [self.second[1]])
+        self.assertEqual(actual, expected)
+        self.assertEqual(audit[0]['source_call_id'], self.first[0].call_id)
+        # Another call at the same timestamp must not read this observation.
+        call, row = copy.deepcopy(self.second)
+        call.call_id = 'different-call'
+        row['call_id'] = call.call_id
+        result, audit, _ = memory.apply([call], [row])
+        self.assertEqual(result[0], row)
+        self.assertEqual(audit[0]['reason'], 'history_not_strictly_earlier')
+
     def test_extractor_applies_memory_and_records_decisions(self):
         from extractor import Extractor
         backend = Extractor.__new__(Extractor)
