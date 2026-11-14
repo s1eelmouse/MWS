@@ -11,8 +11,8 @@ from pathlib import Path
 
 from case_io import read_jsonl, validate_gold
 from config import ADAPTER_DIR, BASE_MODEL, MAX_SEQUENCE_TOKENS
-from training_data import (check_output_directory, encode_row, ensure_training_splits,
-                           file_digest, save_manifest, adapter_origin)
+from training_data import (adapter_origin, check_output_directory, encode_row,
+                           ensure_training_splits, file_digest, save_manifest)
 from schema import contract_signature
 
 
@@ -68,16 +68,18 @@ def main():
     parser.add_argument("--max-sequence-tokens", type=int, default=MAX_SEQUENCE_TOKENS)
     parser.add_argument("--output-dir", default=ADAPTER_DIR)
     parser.add_argument("--resume-from-checkpoint")
-    parser.add_argument("--init-adapter-dir", help="start a NEW cycle from adapter weights, with a fresh optimizer")
+    parser.add_argument("--init-adapter-dir",
+                        help="start a NEW cycle from adapter weights, with a fresh optimizer")
     parser.add_argument("--learning-rate", type=float, default=2e-4)
     parser.add_argument("--check-data", action="store_true",
                         help="validate data and split isolation without GPU or model downloads")
     args = parser.parse_args()
     if not math.isfinite(args.learning_rate) or args.learning_rate <= 0:
-        parser.error('--learning-rate must be finite and positive')
+        parser.error("--learning-rate must be finite and positive")
     if args.init_adapter_dir and args.resume_from_checkpoint:
-        parser.error('Choose starting adapter weights OR resume an interrupted cycle')
-    origin = adapter_origin(args.init_adapter_dir, args.output_dir, BASE_MODEL) if args.init_adapter_dir else None
+        parser.error("Choose starting adapter weights OR resume an interrupted cycle")
+    origin = (adapter_origin(args.init_adapter_dir, args.output_dir, BASE_MODEL)
+              if args.init_adapter_dir else None)
     if min(args.epochs, args.batch_size, args.save_steps, args.max_sequence_tokens) <= 0:
         parser.error("epochs, batch size, save steps and sequence budget must be positive")
     if args.max_steps == 0 or args.max_steps < -1:

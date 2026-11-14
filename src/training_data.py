@@ -44,7 +44,8 @@ def adapter_origin(directory, output_directory, base_model):
         raise ValueError('Starting adapter must be LoRA for the selected base model')
     from schema import check_model_contract
     check_model_contract(directory)
-    weights = [p for p in directory.iterdir() if p.name in ('adapter_model.safetensors', 'adapter_model.bin')]
+    weights = [p for p in directory.iterdir()
+               if p.name in ('adapter_model.safetensors', 'adapter_model.bin')]
     if len(weights) != 1:
         raise ValueError('Starting adapter must have exactly one adapter weight file')
     return {'directory': str(directory), 'files': {p.name: file_digest(p) for p in
