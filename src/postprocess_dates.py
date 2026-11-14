@@ -2,6 +2,7 @@
 import argparse
 from collections import Counter
 import copy
+from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
@@ -11,6 +12,14 @@ from case_io import read_jsonl, write_jsonl
 from catalog_normalization import load_catalog, normalize_catalog_facts
 from schema import Facts, as_call, contract_signature, source_problems
 from temporal import normalize_fact_dates
+
+
+def _at_or_before(value, boundary):
+    try:
+        return (datetime.fromisoformat(value.replace('Z', '+00:00'))
+                <= datetime.fromisoformat(boundary.replace('Z', '+00:00')))
+    except (TypeError, ValueError):
+        return False
 
 
 def _series_key(call):
@@ -76,7 +85,7 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
                 key = (account, item['object'].get('name', '').strip().lower())
                 previous = carried.get(key)
                 if previous and item.get('valid_from') != previous:
-                    if not item.get('valid_to') or previous <= item['valid_to']:
+                    if not item.get('valid_to') or _at_or_before(previous, item['valid_to']):
                         audit.append({'call_id': call.call_id, 'component': 'series',
                                       'fact_index': index, 'field': 'valid_from',
                                       'before': item.get('valid_from'), 'after': previous,
