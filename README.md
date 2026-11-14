@@ -102,7 +102,7 @@ HTTP-интерфейсом; отчёт с кривой «ресурсы × ка
 - Сборщик экспериментов: журнал обучения, замеры инференса на GPU и CPU по единой
   методике, сравнение с базой, CSV и график (`run_experiment.py`, `benchmark.py`,
   `compare_runs.py`). На реальном прогоне ещё не проверен.
-- 64 теста на CPU, см. [docs/VALIDATION.md](docs/VALIDATION.md).
+- 70 тестов на CPU, см. [docs/VALIDATION.md](docs/VALIDATION.md).
 
 Замеры 14.11.2026 на Windows 10, RTX 4060 8 ГБ, torch 2.14.1+cu130:
 

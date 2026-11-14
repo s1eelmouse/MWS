@@ -10,6 +10,33 @@ KNOWN_ISSUES = [
     "Organizer object-name matching can accept different objects.",
     "temporal_recall and grounding are conditional on matched facts; timestamps compare by day.",
 ]
+ATTRIBUTES = ("service_state", "tariff", "ticket_status", "action", "agreement")
+TEMPORAL_ATTRIBUTES = ("service_state", "tariff", "ticket_status")
+
+
+def _day(value):
+    return value[:10] if isinstance(value, str) and value else None
+
+
+def attribute_error_counts(gold_facts, pred_facts):
+    """Error-type counts with the organizer matcher; diagnostics only, not official metrics.
+
+    Dates compare by day like the official temporal_recall, sources by turn_idx like
+    grounding_turn, so the counts explain those metrics instead of redefining them.
+    """
+    matches = match_facts(gold_facts, pred_facts)
+    counts = {"matched_facts": len(matches), "missed_facts": len(gold_facts) - len(matches),
+              "extra_facts": len(pred_facts) - len(matches), "valid_from_errors": 0,
+              "valid_to_errors": 0, "date_errors": 0, "source_turn_errors": 0}
+    for gold, pred, _score in matches:
+        wrong_from = _day(gold.get("valid_from")) != _day(pred.get("valid_from"))
+        wrong_to = _day(gold.get("valid_to")) != _day(pred.get("valid_to"))
+        counts["valid_from_errors"] += wrong_from
+        counts["valid_to_errors"] += wrong_to
+        counts["date_errors"] += wrong_from or wrong_to
+        counts["source_turn_errors"] += ((pred.get("source") or {}).get("turn_idx")
+                                         != gold["source"]["turn_idx"])
+    return counts
 
 
 def index_calls(rows):
@@ -105,14 +132,24 @@ def evaluate_predictions(gold_rows, pred_rows):
             })
     official = evaluate(gold, scoring)
     per_attribute = {}
-    for attr in ("service_state", "tariff", "ticket_status", "action", "agreement"):
+    for attr in ATTRIBUTES:
         filtered_gold = {cid: {"facts": [f for f in row["facts"] if f["attribute"] == attr]}
                          for cid, row in gold.items()}
-        filtered_pred = {cid: {"facts": [f for f in row["facts"] if f["attribute"] == attr]}
+        filtered_pred = {cid: {"facts": [f for f in row.get("facts", []) if f.get("attribute") == attr]}
                          for cid, row in scoring.items()}
         metrics = evaluate(filtered_gold, filtered_pred)
-        per_attribute[attr] = {k: metrics[k] for k in
-                               ("n_gold_facts", "n_pred_facts", "fact_precision", "fact_recall")}
+        counts = dict.fromkeys(("matched_facts", "missed_facts", "extra_facts", "valid_from_errors",
+                                "valid_to_errors", "date_errors", "source_turn_errors"), 0)
+        for cid, row in filtered_gold.items():
+            pred_facts = filtered_pred.get(cid, {"facts": []})["facts"]
+            for key, value in attribute_error_counts(row["facts"], pred_facts).items():
+                counts[key] += value
+        per_attribute[attr] = {
+            "attribute_kind": "temporal" if attr in TEMPORAL_ATTRIBUTES else "static",
+            **{k: metrics[k] for k in ("n_gold_facts", "n_pred_facts", "fact_precision", "fact_recall",
+                                       "temporal_recall", "grounding_turn")},
+            **counts,
+        }
     scorer_path = Path(__file__).with_name("official_case_metrics.py")
     return {
         "official": official,

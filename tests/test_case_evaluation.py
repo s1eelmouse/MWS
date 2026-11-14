@@ -73,6 +73,34 @@ class EvaluationTest(unittest.TestCase):
         self.assertEqual(report["official"]["state_accuracy"], .5)
         self.assertTrue(report["known_scorer_issues"])
 
+    def test_per_attribute_error_types_explain_official_metrics(self):
+        state = {**copy.deepcopy(FACT), "attribute": "service_state", "value": "периодические обрывы",
+                 "object": {"id": "synthetic:svc0", "type": "service", "name": "домашний интернет"}}
+        gold = {**copy.deepcopy(CALL), "facts": [copy.deepcopy(FACT), state]}
+        wrong_date = {**copy.deepcopy(FACT), "valid_from": "2026-11-10T00:00:00"}
+        wrong_turn = {**copy.deepcopy(state), "source": {"turn_idx": 0}}
+        extra = {**copy.deepcopy(FACT), "value": "смена тарифа", "object": {"name": "тариф"}}
+        report, _ = evaluate_predictions([gold], [{"call_id": CALL["call_id"],
+                                                   "facts": [wrong_date, wrong_turn, extra]}])
+        action, service = report["per_attribute"]["action"], report["per_attribute"]["service_state"]
+        self.assertEqual(action["attribute_kind"], "static")
+        self.assertEqual(service["attribute_kind"], "temporal")
+        self.assertEqual((action["matched_facts"], action["missed_facts"], action["extra_facts"]), (1, 0, 1))
+        self.assertEqual((action["valid_from_errors"], action["valid_to_errors"], action["date_errors"]), (1, 0, 1))
+        self.assertEqual(action["source_turn_errors"], 0)
+        self.assertEqual(action["temporal_recall"], 0)
+        self.assertEqual((service["matched_facts"], service["date_errors"], service["source_turn_errors"]), (1, 0, 1))
+        self.assertEqual(service["grounding_turn"], 0)
+        self.assertEqual(report["per_attribute"]["tariff"]["missed_facts"], 0)
+        # Official numbers are untouched by the diagnostics.
+        self.assertEqual(report["official"]["n_pred_facts"], 3)
+        self.assertEqual(report["official"]["fact_recall"], 1)
+
+    def test_failed_call_counts_every_gold_fact_as_missed(self):
+        report, _ = evaluate_predictions([CALL], [{"call_id": CALL["call_id"], "facts": [], "error": "invalid_json"}])
+        action = report["per_attribute"]["action"]
+        self.assertEqual((action["matched_facts"], action["missed_facts"], action["extra_facts"]), (0, 1, 0))
+
 
 if __name__ == "__main__":
     unittest.main()
