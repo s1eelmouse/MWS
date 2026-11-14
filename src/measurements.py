@@ -11,6 +11,16 @@ import threading
 import time
 from pathlib import Path
 
+ERROR_TYPES = ("invalid_json", "invalid_source", "invalid_schema", "output_token_limit",
+               "input_too_long", "out_of_memory", "missing_prediction")
+
+
+def model_weights_bytes(artifacts):
+    """Total local .safetensors/.bin weight file bytes; unavailable stays unknown."""
+    weights = [info["bytes"] for name, info in (artifacts or {}).items()
+               if name.endswith((".safetensors", ".bin"))]
+    return sum(weights) if weights else None
+
 
 def write_json(path, value):
     with Path(path).open("x", encoding="utf-8") as stream:

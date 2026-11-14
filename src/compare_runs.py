@@ -4,7 +4,40 @@ import csv
 import html
 import json
 from pathlib import Path
-from measurements import write_json
+from measurements import write_json, model_weights_bytes, ERROR_TYPES
+
+QUALITY_METRICS = ("fact_precision", "fact_recall", "temporal_recall", "state_accuracy", "grounding_turn")
+
+
+def delta(value, reference):
+    return value - reference if value is not None and reference is not None else None
+
+
+def attribute_rows(reports, baseline, report_paths):
+    rows = []
+    sources = [("baseline", {}, baseline)] + [
+        (path, report["settings"], report["quality"]) for path, report in zip(report_paths, reports)]
+    for run, settings, quality in sources:
+        for attribute, metrics in quality.get("per_attribute", {}).items():
+            reference = baseline["per_attribute"].get(attribute, {})
+            rows.append({"run": run, "model": settings.get("model"),
+                         "device": settings.get("device"), "batch_size": settings.get("batch_size"),
+                         "attribute": attribute,
+                         "attribute_kind": "temporal" if attribute in
+                             ("service_state", "tariff", "ticket_status") else "static",
+                         **metrics,
+                         **{key + "_delta_from_baseline": delta(metrics.get(key), reference.get(key))
+                            for key in ("fact_precision", "fact_recall")}})
+    return rows
+
+
+def write_csv(path, rows):
+    # Union preserves custom failure/attribute fields rather than silently dropping them.
+    fields = list(dict.fromkeys(key for row in rows for key in row))
+    with path.open("x", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def comparison_rows(reports):
@@ -28,7 +61,17 @@ def comparison_rows(reports):
     for report in reports:
         cfg, quality = report["settings"], report["quality"]
         result.append({"model": cfg["model"], "device": cfg["device"], "dtype": report["dtype"], "batch_size": cfg["batch_size"],
+                       "model_parameters": report.get("model_parameters"),
+                       "model_weights_bytes": report.get("model_weights_bytes",
+                           model_weights_bytes(report.get("model_artifacts"))),
+                       "model_load_seconds": report.get("model_load_seconds"),
                        "calls": report["calls"], "failed_calls": report["failed_calls"],
+                       "successful_calls_per_hour": report.get("successful_calls_per_hour"),
+                       **{f"{kind}_tokens_{p}": report.get(f"{kind}_tokens", {}).get(p)
+                          for kind in ("input", "output") for p in ("p50", "p95")},
+                       **{"errors_" + kind: report["error_counts"].get(kind, 0)
+                          if report.get("error_counts") is not None else None for kind in ERROR_TYPES},
+                       "error_counts": report.get("error_counts"),
                        "p50_seconds": report["call_completion_seconds"]["p50"],
                        "p95_seconds": report["call_completion_seconds"]["p95"],
                        "seconds_per_call": report["measurement_seconds"] / report["calls"],
@@ -38,7 +81,7 @@ def comparison_rows(reports):
                        "cuda_peak_allocated_bytes": report["memory"]["cuda_peak_allocated_bytes"],
                        "cuda_peak_reserved_bytes": report["memory"]["cuda_peak_reserved_bytes"],
                        "format_valid_rate": quality["diagnostics"]["format_valid_rate"],
-                       **{k: quality["official"][k] for k in ("fact_precision", "fact_recall", "temporal_recall", "state_accuracy", "grounding_turn")}})
+                       **{k: quality["official"][k] for k in QUALITY_METRICS}})
     return result
 
 
@@ -67,14 +110,15 @@ def main():
     output.mkdir(parents=True, exist_ok=False)
     write_json(output / "baseline.json", baseline)
     for row in rows:
-        for metric in ("temporal_recall", "state_accuracy"):
+        for metric in QUALITY_METRICS:
             reference = baseline["official"][metric]
-            row[metric + "_delta_from_baseline"] = (row[metric] - reference
-                if row[metric] is not None and reference is not None else None)
-    with (output / "comparison.csv").open("x", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
-        writer.writeheader()
-        writer.writerows(rows)
+            row[metric + "_delta_from_baseline"] = delta(row[metric], reference)
+        row["format_valid_rate_delta_from_baseline"] = delta(
+            row["format_valid_rate"], baseline["diagnostics"]["format_valid_rate"])
+    write_csv(output / "comparison.csv", [
+        {**row, "error_counts": json.dumps(row["error_counts"], sort_keys=True)
+         if row["error_counts"] is not None else None} for row in rows])
+    write_csv(output / "per_attribute.csv", attribute_rows(reports, baseline, args.reports))
     write_json(output / "comparison.json", {"runs": rows, "baseline_resource_metrics": None,
                "note": "Baseline predictions provide quality only; runtime cannot be reconstructed.",
                "reports": args.reports})

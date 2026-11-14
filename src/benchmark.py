@@ -3,12 +3,14 @@ import argparse
 import hashlib
 import json
 import time
+from collections import Counter
 from pathlib import Path
 
 from case_io import prediction_row, read_jsonl, validate_gold, write_jsonl
 from case_evaluation import evaluate_predictions
 from config import MAX_INPUT_TOKENS, MAX_NEW_TOKENS, PROMPT_LOOKUP_TOKENS
-from measurements import MemorySampler, distribution, environment, write_json, model_artifacts
+from measurements import (MemorySampler, distribution, environment, write_json, model_artifacts,
+                          model_weights_bytes, ERROR_TYPES)
 from schema import as_call, contract_signature
 from training_data import file_digest
 
@@ -79,7 +81,11 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     write_json(output / "metrics.json", quality)
     write_jsonl(output / "errors.jsonl", errors)
     failed = sum("error" in p for p in predictions)
+    # Only explicit execution/schema failures; fact mismatches are quality diagnostics.
+    error_counts = dict.fromkeys(ERROR_TYPES, 0)
+    error_counts.update(Counter(e["error"] for e in errors if e.get("error")))
     return {"calls": len(calls), "failed_calls": failed,
+            "error_counts": error_counts,
             "warmup_batches": warmup_batches, "warmup_seconds": warmup_seconds,
             "warmup_errors": warmup_errors,
             "measurement_seconds": seconds,
@@ -129,6 +135,7 @@ def main():
     try:
         write_json(output / "environment.json", environment())
         report["model_artifacts"] = model_artifacts(args.model)
+        report["model_weights_bytes"] = model_weights_bytes(report["model_artifacts"])
         from extractor import Extractor
         load_start = time.perf_counter()
         backend = Extractor(args.model, args.with_schema, args.device)

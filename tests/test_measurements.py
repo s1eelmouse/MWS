@@ -10,7 +10,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from benchmark import run_benchmark
 from compare_runs import comparison_rows
-from measurements import percentile, distribution, write_json
+from measurements import percentile, distribution, write_json, model_weights_bytes, model_artifacts, ERROR_TYPES
 from run_experiment import stage
 from schema import to_answer
 from test_case_schema import CALL, FACT
@@ -35,6 +35,27 @@ class FakeBackend:
 
 
 class MeasurementTest(unittest.TestCase):
+    def test_disk_weights_exclude_metadata_and_unknown_is_not_zero(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "config.json").write_text("{}")
+            self.assertIsNone(model_weights_bytes(model_artifacts(root)))
+            (root / "model-1.safetensors").write_bytes(b"a" * 7)
+            (root / "model-2.safetensors").write_bytes(b"b" * 9)
+            self.assertEqual(model_weights_bytes(model_artifacts(root)), 16)
+        self.assertIsNone(model_weights_bytes(None))
+
+    def test_failure_counts_preserve_all_types_and_exclude_warmup(self):
+        kinds = [*ERROR_TYPES, "custom_failure"]
+        backend = FakeBackend()
+        rows = [{**copy.deepcopy(CALL), "call_id": f"synthetic:failure{i}"} for i in range(len(kinds))]
+        with tempfile.TemporaryDirectory() as temp, patch.object(backend, "extract", side_effect=[
+                [{"error": "invalid_json"}], *[[{"error": kind}] for kind in kinds]]):
+            report = run_benchmark(rows, backend, Path(temp), 1, 1)
+            self.assertEqual(report["error_counts"], dict.fromkeys(kinds, 1))
+            self.assertEqual(sum(report["error_counts"].values()), report["failed_calls"])
+            self.assertEqual(report["failed_calls"], len(kinds))
+
     def test_rank_and_missing_lengths_are_explicit(self):
         self.assertEqual(percentile(list(range(1, 21)), .95), 19)
         self.assertEqual(distribution([None, 3, 7]),
@@ -51,6 +72,7 @@ class MeasurementTest(unittest.TestCase):
             self.assertEqual(backend.batches, 3)  # one warmup + two measured batches
             self.assertEqual(report["calls"], 3)
             self.assertEqual(report["failed_calls"], 1)
+            self.assertEqual(report["error_counts"]["invalid_json"], 1)
             self.assertIsNone(report["gpu_seconds_per_1000_calls"])
             self.assertEqual(report["quality"]["diagnostics"]["format_valid_rate"], 2 / 3)
             self.assertEqual(calls[0]["completion_latency_seconds"], batches[0]["seconds"])
@@ -121,6 +143,14 @@ class MeasurementTest(unittest.TestCase):
                               dataset_sha256=file_digest(gold_path), selected_calls_sha256="same",
                               contract_signature="same", limits={}, prompt_lookup_tokens=0,
                               settings={"model": "fake", "device": "cpu", "batch_size": size, "limit": 1})
+                if size == 1:
+                    # Earlier reports cannot supply failure breakdowns; preserve blanks.
+                    del report["error_counts"]
+                else:
+                    report.update(model_parameters=123, model_load_seconds=.5,
+                                  model_artifacts={"model.safetensors": {"bytes": 456},
+                                                   "config.json": {"bytes": 9}})
+                    report["quality"]["official"]["fact_precision"] = .75
                 path = destination / "report.json"
                 write_json(path, report)
                 reports.append(str(path))
@@ -134,6 +164,25 @@ class MeasurementTest(unittest.TestCase):
             self.assertEqual(len(rows), 3)
             self.assertEqual(float(rows[0]["fact_recall"]), 1)
             self.assertEqual(float(rows[0]["temporal_recall_delta_from_baseline"]), 0)
+            self.assertEqual(rows[0]["model_parameters"], "")
+            self.assertEqual(rows[0]["errors_invalid_json"], "")
+            self.assertEqual(rows[1]["model_parameters"], "123")
+            self.assertEqual(rows[1]["model_weights_bytes"], "456")
+            self.assertEqual(rows[1]["model_load_seconds"], "0.5")
+            self.assertEqual(rows[1]["errors_invalid_json"], "0")
+            self.assertEqual(float(rows[1]["fact_precision_delta_from_baseline"]), -.25)
+            self.assertEqual(float(rows[1]["format_valid_rate_delta_from_baseline"]), 0)
+            self.assertEqual(rows[1]["state_accuracy_delta_from_baseline"], "")
+            for key in ("fact_precision", "fact_recall", "temporal_recall", "state_accuracy", "grounding_turn"):
+                self.assertIn(key + "_delta_from_baseline", rows[1])
+            with (output / "per_attribute.csv").open() as stream:
+                attributes = list(csv.DictReader(stream))
+            self.assertEqual(len(attributes), 20)  # five types for baseline + three modes
+            action = next(row for row in attributes if row["attribute"] == "action")
+            self.assertEqual(action["attribute_kind"], "static")
+            self.assertEqual(action["n_gold_facts"], "1")
+            self.assertEqual(action["fact_recall"], "1.0")
+            self.assertTrue(any(row["attribute_kind"] == "temporal" for row in attributes))
             ET.parse(output / "resources-quality.svg")
 
 
