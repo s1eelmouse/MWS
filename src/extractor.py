@@ -122,7 +122,11 @@ class Extractor:
                 details[index]["output_tokens"] = end if end is not None else len(tokens)
                 details[index]["generation_limit_reached"] = end is None and len(tokens) >= MAX_NEW_TOKENS
         for index, raw in zip(indices, answers):
-            facts, problem, normalization = parse_prediction(raw, calls[index])
+            temporal_decisions = []
+            facts, problem, normalization = parse_prediction(raw, calls[index],
+                                                              temporal_decisions=temporal_decisions)
+            if temporal_decisions:
+                details[index]['temporal_decisions'] = temporal_decisions
             if normalization:
                 details[index]["normalization"] = normalization
             if details[index]["generation_limit_reached"]:

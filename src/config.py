@@ -30,6 +30,12 @@ if JSON_GRAMMAR_BACKEND not in ("auto", "cpu", "cuda", "triton", "torch_compile"
 # проверяет сразу несколько токенов, скопированных из запроса. Ответ тот же, шагов меньше.
 PROMPT_LOOKUP_TOKENS = int(os.getenv("PROMPT_LOOKUP_TOKENS", "0"))
 
+# Opt-in deterministic postprocessing. Preserve the historical model contract.
+TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "off").strip().lower()
+if TEMPORAL_NORMALIZATION not in ("off", "conservative"):
+    raise ValueError("TEMPORAL_NORMALIZATION must be off or conservative")
+CATALOG_PATH = os.getenv("CATALOG_PATH", "").strip()
+
 # Печать не должна ронять скрипт из-за символа, которого нет в кодировке консоли Windows.
 for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
