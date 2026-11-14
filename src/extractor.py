@@ -1,10 +1,13 @@
 """Case-aware Transformers inference. Heavy ML imports happen only on model loading."""
 import threading
 import time
+import hashlib
+from pathlib import Path
 
-from config import (JSON_CONSTRAINED, JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS,
+from config import (CATALOG_PATH, JSON_CONSTRAINED, JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS,
                     MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS,
-                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY)
+                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY, TEMPORAL_NORMALIZATION)
+from catalog_normalization import load_catalog
 from json_constraints import GrammarLogitsProcessor, compile_json_grammar
 from prediction import parse_prediction
 from schema import as_call, check_model_contract, source_problems
@@ -18,6 +21,11 @@ class Extractor:
         from transformers import AutoModelForCausalLM, AutoTokenizer
         self.torch = torch
         self.with_schema = with_schema
+        self.temporal_normalization = TEMPORAL_NORMALIZATION
+        self.catalog_sha256 = None
+        if CATALOG_PATH:
+            load_catalog(CATALOG_PATH)
+            self.catalog_sha256 = hashlib.sha256(Path(CATALOG_PATH).read_bytes()).hexdigest()
         if device not in ("auto", "cpu", "cuda"):
             raise ValueError("device must be auto, cpu or cuda")
         self.device = ("cuda" if torch.cuda.is_available() else "cpu") if device == "auto" else device
@@ -125,7 +133,11 @@ class Extractor:
                 details[index]["output_tokens"] = end if end is not None else len(tokens)
                 details[index]["generation_limit_reached"] = end is None and len(tokens) >= MAX_NEW_TOKENS
         for index, raw in zip(indices, answers):
-            facts, problem, normalization = parse_prediction(raw, calls[index])
+            temporal_decisions = []
+            facts, problem, normalization = parse_prediction(raw, calls[index],
+                                                              temporal_decisions=temporal_decisions)
+            if temporal_decisions:
+                details[index]['temporal_decisions'] = temporal_decisions
             if normalization:
                 details[index]["normalization"] = normalization
             retry_problem = None
@@ -154,6 +166,9 @@ class Extractor:
                             "generation_limit_reached")
                         if retry_details[0].get("normalization"):
                             details[index]["normalization"] = retry_details[0]["normalization"]
+                        if retry_details[0].get("temporal_decisions"):
+                            details[index]["temporal_decisions"] = retry_details[0][
+                                "temporal_decisions"]
                         continue
                     if retry_details[0].get("diagnostic"):
                         retry_problem = {

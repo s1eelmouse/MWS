@@ -11,8 +11,11 @@ from typing import Literal
 
 from pydantic import Field, field_validator
 
+from config import CATALOG_PATH, TEMPORAL_NORMALIZATION
+from catalog_normalization import load_catalog, normalize_catalog_facts
 from schema import (Attribute, CallInput, Facts, ObjectRef, Source, Speaker, StrictModel,
                     load_answer_payload, schema_error)
+from temporal import normalize_fact_dates
 
 
 class RawFact(StrictModel):
@@ -69,12 +72,28 @@ def sanitize_interval(valid_from, valid_to):
     return valid_from, valid_to, changes
 
 
-def normalize_prediction(raw: RawFacts, call: CallInput):
+def normalize_prediction(raw: RawFacts, call: CallInput, *, temporal_mode=None,
+                         temporal_decisions=None, catalog_path=None):
     """Fill diarization speaker, make dates valid and remove exact duplicates."""
     turns = {turn.idx: turn for turn in call.turns}
     facts, seen, summary = [], set(), {}
-    for fact in raw.facts:
-        item = fact.model_dump(mode="json")
+    items = [fact.model_dump(mode="json") for fact in raw.facts]
+    catalog_path = CATALOG_PATH if catalog_path is None else catalog_path
+    if catalog_path:
+        items, catalog_changes = normalize_catalog_facts(items, load_catalog(catalog_path))
+        if catalog_changes:
+            summary['catalog_fields_normalized'] = len(catalog_changes)
+    temporal_mode = TEMPORAL_NORMALIZATION if temporal_mode is None else temporal_mode
+    if temporal_mode not in ('off', 'conservative'):
+        raise ValueError('Unknown temporal normalization mode')
+    if temporal_mode == 'conservative':
+        items, decisions = normalize_fact_dates(items, call)
+        if temporal_decisions is not None:
+            temporal_decisions.extend(decisions)
+        changed = sum(len(d['changes']) for d in decisions)
+        if changed:
+            summary['temporal_dates_repaired'] = changed
+    for item in items:
         turn = turns.get(item["source"]["turn_idx"])
         if turn is not None and item.get("speaker") != turn.speaker:
             item["speaker"] = turn.speaker
@@ -93,7 +112,8 @@ def normalize_prediction(raw: RawFacts, call: CallInput):
     return Facts.model_validate({"facts": facts}), summary
 
 
-def parse_prediction(raw: str, call: CallInput):
+def parse_prediction(raw: str, call: CallInput, *, temporal_mode=None,
+                     temporal_decisions=None, catalog_path=None):
     """Parse a model answer and normalize prediction-only fields.
 
     Returns (Facts | None, error | None, normalization summary | None).
@@ -110,7 +130,11 @@ def parse_prediction(raw: str, call: CallInput):
             return None, schema_error(exc), None
         return None, schema_error(raw_error), None
     try:
-        facts, summary = normalize_prediction(raw_facts, call)
+        facts, summary = normalize_prediction(raw_facts, call, temporal_mode=temporal_mode,
+                                              temporal_decisions=temporal_decisions,
+                                              catalog_path=catalog_path)
     except ValueError as exc:
+        if not hasattr(exc, 'errors'):
+            raise  # Configuration/catalog failures are not model schema errors.
         return None, schema_error(exc), None
     return facts, None, summary or None

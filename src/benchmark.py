@@ -170,6 +170,8 @@ def main():
         sync()
         report["model_load_seconds"] = time.perf_counter() - load_start
         report["constrained_json"] = bool(getattr(backend, "constrained_json", False))
+        report["temporal_normalization"] = getattr(backend, "temporal_normalization", "off")
+        report["catalog_sha256"] = getattr(backend, "catalog_sha256", None)
         report["grammar_compile_seconds"] = getattr(backend, "grammar_compile_seconds", None)
         report["model_parameters"] = backend.model.num_parameters()
         report["dtype"] = str(backend.model.dtype)

@@ -15,6 +15,7 @@
 | [docs/DECISION_NEXT_MODEL.md](docs/DECISION_NEXT_MODEL.md) | Решение по 1.7B и следующей эпохе |
 | [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) | Как запускать обучение с журналами и замеры CPU/GPU, методика замеров |
 | [docs/RESULTS.md](docs/RESULTS.md) | Таблицы результатов для отчёта и из каких файлов их заполнять |
+| [docs/DETERMINISTIC.md](docs/DETERMINISTIC.md) | Готовый календарь, точный каталог, обработка без GPU и измеренный результат |
 
 Единый воспроизводимый запуск — обучение, merge, три режима замера и сравнение с базой:
 `python src/run_experiment.py --train-new --epochs 1 --output-dir out/experiment-001`. Для уже обученной
