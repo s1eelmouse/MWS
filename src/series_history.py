@@ -34,7 +34,8 @@ def _ticket(fact):
 
 def _explicit_or_new(fact, call):
     # A local explicit date/new episode overrides remembered model state.
-    from temporal import CLAUSE_BREAK, STATUS_PATTERNS, extract_time_expressions
+    from temporal import (CLAUSE_BREAK, STATUS_PATTERNS, extract_time_expressions,
+                          _cue_dates, _datetime)
     turn = next((t for t in call.turns if t.idx == fact['source']['turn_idx']), None)
     if turn is None:
         return True
@@ -46,6 +47,8 @@ def _explicit_or_new(fact, call):
             return True
         if any(x.certain for x in extract_time_expressions(clause, call.started_at, direction='past')):
             return True
+        if _cue_dates(clause, _datetime(call.started_at).date()):
+            return True  # Respect the same ASR cues recognized by task mode.
     return False
 
 

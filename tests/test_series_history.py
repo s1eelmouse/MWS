@@ -72,7 +72,7 @@ class SeriesHistoryTest(unittest.TestCase):
         self.assertEqual(result, list(rows))
 
     def test_explicit_date_and_new_episode_override_memory(self):
-        for text in ['Вчера заявка была принята.', 'Заявка снова принята.']:
+        for text in ['Вчера заявка была принята.', 'Вчира заявка была принята.', 'Заявка снова принята.']:
             call, row = sample('new', '2026-03-05T12:00:00', '2026-03-04T00:00:00', text=text)
             result, _, _ = SeriesDateMemory().apply([self.first[0], call], [self.first[1], row])
             self.assertEqual(result[1], row)
