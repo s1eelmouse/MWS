@@ -3,6 +3,7 @@ import os
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
 
 import argparse
+from config import ORGANIZER_DIR
 import inspect
 import json
 import math
@@ -56,8 +57,8 @@ def make_batch(rows: list, pad_id: int, tail_only: bool = True) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--train", default="data/organizer/train.jsonl")
-    parser.add_argument("--val", default="data/organizer/val.jsonl")
+    parser.add_argument("--train", default=str(ORGANIZER_DIR / "train.jsonl"))
+    parser.add_argument("--val", default=str(ORGANIZER_DIR / "val.jsonl"))
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--batch-size", type=int, default=1)

@@ -10,6 +10,8 @@ import sys
 
 # Стартовая модель; альтернативы проверяются по полному числу параметров <= 1.5B.
 BASE_MODEL = os.getenv("BASE_MODEL", "Qwen/Qwen3-0.6B")
+ORGANIZER_DIR = Path(os.getenv("ORGANIZER_DIR", str(
+    Path(__file__).resolve().parents[1] / "data/organizer/v2_1")))
 ADAPTER_DIR = os.getenv("ADAPTER_DIR", "out/adapter")  # сюда train.py сохраняет адаптер LoRA
 MERGED_DIR = os.getenv("MERGED_DIR", "out/merged")     # сюда merge.py сохраняет готовую модель
 
@@ -44,7 +46,7 @@ PROMPT_LOOKUP_TOKENS = int(os.getenv("PROMPT_LOOKUP_TOKENS", "0"))
 TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "task").strip().lower()
 if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task"):
     raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative or task")
-_DEFAULT_CATALOG = Path("data/organizer_v2_1/catalog.json")
+_DEFAULT_CATALOG = ORGANIZER_DIR / "catalog.json"
 _FALLBACK_CATALOG = Path("case_data/catalog.json")
 _catalog_default = str(_DEFAULT_CATALOG) if _DEFAULT_CATALOG.is_file() else (
     str(_FALLBACK_CATALOG) if _FALLBACK_CATALOG.is_file() else "")

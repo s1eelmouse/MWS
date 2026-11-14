@@ -1,5 +1,6 @@
 """Measure local inference and official quality on identical calls (PLAN.md section 6)."""
 import argparse
+from config import ORGANIZER_DIR
 import hashlib
 import json
 import time
@@ -163,7 +164,7 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", default="data/organizer/val.jsonl")
+    parser.add_argument("--input", default=str(ORGANIZER_DIR / "val.jsonl"))
     parser.add_argument("--model", required=True)
     parser.add_argument("--device", choices=("cpu", "cuda"), required=True)
     parser.add_argument("--batch-size", type=int, default=1)

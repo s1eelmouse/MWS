@@ -4,6 +4,7 @@ from pathlib import Path
 
 from official_case_metrics import evaluate, load_catalog, match_facts
 from schema import Facts, as_call, source_problems
+from config import ORGANIZER_DIR
 
 KNOWN_ISSUES = [
     "Organizer v2.1 recover_dates may raise TypeError on 'через две недели' / 'позапрошлый'.",
@@ -79,7 +80,7 @@ def evaluate_predictions(gold_rows, pred_rows, catalog_path=None):
     if catalog_path:
         load_catalog(str(catalog_path))
     else:
-        for hint in ("data/organizer_v2_1/val.jsonl", "case_data/val.jsonl"):
+        for hint in (ORGANIZER_DIR / "val.jsonl", Path("case_data/val.jsonl")):
             if Path(hint).exists():
                 load_catalog(hint)
                 break

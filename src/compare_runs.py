@@ -1,5 +1,6 @@
 """Compare compatible benchmarks; emit CSV and an offline resources/quality SVG."""
 import argparse
+from config import ORGANIZER_DIR
 import csv
 import html
 import json
@@ -100,7 +101,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reports", nargs="+", required=True)
     parser.add_argument("--baseline-pred", required=True)
-    parser.add_argument("--gold", default="data/organizer/val.jsonl")
+    parser.add_argument("--gold", default=str(ORGANIZER_DIR / "val.jsonl"))
     parser.add_argument("--output-dir", required=True)
     args = parser.parse_args()
     reports = [json.loads(Path(p).read_text(encoding="utf-8")) for p in args.reports]
@@ -116,7 +117,8 @@ def main():
     all_ids = {g["call_id"] for g in read_jsonl(args.gold)}
     if any(r["call_id"] not in all_ids for r in all_pred):
         parser.error("Unknown baseline call IDs")
-    baseline, _ = evaluate_predictions(gold, [r for r in all_pred if r["call_id"] in ids])
+    baseline, _ = evaluate_predictions(gold, [r for r in all_pred if r["call_id"] in ids],
+                                       catalog_path=args.gold)
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=False)
     write_json(output / "baseline.json", baseline)

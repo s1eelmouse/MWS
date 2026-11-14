@@ -1,5 +1,6 @@
 """Copy the case package locally, preserving original splits and file bytes."""
 import argparse
+from config import ORGANIZER_DIR
 import hashlib
 import json
 import shutil
@@ -56,7 +57,7 @@ def prepare(source: Path, target: Path) -> dict:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-dir", required=True, type=Path)
-    parser.add_argument("--out-dir", default=Path("data/organizer"), type=Path)
+    parser.add_argument("--out-dir", default=ORGANIZER_DIR, type=Path)
     args = parser.parse_args()
     report = prepare(args.source_dir, args.out_dir)
     print(json.dumps(report["validation"], ensure_ascii=False, indent=2))

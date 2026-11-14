@@ -6,6 +6,7 @@ Character spans and quotes no longer point into the changed text, so they are se
 null (grounding_turn stays comparable, grounding_span does not apply).
 """
 import argparse
+from config import ORGANIZER_DIR
 import copy
 import difflib
 import hashlib
@@ -100,7 +101,7 @@ def changed_word_share(original: list[dict], noisy: list[dict]) -> float:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", default="data/organizer/val.jsonl")
+    parser.add_argument("--input", default=str(ORGANIZER_DIR / "val.jsonl"))
     parser.add_argument("--output", required=True)
     parser.add_argument("--level", type=float, default=0.15,
                         help="share of words to corrupt, added on top of the existing noise")

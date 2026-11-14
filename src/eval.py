@@ -1,5 +1,6 @@
 """Evaluate case predictions using the exact organizer scorer, aligned by call_id."""
 import argparse
+from config import ORGANIZER_DIR
 import json
 import statistics
 import time
@@ -28,7 +29,7 @@ def ask(endpoint: str, row: dict, timeout=300):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--gold", default="data/organizer/val.jsonl")
+    parser.add_argument("--gold", default=str(ORGANIZER_DIR / "val.jsonl"))
     parser.add_argument("--pred")
     parser.add_argument("--url", default="http://127.0.0.1:8000")
     parser.add_argument("--workers", type=int, default=1)

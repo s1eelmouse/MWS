@@ -1,5 +1,6 @@
 """Generate case predictions with stable call IDs and incremental, non-overwriting output."""
 import argparse
+from config import ORGANIZER_DIR
 import json
 import os
 import time
@@ -12,7 +13,7 @@ from schema import as_call
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", default="data/organizer/val.jsonl")
+    parser.add_argument("--input", default=str(ORGANIZER_DIR / "val.jsonl"))
     parser.add_argument("--output", required=True, help="new file; each completed batch is flushed")
     parser.add_argument("--model", default=os.getenv("MODEL_DIR", MERGED_DIR))
     parser.add_argument("--with-schema", action="store_true")

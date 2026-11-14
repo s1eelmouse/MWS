@@ -1,5 +1,6 @@
 """Run tests, training and three inference measurements into an exclusive experiment directory."""
 import argparse
+from config import ORGANIZER_DIR
 import json
 import math
 import os
@@ -54,9 +55,9 @@ def main():
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--train-new", action="store_true", help="explicitly create a new adapter")
     parser.add_argument("--model", help="existing merged model: skip training and merge")
-    parser.add_argument("--train", default=str(ROOT / "data/organizer/train.jsonl"))
-    parser.add_argument("--val", default=str(ROOT / "data/organizer/val.jsonl"))
-    parser.add_argument("--baseline-pred", default=str(ROOT / "data/organizer/baseline_pred.jsonl"))
+    parser.add_argument("--train", default=str(ORGANIZER_DIR / "train.jsonl"))
+    parser.add_argument("--val", default=str(ORGANIZER_DIR / "val.jsonl"))
+    parser.add_argument("--baseline-pred", default=str(ORGANIZER_DIR / "baseline_pred.jsonl"))
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--train-limit", type=int)
     parser.add_argument("--max-steps", type=int, default=-1)
