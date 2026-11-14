@@ -1,6 +1,9 @@
 # Слайды защиты
 
-Каркас на 10 слайдов. Числа — полный val, официальный оценщик. Источники:
+Готовый deck: [defense-deck.pdf](defense-deck.pdf), редактируемый исходник —
+[defense-deck.pptx](defense-deck.pptx). Пересобрать:
+`.venv/bin/python tools/build_defense_deck.py` (нужен `python-pptx`).
+Числа — полный val, официальный оценщик. Источники:
 [RESULTS.md](RESULTS.md), [MODEL.md](MODEL.md), [DEFENSE.md](DEFENSE.md).
 
 > **Внимание: пакет организаторов 2.1.** Числа на слайдах — по старому пакету.
