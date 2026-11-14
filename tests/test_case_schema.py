@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from case_io import prediction_row, read_jsonl, validate_gold, write_jsonl
-from schema import (CallInput, Facts, as_call, build_messages, parse_answer,
+from schema import (CallInput, Facts, LEGACY_CONTRACT_SIGNATURE, as_call, build_messages, parse_answer,
                     source_problems, to_answer, check_model_contract, contract_signature)
 
 FACT = {
@@ -143,7 +143,7 @@ class CaseContractTest(unittest.TestCase):
                 write_jsonl(path, [])
             self.assertEqual(before, path.read_bytes())
 
-    def test_old_model_cannot_be_silently_used_with_new_schema(self):
+    def test_contract_accepts_legacy_and_v2_signatures(self):
         with tempfile.TemporaryDirectory() as temp:
             with self.assertRaisesRegex(ValueError, 'legacy'):
                 check_model_contract(temp)
@@ -151,8 +151,21 @@ class CaseContractTest(unittest.TestCase):
             path.write_text(json.dumps({'signature': 'old'}))
             with self.assertRaisesRegex(ValueError, 'different'):
                 check_model_contract(temp)
+            path.write_text(json.dumps({'signature': LEGACY_CONTRACT_SIGNATURE}))
+            check_model_contract(temp)
             path.write_text(json.dumps({'signature': contract_signature()}))
             check_model_contract(temp)
+
+    def test_empty_or_missing_object_name_is_accepted(self):
+        for name in ('', None):
+            fact = copy.deepcopy(FACT)
+            if name is None:
+                fact['object'].pop('name')
+            else:
+                fact['object']['name'] = name
+            parsed = Facts.model_validate({'facts': [fact]})
+            self.assertEqual(parsed.facts[0].object.name, '')
+            self.assertIsNotNone(parse_answer(to_answer([fact])))
 
 
 if __name__ == "__main__":
