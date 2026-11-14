@@ -21,6 +21,7 @@
 | [docs/DECISION_NEXT_MODEL.md](docs/DECISION_NEXT_MODEL.md) | Решение по 1.7B и следующей эпохе |
 | [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) | Как запускать обучение с журналами и замеры CPU/GPU, методика замеров |
 | [docs/RESULTS.md](docs/RESULTS.md) | Таблицы результатов для отчёта и из каких файлов их заполнять |
+| [docs/ORGANIZER_DATA_UPDATE_V2_1.md](docs/ORGANIZER_DATA_UPDATE_V2_1.md) | Изменения пакета организаторов 2.1: данные, оценщик, baseline и совместимость |
 | [docs/DETERMINISTIC.md](docs/DETERMINISTIC.md) | Готовый календарь, точный каталог, обработка без GPU и измеренный результат |
 
 Единый воспроизводимый запуск — обучение, merge, три режима замера и сравнение с базой:
