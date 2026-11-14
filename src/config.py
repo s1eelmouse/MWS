@@ -12,7 +12,7 @@ ADAPTER_DIR = os.getenv("ADAPTER_DIR", "out/adapter")  # сюда train.py со�
 MERGED_DIR = os.getenv("MERGED_DIR", "out/merged")     # сюда merge.py сохраняет готовую модель
 
 MAX_TEXT_CHARS = int(os.getenv("MAX_TEXT_CHARS", "0"))  # 0 = no character cap; never truncate
-MAX_INPUT_TOKENS = int(os.getenv("MAX_INPUT_TOKENS", "8192"))
+MAX_INPUT_TOKENS = int(os.getenv("MAX_INPUT_TOKENS", "12288"))
 MAX_SEQUENCE_TOKENS = int(os.getenv("MAX_SEQUENCE_TOKENS", "16384"))
 MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "4096"))
 

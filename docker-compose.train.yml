@@ -4,14 +4,14 @@ services:
       context: .
       dockerfile: Dockerfile.train
       args:
-        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu128}
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu130}
         CODE_REVISION: ${CODE_REVISION:-unknown}
     image: compactfactextraction-train:${TRAIN_TAG:-local}
     init: true
     shm_size: "2gb"
     environment:
       BASE_MODEL: ${BASE_MODEL:-Qwen/Qwen3-0.6B}
-      MAX_INPUT_TOKENS: ${MAX_INPUT_TOKENS:-11000}
+      MAX_INPUT_TOKENS: ${MAX_INPUT_TOKENS:-12288}
       MAX_NEW_TOKENS: ${MAX_NEW_TOKENS:-4096}
       MAX_SEQUENCE_TOKENS: ${MAX_SEQUENCE_TOKENS:-16384}
       MWS_IMAGE_REFERENCE: ${MWS_IMAGE_REFERENCE:-compactfactextraction-train:local}
@@ -35,6 +35,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    command: ["--output-dir", "/app/out/${RUN_NAME:-experiment-001}"]
+    command: ["--output-dir", "/app/out/${RUN_NAME:-experiment-001}", "--model", "/app/out/${MODEL_NAME:-merged-4090-baseline-001}"]
 volumes:
   hf-training-cache:

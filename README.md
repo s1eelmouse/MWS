@@ -1,3 +1,5 @@
+> Замеры готовой модели 4090 и диагностика отказов: [docs/MEASUREMENTS_4090.md](docs/MEASUREMENTS_4090.md).
+
 # CompactFactExtraction
 
 Компактный экстрактор фактов из русскоязычных транскриптов звонков в техподдержку.
@@ -14,7 +16,7 @@
 | [docs/RESULTS.md](docs/RESULTS.md) | Таблицы результатов для отчёта и из каких файлов их заполнять |
 
 Единый воспроизводимый запуск — обучение, merge, три режима замера и сравнение с базой:
-`python src/run_experiment.py --output-dir out/experiment-001`. Для уже обученной
+`python src/run_experiment.py --train-new --epochs 1 --output-dir out/experiment-001`. Для уже обученной
 модели добавьте `--model /path/to/merged-model`. Отдельная Docker-среда обучения:
 `Dockerfile.train` и `docker-compose.train.yml`.
 
@@ -102,7 +104,7 @@ HTTP-интерфейсом; отчёт с кривой «ресурсы × ка
 - Сборщик экспериментов: журнал обучения, замеры инференса на GPU и CPU по единой
   методике, сравнение с базой, CSV и график (`run_experiment.py`, `benchmark.py`,
   `compare_runs.py`). На реальном прогоне ещё не проверен.
-- 70 тестов на CPU, см. [docs/VALIDATION.md](docs/VALIDATION.md).
+- Локально 73 проверки прошли, 4 проверки с ML-зависимостями пропущены; см. [docs/VALIDATION.md](docs/VALIDATION.md).
 
 Замеры 14.11.2026 на Windows 10, RTX 4060 8 ГБ, torch 2.14.1+cu130:
 

@@ -2,7 +2,7 @@
 import threading
 
 from config import MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS
-from schema import as_call, parse_answer, source_problems, check_model_contract
+from schema import as_call, parse_answer_with_diagnostics, source_problems, check_model_contract
 from training_data import prompt_for
 
 
@@ -94,14 +94,19 @@ class Extractor:
                 details[index]["output_tokens"] = end if end is not None else len(tokens)
                 details[index]["generation_limit_reached"] = end is None and len(tokens) >= MAX_NEW_TOKENS
         for index, raw in zip(indices, answers):
+            facts, problem = parse_answer_with_diagnostics(raw)
             if details[index]["generation_limit_reached"]:
-                results[index] = {"error": "output_token_limit"}
-                continue
-            facts = parse_answer(raw)
-            if facts is None:
-                results[index] = {"error": "invalid_json"}
-            elif source_problems(facts, calls[index]):
-                results[index] = {"error": "invalid_source"}
+                problem = {"error": "output_token_limit", "reason": "max_new_tokens_without_eos",
+                           "parse_diagnostic": problem}
+            elif facts is not None:
+                problems = source_problems(facts, calls[index])
+                if problems:
+                    problem = {"error": "invalid_source", "reason": "source_validation",
+                               "source_problems": problems}
+            if problem:
+                results[index] = {"error": problem["error"]}
+                if measurements is not None:
+                    details[index]["diagnostic"] = {**problem, "raw_response": raw}
             else:
                 results[index] = facts.model_dump(mode="json")
         return results

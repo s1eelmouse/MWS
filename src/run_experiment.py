@@ -51,16 +51,19 @@ def stage(directory, name, argv):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--train-new", action="store_true", help="explicitly create a new adapter")
     parser.add_argument("--model", help="existing merged model: skip training and merge")
     parser.add_argument("--train", default=str(ROOT / "data/organizer/train.jsonl"))
     parser.add_argument("--val", default=str(ROOT / "data/organizer/val.jsonl"))
     parser.add_argument("--baseline-pred", default=str(ROOT / "data/organizer/baseline_pred.jsonl"))
-    parser.add_argument("--epochs", type=int, default=3)
+    parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--train-limit", type=int)
     parser.add_argument("--max-steps", type=int, default=-1)
     parser.add_argument("--eval-limit", type=int)
     parser.add_argument("--modes", nargs="+", default=["cuda:1", "cuda:4", "cpu:1"])
     args = parser.parse_args()
+    if bool(args.model) == args.train_new:
+        parser.error("Choose --model EXISTING_MERGED_MODEL or --train-new")
     if len(args.modes) < 3 or len(set(args.modes)) != len(args.modes):
         parser.error("Provide at least three distinct device:batch configurations")
     for mode in args.modes:

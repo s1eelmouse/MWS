@@ -1,3 +1,5 @@
+> Для текущей 4090-модели сначала используйте [MEASUREMENTS_4090.md](MEASUREMENTS_4090.md). Новый адаптер запускается только через --train-new.
+
 # Обучение и замеры по пункту 6 PLAN.md
 
 Ветка добавляет сбор результатов. Реальные CPU/GPU-замеры и Docker-прогон на сервере
@@ -104,16 +106,15 @@ CSV содержит стандартные `errors_*` и полный JSON в �
 ### Устойчивость к шуму
 
 `src/make_noisy_val.py` делает детерминированную копию val с дополнительным ASR-шумом
-вместо скрытого adversarial-подмножества; исходный файл не меняется:
+для локального стресс-теста (не замена скрытому adversarial-подмножеству); исходный файл не меняется:
 
 ```bash
 python src/make_noisy_val.py --input data/organizer/val.jsonl --output out/val-noisy-015.jsonl --level 0.15 --seed 42
-python src/run_experiment.py --output-dir out/noisy-001 --model out/merged --val out/val-noisy-015.jsonl
+python src/benchmark.py --output-dir out/noisy-001 --model out/merged --device cuda --batch-size 1 --input out/val-noisy-015.jsonl
 ```
 
 Меняются только тексты реплик; факты и `turn_idx` прежние, span и цитата обнуляются.
-База на шумной копии не пересчитывается по смыслу: её предсказания сделаны по чистому
-тексту, поэтому `comparison.csv` для такого прогона сравнивает с базой на чистом val.
+Для шумной копии используйте отдельный benchmark без compare_runs с исходными baseline-предсказаниями: учитель не запускался на изменённом тексте. Генератор может удалить важную информацию при неизменном gold; нужен ручной просмотр примеров.
 
 ## Запуск на Linux без Docker
 
@@ -125,9 +126,9 @@ uv venv --python 3.12
 source .venv/bin/activate
 uv pip install --torch-backend=auto torch -r requirements.txt -r requirements-cpu.txt
 python src/prepare_case.py --source-dir /path/to/organizer-package
-export MAX_INPUT_TOKENS=11000
+export MAX_INPUT_TOKENS=12288
 export BASE_MODEL=Qwen/Qwen3-0.6B
-python src/run_experiment.py --output-dir out/experiment-001
+python src/run_experiment.py --train-new --epochs 1 --output-dir out/experiment-001
 ```
 
 Данные должны быть в `data/organizer`. Папка `case_data` исключена из Docker build
@@ -139,7 +140,7 @@ context. В `.gitignore` она тоже есть, но в `main` её файл�
 Короткая проверка новой среды (не итоговая оценка):
 
 ```bash
-python src/run_experiment.py --output-dir out/smoke-001 \
+python src/run_experiment.py --train-new --output-dir out/smoke-001 \
   --train-limit 64 --max-steps 30 --eval-limit 20
 ```
 
@@ -176,8 +177,8 @@ mkdir -p out
 sudo chown 10001:10001 out
 export CODE_REVISION=$(git rev-parse HEAD)
 export RUN_NAME=experiment-001
-# Индекс выбирается под GPU и драйвер; cu128 — пример, не гарантия совместимости.
-export TORCH_INDEX_URL=https://download.pytorch.org/whl/cu128
+# Индекс выбирается под GPU и драйвер; cu130 — пример, не гарантия совместимости.
+export TORCH_INDEX_URL=https://download.pytorch.org/whl/cu130
 docker compose -f docker-compose.train.yml build
 docker compose -f docker-compose.train.yml up -d
 docker compose -f docker-compose.train.yml logs -f

@@ -36,7 +36,8 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     with MemorySampler(output / "memory.csv") as memory, \
             (output / "predictions.jsonl").open("x", encoding="utf-8") as pred_file, \
             (output / "calls.jsonl").open("x", encoding="utf-8") as call_file, \
-            (output / "batches.jsonl").open("x", encoding="utf-8") as batch_file:
+            (output / "batches.jsonl").open("x", encoding="utf-8") as batch_file, \
+            (output / "failures.jsonl").open("x", encoding="utf-8") as failure_file:
         for start in range(0, len(calls), batch_size):
             batch = calls[start:start + batch_size]
             details = []
@@ -67,11 +68,14 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
                           **by_id.get(call.call_id, {}),
                           "error": prediction.get("error"),
                           "completion_latency_seconds": elapsed}
+                diagnostic = record.pop("diagnostic", None)
+                if "error" in prediction:
+                    failure_file.write(json.dumps({**record, **(diagnostic or {})}, ensure_ascii=False) + "\n")
                 records.append(record)
                 predictions.append(prediction)
                 pred_file.write(json.dumps(prediction, ensure_ascii=False) + "\n")
                 call_file.write(json.dumps(record, ensure_ascii=False) + "\n")
-            for stream in (pred_file, call_file, batch_file):
+            for stream in (pred_file, call_file, batch_file, failure_file):
                 stream.flush()
             print(f"Measured {len(predictions)}/{len(calls)} calls", flush=True)
     seconds = sum(batch["seconds"] for batch in batches)
@@ -114,26 +118,41 @@ def main():
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--warmup-batches", type=int, default=1)
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--failures", help="diagnostic subset: JSONL containing call_id and error")
     parser.add_argument("--with-schema", action="store_true")
     parser.add_argument("--output-dir", required=True)
     args = parser.parse_args()
     if args.batch_size < 1 or args.warmup_batches < 1:
         parser.error("batch size and warmup batches must be positive")
-    rows = read_jsonl(args.input, args.limit)
+    rows = read_jsonl(args.input)
+    if args.failures:
+        failure_rows = read_jsonl(args.failures)
+        ids = {r["call_id"] for r in failure_rows if r.get("error")}
+        unknown = ids - {r["call_id"] for r in rows}
+        if unknown:
+            parser.error("Failure file contains unknown call IDs")
+        rows = [r for r in rows if r["call_id"] in ids]
+    if args.limit is not None:
+        if args.limit <= 0:
+            parser.error("--limit must be positive")
+        rows = rows[:args.limit]
     if not rows:
         parser.error("Empty input")
     for row in rows:
         validate_gold(row)
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=False)
-    report = {"protocol": "local-inference-v1", "settings": vars(args),
+    report = {"protocol": "local-inference-v2", "settings": vars(args),
               "dataset_sha256": file_digest(args.input),
               "selected_calls_sha256": hashlib.sha256(json.dumps([r["call_id"] for r in rows]).encode()).hexdigest(),
               "contract_signature": contract_signature(),
+              "diagnostic_subset": bool(args.failures),
+              "failures_sha256": file_digest(args.failures) if args.failures else None,
               "limits": {"input": MAX_INPUT_TOKENS, "output": MAX_NEW_TOKENS},
               "prompt_lookup_tokens": PROMPT_LOOKUP_TOKENS}
     try:
-        write_json(output / "environment.json", environment())
+        report["hardware"] = environment()
+        write_json(output / "environment.json", report["hardware"])
         report["model_artifacts"] = model_artifacts(args.model)
         report["model_weights_bytes"] = model_weights_bytes(report["model_artifacts"])
         from extractor import Extractor

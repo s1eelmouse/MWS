@@ -45,6 +45,8 @@ def comparison_rows(reports):
         raise ValueError("PLAN.md requires at least three measured configurations")
     keys = ("protocol", "dataset_sha256", "selected_calls_sha256", "contract_signature", "limits")
     for report in reports:
+        if report.get("diagnostic_subset"):
+            raise ValueError("Diagnostic failure subset cannot enter the resource-quality curve")
         if report.get("status") != "complete":
             raise ValueError("Incomplete/failed benchmark cannot enter comparison")
         if any(report[k] != reports[0][k] for k in keys):
@@ -53,6 +55,15 @@ def comparison_rows(reports):
             raise ValueError("Scorer differs")
         if report["warmup_batches"] != reports[0]["warmup_batches"]:
             raise ValueError("Warmup protocol differs")
+    for device in ("cpu", "cuda"):
+        same_device = [r for r in reports if r["settings"]["device"] == device]
+        hardware = [r.get("hardware") for r in same_device]
+        if hardware and all(hardware):
+            fields = ("cpu", "logical_cpus", "ram_bytes", "nvidia_smi")
+            if any(any(h.get(k) != hardware[0].get(k) for k in fields) for h in hardware):
+                raise ValueError("Hardware differs within the same device group")
+        if len({r.get("torch_threads") for r in same_device}) > 1:
+            raise ValueError("CPU thread settings differ within the same device group")
     variants = {(r["settings"]["model"], r["settings"]["device"], r["settings"]["batch_size"],
                  r["dtype"], r["prompt_lookup_tokens"]) for r in reports}
     if len(variants) < 3:

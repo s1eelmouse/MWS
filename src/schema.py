@@ -174,15 +174,28 @@ def to_answer(facts: list | dict) -> str:
     return json.dumps({"facts": result}, ensure_ascii=False, separators=(",", ":"))
 
 
-def parse_answer(raw: str) -> Facts | None:
+def parse_answer_with_diagnostics(raw: str):
     raw = raw.rsplit("</think>", 1)[-1]
     start, end = raw.find("{"), raw.rfind("}")
     if start < 0 or end <= start:
-        return None
+        return None, {"error": "invalid_json", "reason": "missing_json_object"}
+    candidate = raw[start:end + 1]
     try:
-        return Facts.model_validate_json(raw[start:end + 1])
-    except ValueError:
-        return None
+        payload = json.loads(candidate)
+    except json.JSONDecodeError as exc:
+        return None, {"error": "invalid_json", "reason": "json_syntax",
+                      "json_error": {"message": exc.msg, "line": exc.lineno,
+                                     "column": exc.colno, "position": exc.pos}}
+    try:
+        return Facts.model_validate(payload), None
+    except ValueError as exc:
+        return None, {"error": "invalid_schema", "reason": "schema_validation",
+                      "validation_errors": exc.errors(include_input=False, include_context=False,
+                                                      include_url=False)}
+
+
+def parse_answer(raw: str) -> Facts | None:
+    return parse_answer_with_diagnostics(raw)[0]
 
 
 def source_problems(facts: Facts, call: CallInput) -> list[str]:
