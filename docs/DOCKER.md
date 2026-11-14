@@ -4,9 +4,33 @@
 через `.dockerignore`; готовая merged-модель монтируется в `/models/merged`
 только для чтения. Контейнер работает от пользователя `app` (UID 10001).
 
-Статус: файлы подготовлены, но в среде проверки Docker отсутствовал. Образы
-не собирались, CPU/GPU-запуск и стек vLLM здесь не проверены. См.
-[VALIDATION.md](VALIDATION.md).
+Статус: CPU-образ собран и проверен на Ubuntu 24.04. `/health` отвечает 200,
+короткий `/extract` возвращает валидный JSON. Полный звонок с датами на CPU
+не уложился в 240 с — для живого демо нужен GPU или более длинный таймаут.
+GPU- и vLLM-варианты не проверялись. См. [VALIDATION.md](VALIDATION.md).
+
+## 0. Проверка 14.11.2026
+
+Стенд: Ubuntu 24.04, Docker 29.1.3, Compose 2.40.3, CPU-only контейнер.
+Образ `compactfactextraction:cpu` — 3,16 ГБ, модель
+`out/merged-4090-continue-003` смонтирована read-only в `/models/merged`.
+
+    sudo chmod 644 out/merged-4090-continue-003/model.safetensors
+    sudo docker run -d --name mws-cpu-test -p 18000:8000 \
+      -e JSON_CONSTRAINED=1 -e JSON_GRAMMAR_BACKEND=torch_native \
+      -e TEMPORAL_NORMALIZATION=task -e MAX_BATCH=1 -e MAX_NEW_TOKENS=256 \
+      -v "$PWD/out/merged-4090-continue-003:/models/merged:ro" \
+      compactfactextraction:cpu
+    curl -fsS http://127.0.0.1:18000/health
+
+Результат: `/health` 200, `constrained_json=true`; короткий звонок «Здравствуйте»
+вернул `{"call_id":"demo:cpu-min","facts":[]}` за 13 с. Полный синтетический
+звонок с «вчера/сегодня/в пятницу» на CPU не завершился за 240 с; это ограничение
+CPU-инференса, а не ошибка контейнера. Для демо дат использовать GPU.
+
+Важно: merged-модель после `merge.py` может иметь `model.safetensors` с правами
+`600`; пользователь контейнера 10001 не прочитает файл. Перед запуском:
+`chmod 644 .../model.safetensors`.
 
 ## 1. Подготовить модель
 
