@@ -60,6 +60,14 @@ class TaskModeTest(unittest.TestCase):
         result, _ = normalize_fact_dates([fact], call, mode='task')
         self.assertEqual(result[0]['valid_from'], '2026-03-03T00:00:00')
 
+    def test_action_uses_exact_cues_only(self):
+        call, fact = fixture('Вчира проверку баланса делала.', attribute='action',
+                             value='проверка баланса', valid_from='2026-01-01T00:00:00',
+                             start='2026-09-25T10:00:00')
+        result, decision = normalize_fact_dates([fact], call, mode='task')
+        self.assertEqual(result[0]['valid_from'], call.started_at)
+        self.assertEqual(decision[0]['reason'], 'action_assertion_time')
+
     def test_common_words_that_resemble_cues_are_not_rewritten(self):
         for text in ('Вечера ждали.', 'Путаницу устроили.', 'Над столом висит роутер.'):
             call, fact = fixture(text)

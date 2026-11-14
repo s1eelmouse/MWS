@@ -431,9 +431,10 @@ def _canonicalize_cues(text):
     return ''.join(parts)
 
 
-def _cue_dates(text, anchor, *, future=False):
+def _cue_dates(text, anchor, *, future=False, fuzzy=True):
     """Return (date, label, position) for explicit calendar cues in one clause."""
-    text = _canonicalize_cues(text)
+    if fuzzy:
+        text = _canonicalize_cues(text)
     lower = text.lower().replace('ё', 'е')
     found = []
     if not future and re.search(r'не\s+вчера\s+родил', lower):
@@ -536,7 +537,7 @@ def _task_action(fact, call, turn):
     chunks = _value_clauses(turn.text, fact['value']) or [turn.text]
     found = []
     for chunk in chunks:
-        found.extend(_cue_dates(chunk, anchor))
+        found.extend(_cue_dates(chunk, anchor, fuzzy=False))
     dates = sorted({item[0] for item in found})
     value = _iso_day(dates[0]) if len(dates) == 1 else call.started_at
     if fact.get('valid_from') == value:
