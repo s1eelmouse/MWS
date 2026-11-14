@@ -8,7 +8,7 @@
 Проверено локально в Python 3.12 с `xgrammar 0.2.9`, `transformers 5.23.0`,
 `torch 2.15.0`:
 
-- `python -m unittest discover -s tests`: **157 тестов, 152 успешно, 5 skipped**
+- `python -m unittest discover -s tests`: **175 тестов, 170 успешно, 5 skipped**
   после добавления режима `task`, переноса дат внутри серий и пакетного шага в
   benchmark; на сервере с torch/xgrammar проходят все 151. Пропущены только
   тесты с ML-зависимостями в CPU-окружении.
