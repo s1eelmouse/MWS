@@ -1,0 +1,31 @@
+{
+  "sha256": {
+    "train.jsonl": "041dacaa1f6974b2c5b915eaa0f58eeafa537b0c6aa77d5282df533677029d6a",
+    "val.jsonl": "a2cd8a6e3583e0c0db8cc700bef0387775ad44d0639723781cea2543baf7019e",
+    "baseline_pred.jsonl": "5e77ab38d2b96b9e31a3ed40487a2f5f592988108e9b34e8a172de3e87ca85f8",
+    "baseline_metrics.json": "595f6b740d865e4326ab9f22bbacff8d05402ba1e62c6ee476b9a4107ee132d8",
+    "catalog.json": "8977c2eacfe48cdccc41357436486718f9baa322514c2503d8c2ff557a5b52b3",
+    "schema.md": "8a864baaadbc4286a635f8454fee7de75bd90eae24bfc2d35a833daf597ae20e",
+    "case_metrics.py": "9a71a9bbe720bb235d3f190bf9d92f070a26edebab3df1214daba031af1a7afb",
+    "README.md": "5ef2bfd9ca975df00082ece70a4d14edc631f81253b9e9d832a5596cae9fca44"
+  },
+  "validation": {
+    "train": {
+      "calls": 3926,
+      "facts": 18475,
+      "invalid_calls": 0,
+      "errors": [],
+      "nonliteral_quote_warnings": 7365,
+      "nonempty_quotes": 10205
+    },
+    "val": {
+      "calls": 383,
+      "facts": 1845,
+      "invalid_calls": 0,
+      "errors": [],
+      "nonliteral_quote_warnings": 744,
+      "nonempty_quotes": 1039
+    }
+  },
+  "split_policy": "organizer train/val preserved; never re-split val"
+}

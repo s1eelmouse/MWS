@@ -1,0 +1,15 @@
+{
+  "learning_rate": 0.0002,
+  "lr_scheduler_type": "cosine",
+  "warmup_steps": 12,
+  "optim": "adamw_torch_fused",
+  "weight_decay": 0.0,
+  "adam_beta1": 0.9,
+  "adam_beta2": 0.999,
+  "adam_epsilon": 1e-08,
+  "gradient_accumulation_steps": 16,
+  "bf16": true,
+  "fp16": false,
+  "save_total_limit": 2,
+  "data_seed": 42
+}
