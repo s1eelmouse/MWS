@@ -1,0 +1,18 @@
+{
+  "metrics.json": {
+    "source_in_download": "out/benchmark-4090-continue-002/metrics.json",
+    "sha256": "4e2fdf37e12290c0f793b06cc0279e1c80eb174120f0a5e897845586ea2642bf"
+  },
+  "benchmark-report.json": {
+    "source_in_download": "out/benchmark-4090-continue-002/report.json",
+    "sha256": "f589d2ef1e854b3bad002abd48b7265c1011ac57a4b76b5184a4f791e330c9a9"
+  },
+  "experiment.json": {
+    "source_in_download": "out/4090-continue-002/experiment.json",
+    "sha256": "10207ada748356926d017dd1b671d1f50805ba90e643f678a68144b1d5add864"
+  },
+  "training-stats.json": {
+    "source_in_download": "out/4090-continue-002/training_stats_step_246_1794635466084848888.json",
+    "sha256": "17b6a4320cd5ccfc99a7c21dd7e408f13c1d421b7fbbe6e6c27b4cbe2932c14f"
+  }
+}

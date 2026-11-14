@@ -127,6 +127,15 @@ class MeasurementTest(unittest.TestCase):
             run_benchmark([CALL], backend, Path(temp), 1, 1)
         self.assertEqual(backend.resets, 1)
 
+    def test_benchmark_does_not_rewrite_predictions_after_measurement(self):
+        backend = FakeBackend()
+        backend.temporal_normalization = 'task'
+        with tempfile.TemporaryDirectory() as temp, patch(
+                'benchmark.apply_temporal_postprocess', side_effect=AssertionError('untimed rules')):
+            report = run_benchmark([CALL], backend, Path(temp), 1, 1)
+        self.assertEqual(report['temporal_postprocess']['stage'], 'backend.extract')
+        self.assertTrue(report['temporal_postprocess']['included_in_measurement'])
+
     def test_warmup_runtime_failure_remains_explicit(self):
         backend = FakeBackend()
         with tempfile.TemporaryDirectory() as temp, patch.object(

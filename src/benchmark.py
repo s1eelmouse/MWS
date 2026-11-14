@@ -16,6 +16,16 @@ from schema import as_call, contract_signature
 from training_data import file_digest
 
 
+def apply_temporal_postprocess(calls, predictions, mode, *, allow_series_history=False):
+    """Explicit CPU-only helper; runtime backends already normalize inside timing."""
+    if mode not in ('conservative', 'task', 'binding'):
+        return predictions, {}, []
+    from postprocess_dates import process_predictions
+    processed, audit, counts = process_predictions(
+        calls, predictions, mode=mode, allow_series_history=allow_series_history)
+    return processed, counts, audit
+
+
 def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda: None):
     """Backend receives CallInput only; labels stay exclusively in the evaluator."""
     calls = [as_call(row) for row in rows]
@@ -84,6 +94,15 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     seconds = sum(batch["seconds"] for batch in batches)
     if memory.error:
         raise RuntimeError(f"Memory sampling failed: {memory.error}")
+    # Preserve the same output as HTTP: all rules run in backend.extract and
+    # count towards measured latency. Never rewrite predictions after timing.
+    temporal_audit = []
+    for record in records:
+        temporal_audit.extend({'call_id': record['call_id'], 'component': 'temporal', **d}
+                              for d in record.get('temporal_decisions', []))
+        temporal_audit.extend(record.get('series_decisions', []))
+    if temporal_audit:
+        write_jsonl(output / "temporal-audit.jsonl", temporal_audit)
     quality, errors = evaluate_predictions(rows, predictions)
     write_json(output / "metrics.json", quality)
     write_jsonl(output / "errors.jsonl", errors)
@@ -98,6 +117,9 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     return {"calls": len(calls), "failed_calls": failed,
             "error_counts": error_counts,
             "normalization_counts": dict(normalization_counts),
+            "temporal_postprocess": {"stage": "backend.extract", "included_in_measurement": True,
+                                     "mode": getattr(backend, "temporal_normalization", "off"),
+                                     "series_history_enabled": bool(getattr(backend, "series_history_enabled", False))},
             "warmup_batches": warmup_batches, "warmup_seconds": warmup_seconds,
             "warmup_errors": warmup_errors,
             "measurement_seconds": seconds,

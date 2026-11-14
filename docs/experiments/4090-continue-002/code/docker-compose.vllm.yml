@@ -1,0 +1,64 @@
+# Optional vLLM stack: vLLM serves the merged model, the small API image forwards calls.
+#   docker compose -f docker-compose.vllm.yml up --build
+name: compactfactextraction-vllm
+
+services:
+  vllm:
+    image: ${VLLM_IMAGE:-vllm/vllm-openai:latest}
+    command:
+      - --model
+      - /models/merged
+      - --served-model-name
+      - extractor
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8001"
+      - --max-model-len
+      - "${VLLM_MAX_MODEL_LEN:-16384}"
+    ipc: host
+    volumes:
+      - type: bind
+        source: ${MODEL_PATH:-./out/merged}
+        target: /models/merged
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: volume
+        source: hf-cache
+        target: /root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 300s
+      retries: 3
+
+  extractor:
+    build:
+      context: .
+      target: api
+    image: compactfactextraction:${TAG:-vllm-api}
+    init: true
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      # /health reports the backend model name instead of a local model directory.
+      MODEL_DIR: extractor
+      VLLM_URL: http://vllm:8001/v1
+      VLLM_MODEL: extractor
+      MAX_BATCH: ${MAX_BATCH:-1}
+    depends_on:
+      vllm:
+        condition: service_healthy
+
+volumes:
+  hf-cache:

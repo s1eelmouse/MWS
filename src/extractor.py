@@ -10,7 +10,7 @@ from config import (CATALOG_PATH, JSON_CONSTRAINED, JSON_GRAMMAR_BACKEND, JSON_G
                     TEMPORAL_SERIES_HISTORY, TEMPORAL_SERIES_MAX_ENTRIES)
 from catalog_normalization import load_catalog
 from json_constraints import GrammarLogitsProcessor, compile_json_grammar
-from prediction import parse_prediction
+from prediction import parse_prediction, salvage_sources
 from schema import as_call, check_model_contract, source_problems
 from training_data import prompt_for
 from series_history import SeriesDateMemory
@@ -201,8 +201,16 @@ class Extractor:
             elif facts is not None:
                 problems = source_problems(facts, calls[index])
                 if problems:
-                    problem = {"error": "invalid_source", "reason": "source_validation",
-                               "source_problems": problems}
+                    salvaged, dropped = salvage_sources(facts, calls[index])
+                    if salvaged is None:
+                        problem = {"error": "invalid_source", "reason": "source_validation",
+                                   "source_problems": problems}
+                    else:
+                        facts = salvaged
+                        normalization = dict(normalization or {})
+                        normalization["invalid_source_facts_dropped"] = (
+                            normalization.get("invalid_source_facts_dropped", 0) + dropped)
+                        details[index]["normalization"] = normalization
             if problem:
                 results[index] = {"error": problem["error"]}
                 if measurements is not None:

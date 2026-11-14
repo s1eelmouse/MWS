@@ -7,6 +7,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from benchmark import apply_temporal_postprocess
 from postprocess_dates import process_predictions
 from prediction import parse_prediction
 from schema import as_call
@@ -47,6 +48,32 @@ class TaskModeTest(unittest.TestCase):
                              value='выезд специалиста', valid_from='2026-02-27T00:00:00')
         result, _ = normalize_fact_dates([fact], call, mode='task')
         self.assertEqual(result[0]['valid_from'], '2026-03-02T00:00:00')
+
+    def test_asr_variants_of_cues_are_recovered(self):
+        call, fact = fixture('Вчира заявку приняли.')
+        result, _ = normalize_fact_dates([fact], call, mode='task')
+        self.assertEqual(result[0]['valid_from'], '2026-02-28T00:00:00')
+
+        call, fact = fixture('Чирез два дня мастер приедет.', attribute='agreement',
+                             value='выезд специалиста', valid_from='2026-02-27T00:00:00',
+                             start='2026-03-01T12:00:00')
+        result, _ = normalize_fact_dates([fact], call, mode='task')
+        self.assertEqual(result[0]['valid_from'], '2026-03-03T00:00:00')
+
+    def test_action_uses_exact_cues_only(self):
+        call, fact = fixture('Вчира проверку баланса делала.', attribute='action',
+                             value='проверка баланса', valid_from='2026-01-01T00:00:00',
+                             start='2026-09-25T10:00:00')
+        result, decision = normalize_fact_dates([fact], call, mode='task')
+        self.assertEqual(result[0]['valid_from'], call.started_at)
+        self.assertEqual(decision[0]['reason'], 'action_assertion_time')
+
+    def test_common_words_that_resemble_cues_are_not_rewritten(self):
+        for text in ('Вечера ждали.', 'Путаницу устроили.', 'Над столом висит роутер.'):
+            call, fact = fixture(text)
+            result, decision = normalize_fact_dates([fact], call, mode='task')
+            self.assertEqual(result, [fact], text)
+            self.assertIn(decision[0]['reason'], ('task_mode_left_unchanged', 'already_consistent'))
 
     def test_negative_fact_is_not_redated(self):
         call, fact = fixture('Вчера заявку приняли.')
@@ -99,6 +126,31 @@ class TaskModeTest(unittest.TestCase):
         self.assertEqual(by_id['series:2']['facts'][0]['valid_from'], '2026-03-01T00:00:00')
         self.assertEqual(counts.get('series_accepted_carried'), 1)
         self.assertTrue(any(item.get('component') == 'series' for item in audit))
+
+    def test_benchmark_postprocess_applies_series_carry(self):
+        first = as_call({'call_id': 'bench:0', 'started_at': '2026-03-01T12:00:00',
+                         'series': {'account_id': 'account-a', 'call_index': 0},
+                         'turns': [{'idx': 42, 'speaker': 'operator', 'text': 'Заявка принята.'}]})
+        second = as_call({'call_id': 'bench:1', 'started_at': '2026-03-05T12:00:00',
+                          'series': {'account_id': 'account-a', 'call_index': 1},
+                          'turns': [{'idx': 42, 'speaker': 'operator', 'text': 'Заявка принята.'}]})
+        base = {'object': {'name': 'заявка', 'type': 'ticket', 'id': 'ticket:1'},
+                'attribute': 'ticket_status', 'value': 'принята', 'polarity': 1,
+                'valid_from': '2026-01-05T00:00:00', 'valid_to': None,
+                'source': {'turn_idx': 42}, 'speaker': 'operator'}
+        second_fact = {**copy.deepcopy(base), 'valid_from': '2026-02-01T00:00:00'}
+        predictions = [{'call_id': 'bench:0', 'facts': [base]},
+                       {'call_id': 'bench:1', 'facts': [second_fact]}]
+        processed, counts, audit = apply_temporal_postprocess(
+            [first, second], predictions, 'task', allow_series_history=True)
+        self.assertEqual(processed[1]['facts'][0]['valid_from'], '2026-01-05T00:00:00')
+        self.assertEqual(counts.get('series_accepted_carried'), 1)
+        self.assertTrue(any(item.get('component') == 'series' for item in audit))
+        same, empty_counts, empty_audit = apply_temporal_postprocess(
+            [first, second], predictions, 'off')
+        self.assertIs(same, predictions)
+        self.assertEqual(empty_counts, {})
+        self.assertEqual(empty_audit, [])
 
     def test_mode_off_preserves_model_dates(self):
         call, fact = fixture('Вчера заявку приняли.')

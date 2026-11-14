@@ -10,14 +10,17 @@
 
 ## 1. Подготовить модель
 
-Docker не обучает и не сливает адаптер. Сначала выполните команды из разделов
-8–9 [README.md](../README.md), например:
+Docker не обучает и не сливает адаптер. Для финальной модели:
 
-    python src/train.py --limit 64 --max-steps 30 --batch-size 1 --output-dir out/smoke-001
-    python src/merge.py --adapter-dir out/smoke-001 --output out/merged
+    python src/merge.py --adapter-dir out/4090-continue-002 --output out/merged-4090-continue-002
+    docker run --rm -p 8000:8000 \
+      -v "$PWD/out/merged-4090-continue-002:/models/merged:ro" compactfactextraction:cpu
 
-`out/merged` должен содержать `case_contract.json`; иначе `serve.py` откажется
-загружать модель как несовместимую с текущей схемой.
+`out/merged-4090-continue-002` должен содержать `case_contract.json`; иначе
+`serve.py` откажется загружать модель как несовместимую с текущей схемой.
+Рецепт и метрики — [MODEL.md](MODEL.md). Для быстрой проверки цепочки можно
+собрать smoke-адаптер (`--limit 64 --max-steps 30`), но он не является
+финальной моделью.
 
 ## 2. CPU
 
@@ -40,7 +43,7 @@ Docker не обучает и не сливает адаптер. Сначала
 
     docker build --target extractor -t compactfactextraction:cpu .
     docker run --rm -p 8000:8000 \
-      -v "$PWD/out/merged:/models/merged:ro" compactfactextraction:cpu
+      -v "$PWD/out/merged-4090-continue-002:/models/merged:ro" compactfactextraction:cpu
 
 ## 3. NVIDIA GPU
 
@@ -80,7 +83,7 @@ float16. Это не заменяет измерение памяти и ско�
 
 | Переменная | По умолчанию | Назначение |
 | --- | --- | --- |
-| `MODEL_PATH` | `./out/merged` | каталог merged-модели на хосте, монтируется только для чтения |
+| `MODEL_PATH` | `./out/merged-4090-continue-002` | каталог merged-модели на хосте, монтируется только для чтения |
 | `PORT` | `8000` | порт API на хосте |
 | `MAX_BATCH` | `1` | размер пачки для backend |
 | `WITH_SCHEMA` | `0` | `1` добавляет JSON-схему в prompt; не включать для модели, обученной без неё |
