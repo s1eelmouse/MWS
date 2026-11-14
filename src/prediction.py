@@ -84,9 +84,9 @@ def normalize_prediction(raw: RawFacts, call: CallInput, *, temporal_mode=None,
         if catalog_changes:
             summary['catalog_fields_normalized'] = len(catalog_changes)
     temporal_mode = TEMPORAL_NORMALIZATION if temporal_mode is None else temporal_mode
-    if temporal_mode not in ('off', 'conservative', 'task'):
+    if temporal_mode not in ('off', 'conservative', 'task', 'binding'):
         raise ValueError('Unknown temporal normalization mode')
-    if temporal_mode in ('conservative', 'task'):
+    if temporal_mode in ('conservative', 'task', 'binding'):
         items, decisions = normalize_fact_dates(items, call, mode=temporal_mode)
         if temporal_decisions is not None:
             temporal_decisions.extend(decisions)

@@ -93,7 +93,7 @@ class TaskModeTest(unittest.TestCase):
             [{'call_id': 'series:0', 'facts': [base]},
              {'call_id': 'series:1', 'facts': [second_fact]},
              {'call_id': 'series:2', 'facts': [other_fact]}],
-            mode='task')
+            mode='task', allow_series_history=True)
         by_id = {row['call_id']: row for row in output}
         self.assertEqual(by_id['series:1']['facts'][0]['valid_from'], '2026-01-05T00:00:00')
         self.assertEqual(by_id['series:2']['facts'][0]['valid_from'], '2026-03-01T00:00:00')

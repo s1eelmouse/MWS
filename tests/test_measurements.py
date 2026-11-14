@@ -107,6 +107,26 @@ class MeasurementTest(unittest.TestCase):
             self.assertEqual(report["failed_calls"], 1)
             self.assertEqual(report["quality"]["diagnostics"]["format_valid_rate"], 0)
 
+    def test_history_is_reset_between_warmup_and_measurement(self):
+        class Backend(FakeBackend):
+            warmed = False
+            resets = 0
+
+            def extract(self, calls, batch_size, measurements):
+                if self.batches == 1:
+                    assert not self.warmed, 'Warmup history reached measurement'
+                self.warmed = True
+                return super().extract(calls, batch_size, measurements)
+
+            def reset_series_history(self):
+                self.warmed = False
+                self.resets += 1
+
+        backend = Backend()
+        with tempfile.TemporaryDirectory() as temp:
+            run_benchmark([CALL], backend, Path(temp), 1, 1)
+        self.assertEqual(backend.resets, 1)
+
     def test_warmup_runtime_failure_remains_explicit(self):
         backend = FakeBackend()
         with tempfile.TemporaryDirectory() as temp, patch.object(

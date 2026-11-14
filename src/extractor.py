@@ -6,12 +6,14 @@ from pathlib import Path
 
 from config import (CATALOG_PATH, JSON_CONSTRAINED, JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS,
                     MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS,
-                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY, TEMPORAL_NORMALIZATION)
+                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY, TEMPORAL_NORMALIZATION,
+                    TEMPORAL_SERIES_HISTORY, TEMPORAL_SERIES_MAX_ENTRIES)
 from catalog_normalization import load_catalog
 from json_constraints import GrammarLogitsProcessor, compile_json_grammar
 from prediction import parse_prediction
 from schema import as_call, check_model_contract, source_problems
 from training_data import prompt_for
+from series_history import SeriesDateMemory
 
 
 class Extractor:
@@ -22,6 +24,8 @@ class Extractor:
         self.torch = torch
         self.with_schema = with_schema
         self.temporal_normalization = TEMPORAL_NORMALIZATION
+        self.series_history_enabled = TEMPORAL_SERIES_HISTORY
+        self.series_memory = SeriesDateMemory(TEMPORAL_SERIES_MAX_ENTRIES) if TEMPORAL_SERIES_HISTORY else None
         self.catalog_sha256 = None
         if CATALOG_PATH:
             load_catalog(CATALOG_PATH)
@@ -71,7 +75,24 @@ class Extractor:
             # Benchmarks must not silently change the requested batch on OOM.
             results.extend(self._extract_safely(batch) if measurements is None
                            else self._extract_batch(batch, measurements))
+        memory = getattr(self, 'series_memory', None)
+        if memory is not None:
+            results, events, _ = memory.apply(calls, results)
+            if measurements is not None:
+                by_id = {row['call_id']: row for row in measurements}
+                for event in events:
+                    record = by_id.get(event['call_id'])
+                    if record is not None:
+                        record.setdefault('series_decisions', []).append(event)
+                        if event.get('status') == 'changed':
+                            counts = record.setdefault('normalization', {})
+                            counts['series_accepted_carried'] = counts.get('series_accepted_carried', 0) + 1
         return results
+
+    def reset_series_history(self):
+        memory = getattr(self, 'series_memory', None)
+        if memory is not None:
+            memory.clear()
 
     def _extract_safely(self, calls):
         try:

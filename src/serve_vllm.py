@@ -2,7 +2,8 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
 
-from config import MAX_NEW_TOKENS
+from config import MAX_NEW_TOKENS, TEMPORAL_SERIES_HISTORY, TEMPORAL_SERIES_MAX_ENTRIES
+from series_history import SeriesDateMemory
 from llm_api import chat
 from prediction import parse_prediction
 from schema import Facts, build_messages, source_problems
@@ -14,6 +15,10 @@ ANSWER_FORMAT = {"type": "json_schema",
 
 class VLLMExtractor:
     constrained_json = True  # response_format asks vLLM for schema-guided decoding
+
+    def __init__(self):
+        self.series_history_enabled = TEMPORAL_SERIES_HISTORY
+        self.series_memory = SeriesDateMemory(TEMPORAL_SERIES_MAX_ENTRIES) if TEMPORAL_SERIES_HISTORY else None
 
     def extract(self, calls, batch_size=1):
         def ask(call):
@@ -32,7 +37,10 @@ class VLLMExtractor:
                 return {"error": "invalid_source"}
             return facts.model_dump(mode="json")
         with ThreadPoolExecutor(max_workers=min(8, len(calls) or 1)) as pool:
-            return list(pool.map(ask, calls))
+            results = list(pool.map(ask, calls))
+        if self.series_memory is not None:
+            results, _, _ = self.series_memory.apply(calls, results)
+        return results
 
 
 app = create_app(VLLMExtractor())

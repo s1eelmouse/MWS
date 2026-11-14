@@ -31,6 +31,8 @@ def main():
     from extractor import Extractor
     extractor = Extractor(args.model, args.with_schema)
     extractor.extract(calls[:1])  # warmup, excluded from timing
+    if hasattr(extractor, 'reset_series_history'):
+        extractor.reset_series_history()
     output.parent.mkdir(parents=True, exist_ok=True)
     completed = failed = 0
     start = time.perf_counter()
@@ -54,6 +56,7 @@ def main():
         "batch_size": args.batch_size, "with_schema": args.with_schema,
         "constrained_json": bool(getattr(extractor, "constrained_json", False)),
         "temporal_normalization": getattr(extractor, "temporal_normalization", "off"),
+        "series_history_enabled": bool(getattr(extractor, "series_history_enabled", False)),
         "catalog_sha256": getattr(extractor, "catalog_sha256", None),
         "grammar_compile_seconds": getattr(extractor, "grammar_compile_seconds", None),
     }

@@ -11,18 +11,15 @@ from case_io import read_jsonl, write_jsonl
 from catalog_normalization import load_catalog, normalize_catalog_facts
 from schema import Facts, as_call, contract_signature, source_problems
 from temporal import normalize_fact_dates
-
-
-def _series_key(call):
-    series = call.series or {}
-    return (0, series.get('account_id', call.call_id), series.get('call_index', 0), call.call_id) \
-        if series else (1, call.call_id, 0, call.call_id)
+from series_history import SeriesDateMemory
 
 
 def process_predictions(calls, predictions, *, mode='conservative', catalog=None,
-                        deduplicate=False, speaker_from_source=False):
-    if mode not in ('off', 'conservative', 'task'):
+                        deduplicate=False, speaker_from_source=False, allow_series_history=False):
+    if mode not in ('off', 'conservative', 'task', 'binding'):
         raise ValueError('Unknown temporal mode')
+    if allow_series_history and mode not in ('task', 'binding'):
+        raise ValueError('Series history requires task or binding mode')
     by_id = {row['call_id']: row for row in predictions}
     if len(by_id) != len(predictions) or len({call.call_id for call in calls}) != len(calls):
         raise ValueError('Duplicate call IDs')
@@ -30,8 +27,7 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
         raise ValueError('Inputs and predictions must contain the same call IDs')
     output, audit, counts = [], [], Counter()
     processed = {}
-    carried = {}
-    for call in sorted(calls, key=_series_key):
+    for call in calls:
         row = copy.deepcopy(by_id[call.call_id])
         if row.get('error'):
             processed[call.call_id] = row
@@ -42,7 +38,7 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
             items, decisions = normalize_catalog_facts(items, catalog)
             audit.extend({'call_id': call.call_id, 'component': 'catalog', **d} for d in decisions)
             counts['catalog_fields_normalized'] += len(decisions)
-        if mode in ('conservative', 'task'):
+        if mode in ('conservative', 'task', 'binding'):
             items, decisions = normalize_fact_dates(items, call, mode=mode)
             audit.extend({'call_id': call.call_id, 'component': 'temporal', **d} for d in decisions)
             for d in decisions:
@@ -66,24 +62,6 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
                 continue
             seen.add(key)
             final.append(item)
-        if mode == 'task' and call.series:
-            account = call.series.get('account_id', call.call_id)
-            for index, item in enumerate(final):
-                if item.get('attribute') != 'ticket_status':
-                    continue
-                if item.get('value', '').strip().lower() != 'принята':
-                    continue
-                key = (account, item['object'].get('name', '').strip().lower())
-                previous = carried.get(key)
-                if previous and item.get('valid_from') != previous:
-                    if not item.get('valid_to') or previous <= item['valid_to']:
-                        audit.append({'call_id': call.call_id, 'component': 'series',
-                                      'fact_index': index, 'field': 'valid_from',
-                                      'before': item.get('valid_from'), 'after': previous,
-                                      'reason': 'accepted_status_carried_within_series'})
-                        item['valid_from'] = previous
-                        counts['series_accepted_carried'] += 1
-                carried[key] = item.get('valid_from')
         parsed = Facts.model_validate({'facts': final})
         problems = source_problems(parsed, call)
         if problems:
@@ -91,6 +69,13 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
         row['facts'] = final
         processed[call.call_id] = row
     output = [processed[call.call_id] for call in calls]
+    if allow_series_history:
+        output, history_events, history_counts = SeriesDateMemory().apply(calls, output)
+        audit.extend(history_events)
+        counts.update(history_counts)
+        for call, row in zip(calls, output):
+            if not row.get('error'):
+                Facts.model_validate({'facts': row['facts']})
     return output, audit, dict(counts)
 
 
@@ -99,10 +84,12 @@ def main():
     parser.add_argument('--input', required=True, help='calls; gold fields are stripped at the boundary')
     parser.add_argument('--pred', required=True)
     parser.add_argument('--output-dir', required=True)
-    parser.add_argument('--mode', choices=['off', 'conservative', 'task'], default='task')
+    parser.add_argument('--mode', choices=['off', 'conservative', 'task', 'binding'], default='task')
     parser.add_argument('--catalog', help='optional exact catalog normalization; separate from date-only A/B')
     parser.add_argument('--deduplicate', action='store_true')
     parser.add_argument('--speaker-from-source', action='store_true')
+    parser.add_argument('--allow-series-history', action='store_true',
+                        help='use earlier calls of the same identified ticket/account; default matches stateless HTTP')
     args = parser.parse_args()
     output = Path(args.output_dir)
     if output.exists():
@@ -115,7 +102,8 @@ def main():
     start = time.perf_counter()
     results, audit, counts = process_predictions(
         calls, predictions, mode=args.mode, catalog=resolver,
-        deduplicate=args.deduplicate, speaker_from_source=args.speaker_from_source)
+        deduplicate=args.deduplicate, speaker_from_source=args.speaker_from_source,
+        allow_series_history=args.allow_series_history)
     elapsed = time.perf_counter() - start
     manifest = {
         'settings': vars(args), 'calls': len(calls), 'counts': counts,
@@ -124,8 +112,10 @@ def main():
         'prediction_sha256': hashlib.sha256(Path(args.pred).read_bytes()).hexdigest(),
         'catalog_sha256': hashlib.sha256(Path(args.catalog).read_bytes()).hexdigest() if args.catalog else None,
         'source_sha256': {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                          for name in ['temporal.py', 'catalog_normalization.py', 'postprocess_dates.py']},
+                          for name in ['temporal.py', 'temporal_binding.py', 'series_history.py',
+                                       'catalog_normalization.py', 'postprocess_dates.py']},
         'gold_fields_passed_to_rules': False,
+        'history_scope': 'earlier_same_account_ticket' if args.allow_series_history else 'single_call',
     }
     output.mkdir(parents=True, exist_ok=False)
     write_jsonl(output / 'predictions.jsonl', results)

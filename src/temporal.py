@@ -553,23 +553,31 @@ def repair_task_dates(fact, call):
 
 def normalize_fact_dates(facts, call, mode='conservative'):
     """No mutation, dropping, reordering or access to gold labels."""
-    if mode not in ('conservative', 'task'):
-        raise ValueError('temporal mode must be conservative or task')
+    if mode not in ('conservative', 'task', 'binding'):
+        raise ValueError('temporal mode must be conservative, task or binding')
     owners = {}
+    source_owners = {}
     for fact in facts:
         key = (fact['source']['turn_idx'], fact['attribute'], _norm(fact['value']))
         obj = fact['object']
         owners.setdefault(key, set()).add((obj.get('id'), _norm(obj['name']), obj.get('type')))
+        source_owners.setdefault((fact['source']['turn_idx'], fact['attribute']), set()).add(
+            (obj.get('id'), _norm(obj['name']), obj.get('type')))
     output, decisions = [], []
     for index, fact in enumerate(facts):
         key = (fact['source']['turn_idx'], fact['attribute'], _norm(fact['value']))
-        if len(owners[key]) > 1:
+        ambiguous_source = (mode == 'binding' and fact['attribute'] == 'ticket_status'
+                            and len(source_owners[(fact['source']['turn_idx'], fact['attribute'])]) > 1)
+        if len(owners[key]) > 1 or ambiguous_source:
             item = copy.deepcopy(fact)
             decision = {'attribute': fact['attribute'], 'source_turn_idx': fact['source']['turn_idx'],
                         'status': 'abstained', 'reason': 'multiple_objects_same_evidence',
                         'changes': [], 'evidence': []}
         elif mode == 'conservative':
             item, decision = repair_fact_dates(fact, call)
+        elif mode == 'binding':
+            from temporal_binding import repair_bound_dates
+            item, decision = repair_bound_dates(fact, call)
         else:
             item, decision = repair_task_dates(fact, call)
         output.append(item)

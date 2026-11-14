@@ -31,6 +31,8 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
                              for call, result in zip(calls[:batch_size], warmup) if "error" in result)
     sync()
     warmup_seconds = time.perf_counter() - warmup_start
+    if hasattr(backend, 'reset_series_history'):
+        backend.reset_series_history()
     torch = getattr(backend, "torch", None)
     if backend.device == "cuda":
         torch.cuda.reset_peak_memory_stats()
@@ -171,6 +173,7 @@ def main():
         report["model_load_seconds"] = time.perf_counter() - load_start
         report["constrained_json"] = bool(getattr(backend, "constrained_json", False))
         report["temporal_normalization"] = getattr(backend, "temporal_normalization", "off")
+        report["series_history_enabled"] = bool(getattr(backend, "series_history_enabled", False))
         report["catalog_sha256"] = getattr(backend, "catalog_sha256", None)
         report["grammar_compile_seconds"] = getattr(backend, "grammar_compile_seconds", None)
         report["model_parameters"] = backend.model.num_parameters()

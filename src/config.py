@@ -41,9 +41,15 @@ PROMPT_LOOKUP_TOKENS = int(os.getenv("PROMPT_LOOKUP_TOKENS", "0"))
 # Deterministic date binding. "task" uses explicit text cues and the call timestamp;
 # "conservative" is the earlier, narrower rule set; "off" preserves model dates.
 TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "task").strip().lower()
-if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task"):
-    raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative or task")
+if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task", "binding"):
+    raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative, task or binding")
 CATALOG_PATH = os.getenv("CATALOG_PATH", "").strip()
+TEMPORAL_SERIES_HISTORY = os.getenv("TEMPORAL_SERIES_HISTORY", "0").strip().lower() not in ("0", "false", "no", "off")
+TEMPORAL_SERIES_MAX_ENTRIES = int(os.getenv("TEMPORAL_SERIES_MAX_ENTRIES", "10000"))
+if TEMPORAL_SERIES_MAX_ENTRIES < 1:
+    raise ValueError("TEMPORAL_SERIES_MAX_ENTRIES must be positive")
+if TEMPORAL_SERIES_HISTORY and TEMPORAL_NORMALIZATION not in ('task', 'binding'):
+    raise ValueError("TEMPORAL_SERIES_HISTORY requires task or binding mode")
 
 # Печать не должна ронять скрипт из-за символа, которого нет в кодировке консоли Windows.
 for _stream in (sys.stdout, sys.stderr):
