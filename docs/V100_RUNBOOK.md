@@ -12,7 +12,9 @@
 - `data/organizer_v2_1/` (train/val/catalog, ~34 МБ);
 - одна merged-модель:
   - кандидат `out/merged-4090-continue-004-v21`;
-  - fallback `out/merged-4090-continue-002` (если 004 ещё нет).
+  - fallback `out/merged-4090-continue-003` — на сохранённых предсказаниях
+    с recovery даёт T 0.4663, S 0.5152; если 4090 недоступен, использовать его;
+  - `out/merged-4090-continue-002` — старый fallback.
 
 Если есть доступ с V100 к 4090:
 
@@ -21,12 +23,17 @@ rsync -az ubuntu@<4090-host>:/home/ubuntu/mws-v21/ ~/mws-v21/
 # внутри уже есть data/organizer_v2_1 и out/merged-...
 ```
 
-Иначе попросить архив `v100-bundle.tar.gz` и распаковать:
+Иначе использовать готовый `v100-bundle-003.tar.gz` (код + data 2.1 +
+merged-003; 1019 МБ, SHA256
+`bf62eefcd9265dea47ad3ebc2476f7ef2194742f200c5642edd29b4a2cf85728`,
+локально `/home/user/hackathon/artifacts-4090/`) и распаковать:
 
 ```bash
-tar xzf v100-bundle.tar.gz -C ~/mws-v21
+mkdir -p ~/mws-v21 && tar xzf v100-bundle-003.tar.gz -C ~/mws-v21
 cd ~/mws-v21
 ```
+
+Bundle содержит gold train/val; передавать только внутри команды, не публиковать.
 
 ## 2. Окружение
 
@@ -97,7 +104,9 @@ export CATALOG_PATH=data/organizer_v2_1/catalog.json
 ```
 
 Проверить: `failed_calls = 0`, `format_valid_rate = 1.0`, `temporal_normalization
-= task`. Если 004 ещё не готов, заменить модель на `merged-4090-continue-002`.
+= task`. Если 004 ещё не готов или 4090 недоступен, заменить модель на
+`merged-4090-continue-003` (fallback; с recovery T 0.4663/S 0.5152 на
+сохранённых предсказаниях).
 
 ## 5. Полный val, если preview живой
 
@@ -133,6 +142,17 @@ export CATALOG_PATH=data/organizer_v2_1/catalog.json
 
 Если получился полный val — `report.json`, `metrics.json`, `predictions.jsonl`.
 
+Собрать всё в один архив:
+
+```bash
+.venv/bin/pip freeze > v100-pip-freeze.txt
+tar czf v100-results.tar.gz --ignore-failed-read v100-doctor.json v100-pip-freeze.txt \
+  out/v100-smoke-001.log out/v100-smoke-001/experiment.json \
+  out/v100-preview-001/report.json out/v100-preview-001/metrics.json \
+  out/v100-full-001/report.json out/v100-full-001/metrics.json
+```
+
+Прислать `v100-results.tar.gz` и `sha256sum v100-results.tar.gz`.
 Не нужно присылать веса и большие логи. Достаточно отчётов и хешей.
 
 ## 7. Ограничения
@@ -142,3 +162,6 @@ export CATALOG_PATH=data/organizer_v2_1/catalog.json
 - vLLM/FlashAttention на V100 не гарантированы; сервис — Transformers.
 - 1.7B не тренировать без письменного разрешения и проверки лимита 1,5B.
 - Не смешивать скорость V100 с 4090; качество на одном и том же val должно совпасть.
+- 4090 дважды уходил в ребут при работе с Docker; не запускать Docker-сборку на
+  нём до сдачи. Docker уже собран и проверен на `/health`/коротком `/extract`;
+  для повторной проверки использовать V100 или отдельную машину.
