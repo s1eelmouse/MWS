@@ -70,7 +70,9 @@ class DiagnosticTest(unittest.TestCase):
             generate=lambda **kwargs: Tokens([[1,3,6,2,0]]*3+[[1,3,6,7,8]]))
         calls=[{**CALL,'call_id':f'synthetic:{i}'} for i in range(4)]
         details=[]
-        with patch('extractor.prompt_for',return_value='prompt'), patch('extractor.MAX_NEW_TOKENS',3):
+        with patch('extractor.prompt_for',return_value='prompt'), \
+                patch('extractor.MAX_NEW_TOKENS',3), \
+                patch('extractor.RETRY_ON_TOKEN_LIMIT',False):
             answers=backend.extract(calls,4,details)
         self.assertEqual([x['error'] for x in answers],['invalid_json','invalid_schema','invalid_source','output_token_limit'])
         self.assertEqual([x['diagnostic']['raw_response'] for x in details],raw)

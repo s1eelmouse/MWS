@@ -3,6 +3,7 @@
 Меняйте значения здесь или задавайте переменные окружения с теми же именами.
 Пример для PowerShell:  $env:BASE_MODEL = "Qwen/Qwen3-0.6B"
 """
+import math
 import os
 import sys
 
@@ -25,6 +26,13 @@ if JSON_GRAMMAR_THREADS < 1:
     raise ValueError("JSON_GRAMMAR_THREADS must be at least 1")
 if JSON_GRAMMAR_BACKEND not in ("auto", "cpu", "cuda", "triton", "torch_compile", "torch_native"):
     raise ValueError("JSON_GRAMMAR_BACKEND must be auto, cpu, triton, torch_compile or torch_native")
+
+# A call that hits max_new_tokens gets one retry with this penalty. Normal calls
+# are unchanged; the retry is recorded in calls.jsonl.
+RETRY_ON_TOKEN_LIMIT = os.getenv("RETRY_ON_TOKEN_LIMIT", "1").strip().lower() not in ("0", "false", "no", "off")
+RETRY_REPETITION_PENALTY = float(os.getenv("RETRY_REPETITION_PENALTY", "1.2"))
+if not math.isfinite(RETRY_REPETITION_PENALTY) or RETRY_REPETITION_PENALTY <= 0:
+    raise ValueError("RETRY_REPETITION_PENALTY must be finite and positive")
 
 # Ускорение одиночного запроса. Факты — цитаты из обращения, поэтому модель за один шаг
 # проверяет сразу несколько токенов, скопированных из запроса. Ответ тот же, шагов меньше.

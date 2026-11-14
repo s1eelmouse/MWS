@@ -67,7 +67,9 @@ class ModelSmokeTest(unittest.TestCase):
             generation_config=SimpleNamespace(eos_token_id=[2, 9]),
             generate=Mock(return_value=torch.tensor([[1, 3, 6, 2, 0], [1, 3, 6, 7, 8]])))
         details = []
-        with patch("extractor.prompt_for", return_value="prompt"), patch("extractor.MAX_NEW_TOKENS", 3):
+        with patch("extractor.prompt_for", return_value="prompt"), \
+                patch("extractor.MAX_NEW_TOKENS", 3), \
+                patch("extractor.RETRY_ON_TOKEN_LIMIT", False):
             answers = extractor.extract([CALL, {**CALL, "call_id": "synthetic:call2"}], 2, details)
         self.assertEqual(answers[0]["facts"], [])
         self.assertEqual(answers[1]["error"], "output_token_limit")
