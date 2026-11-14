@@ -8,12 +8,13 @@
 | Артефакт | Где | Статус |
 |---|---|---|
 | Код | GitHub `main`, последний коммит | 157 тестов, `compileall` |
-| Адаптер 002 (fallback) | `out/4090-continue-002`, `experiment.json` | подтверждён на чистом и шумном val |
-| Адаптер 003 (кандидат) | `out/4090-continue-003`, `experiment.json` | чистый val; шумный ждёт сервер |
-| Merged-модель 002 | `out/merged-4090-continue-002` | скопировать с сервера |
-| Merged-модель 003 | `out/merged-4090-continue-003` | скопировать с сервера |
+| Адаптер 002 (старый fallback) | `out/4090-continue-002`, `experiment.json` | подтверждён на старом пакете |
+| Адаптер 003 (кандидат) | `out/4090-continue-003`, `experiment.json` | 003+recovery: T 0.4663, S 0.5152 на сохранённых 2.1; end-to-end — V100 |
+| Адаптер 004-v21 | `out/4090-continue-004-v21` | обучен/merged; val прерван ребутом 4090 |
+| Merged-модель 002/003 | локально `/home/user/hackathon/artifacts-4090/` | скопированы с 4090 |
+| V100 bundle (003) | `/home/user/hackathon/artifacts-4090/v100-bundle-003.tar.gz` | 1019 МБ, SHA256 `bf62eefc…5728` |
 | Конфиг инференса | `README.md`, `MODEL.md` | 12288/16384/4096, XGrammar, `task` |
-| Docker CPU | `compactfactextraction:cpu` | образ собран; контейнер не проверен |
+| Docker CPU | `compactfactextraction:cpu` | образ собран; `/health` и короткий `/extract` проверены; полный датовый звонок на CPU >240 с |
 | Отчёт | `MODEL.md`, `RESULTS.md`, `DEFENSE.md` | готово |
 | Презентация | `SLIDES.md` | каркас; собрать слайды |
 | Демо/видео | `DEMO.md` | сценарий; записать видео |
