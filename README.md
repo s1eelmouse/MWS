@@ -23,6 +23,9 @@
 
 | Документ | Что в нём |
 |---|---|
+| [docs/CASE_V21_MIGRATION.md](docs/CASE_V21_MIGRATION.md) | Код под пакет 2.1: данные, совместимость старых весов, оценщик 2.1, команды полного val |
+| [docs/TEAM_V21_INTEGRATION.md](docs/TEAM_V21_INTEGRATION.md) | Что из веток команды вошло в решение 2.1 и CPU-проверка второй модели |
+| [docs/TEMPORAL_BINDING_V2.md](docs/TEMPORAL_BINDING_V2.md) | История дат заявок между звонками в файле и HTTP |
 | [docs/PLAN.md](docs/PLAN.md) | План работ и статус по пунктам |
 | [docs/MODEL.md](docs/MODEL.md) | Финальная модель: рецепт, конфиг инференса, качество, ограничения |
 | [docs/DEFENSE.md](docs/DEFENSE.md) | Как решали проблемы и улучшали модель: хронология, числа, отвергнутые гипотезы, Q&A |

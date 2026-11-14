@@ -12,6 +12,7 @@ import hashlib
 import json
 import random
 import re
+import shutil
 from pathlib import Path
 
 from case_io import read_jsonl, validate_gold
@@ -100,7 +101,8 @@ def changed_word_share(original: list[dict], noisy: list[dict]) -> float:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", default="data/organizer/val.jsonl")
+    from config import CASE_DATA_DIR
+    parser.add_argument("--input", default=str(Path(CASE_DATA_DIR) / 'val.jsonl'))
     parser.add_argument("--output", required=True)
     parser.add_argument("--level", type=float, default=0.15,
                         help="share of words to corrupt, added on top of the existing noise")
@@ -112,18 +114,27 @@ def main():
     source, output = Path(args.input).resolve(), Path(args.output).resolve()
     if source == output:
         parser.error("The original file must stay untouched; choose another --output")
+    if output.exists() or output.with_suffix('.manifest.json').exists():
+        parser.error('Output or manifest exists; choose a fresh output')
+    catalog, target_catalog = source.with_name('catalog.json'), output.with_name('catalog.json')
+    if catalog.is_file() and target_catalog.exists() and catalog.read_bytes() != target_catalog.read_bytes():
+        parser.error('Output directory contains a different catalog; choose a fresh directory')
     rows = read_jsonl(source, args.limit)
     noisy = make_noisy(rows, args.level, args.seed)
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("x", encoding="utf-8") as stream:
         for row in noisy:
             stream.write(json.dumps(row, ensure_ascii=False) + "\n")
+    if catalog.is_file() and not target_catalog.exists():
+        shutil.copyfile(catalog, target_catalog)
     manifest = {
         "input": str(args.input), "input_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         "output_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "calls": len(noisy), "level": args.level, "seed": args.seed, "limit": args.limit,
         "changed_word_share": round(changed_word_share(rows, noisy), 4),
         "note": "Turn texts only; facts unchanged; source span/quote set to null.",
+        'catalog_next_to_output': target_catalog.is_file(),
+        'catalog_sha256': hashlib.sha256(target_catalog.read_bytes()).hexdigest() if target_catalog.is_file() else None,
     }
     with output.with_suffix(".manifest.json").open("x", encoding="utf-8") as stream:
         json.dump(manifest, stream, ensure_ascii=False, indent=2)

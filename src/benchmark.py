@@ -10,24 +10,27 @@ from case_io import prediction_row, read_jsonl, validate_gold, write_jsonl
 from case_evaluation import evaluate_predictions
 from config import (MAX_INPUT_TOKENS, MAX_NEW_TOKENS, PROMPT_LOOKUP_TOKENS,
                     RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY,
-                    JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS, SAVE_RAW_RESPONSES)
+                    JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS, SAVE_RAW_RESPONSES, CASE_DATA_DIR)
+from run_context import context as run_context, catalog_for
 from measurements import (MemorySampler, distribution, environment, write_json, model_artifacts,
                           model_weights_bytes, ERROR_TYPES)
 from schema import as_call, contract_signature
 from training_data import file_digest
 
 
-def apply_temporal_postprocess(calls, predictions, mode):
-    """Apply the batch rules (including series carry) after all calls exist."""
-    if mode not in ('conservative', 'task'):
+def apply_temporal_postprocess(calls, predictions, mode, *, allow_series_history=False,
+                              date_catalog=None, fact_recovery=False, recovery_catalog_path=None):
+    """Explicit CPU-only helper; runtime backends already normalize inside timing."""
+    if mode not in ('conservative', 'task', 'binding', 'case_v2'):
         return predictions, {}, []
     from postprocess_dates import process_predictions
-    processed, audit, counts = process_predictions(calls, predictions, mode=mode)
+    processed, audit, counts = process_predictions(
+        calls, predictions, mode=mode, allow_series_history=allow_series_history,
+        date_catalog=date_catalog, fact_recovery=fact_recovery, recovery_catalog_path=recovery_catalog_path)
     return processed, counts, audit
 
 
-def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda: None,
-                  catalog_path=None):
+def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda: None):
     """Backend receives CallInput only; labels stay exclusively in the evaluator."""
     calls = [as_call(row) for row in rows]
     predictions, records, batches = [], [], []
@@ -43,6 +46,8 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
                              for call, result in zip(calls[:batch_size], warmup) if "error" in result)
     sync()
     warmup_seconds = time.perf_counter() - warmup_start
+    if hasattr(backend, 'reset_series_history'):
+        backend.reset_series_history()
     torch = getattr(backend, "torch", None)
     if backend.device == "cuda":
         torch.cuda.reset_peak_memory_stats()
@@ -51,7 +56,8 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
             (output / "calls.jsonl").open("x", encoding="utf-8") as call_file, \
             (output / "batches.jsonl").open("x", encoding="utf-8") as batch_file, \
             (output / "failures.jsonl").open("x", encoding="utf-8") as failure_file, \
-            (output / "raw-answers.jsonl").open("x", encoding="utf-8") as raw_file:
+            (output / "raw-answers.jsonl").open("x", encoding="utf-8") as raw_file, \
+            (output / "predictions-before-series.jsonl").open("x", encoding="utf-8") as before_file:
         for start in range(0, len(calls), batch_size):
             batch = calls[start:start + batch_size]
             details = []
@@ -83,6 +89,9 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
                           "error": prediction.get("error"),
                           "completion_latency_seconds": elapsed}
                 diagnostic = record.pop("diagnostic", None)
+                before_series = record.pop('prediction_before_series', result)
+                before_file.write(json.dumps(prediction_row(call.model_dump(mode='json'), before_series),
+                                             ensure_ascii=False) + '\n')
                 raw_fields = {key: record.pop(key) for key in
                               ('raw_response', 'initial_raw_response') if key in record}
                 if raw_fields:
@@ -95,34 +104,26 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
                 predictions.append(prediction)
                 pred_file.write(json.dumps(prediction, ensure_ascii=False) + "\n")
                 call_file.write(json.dumps(record, ensure_ascii=False) + "\n")
-            for stream in (pred_file, call_file, batch_file, failure_file, raw_file):
+            for stream in (pred_file, call_file, batch_file, failure_file, raw_file, before_file):
                 stream.flush()
-            print(f"Completed {len(predictions)}/{len(calls)}; failed: {cumulative_failed}", flush=True)
+            print(f"Completed {len(predictions)}/{len(calls)}; "
+                  f"failed: {cumulative_failed}", flush=True)
     seconds = sum(batch["seconds"] for batch in batches)
     if memory.error:
         raise RuntimeError(f"Memory sampling failed: {memory.error}")
-    temporal_mode = getattr(backend, "temporal_normalization", "off")
-    # These already include per-call prediction normalization; not a dates-off baseline.
-    write_jsonl(output / 'predictions-before-series.jsonl', predictions)
-    with MemorySampler(output / 'postprocess-memory.csv') as post_memory:
-        post_start = time.perf_counter()
-        predictions, temporal_counts, temporal_audit = apply_temporal_postprocess(
-            calls, predictions, temporal_mode)
-        post_seconds = time.perf_counter() - post_start
-    if post_memory.error:
-        raise RuntimeError(f'Postprocess memory sampling failed: {post_memory.error}')
-    if temporal_counts:
-        with (output / "predictions.jsonl").open("w", encoding="utf-8") as stream:
-            for prediction in predictions:
-                stream.write(json.dumps(prediction, ensure_ascii=False) + "\n")
-        if temporal_audit:
-            write_jsonl(output / "temporal-audit.jsonl", temporal_audit)
-    quality, errors = evaluate_predictions(rows, predictions, catalog_path=catalog_path)
+    # Preserve the same output as HTTP: all rules run in backend.extract and
+    # count towards measured latency. Never rewrite predictions after timing.
+    temporal_audit = []
+    for record in records:
+        temporal_audit.extend({'call_id': record['call_id'], 'component': 'temporal', **d}
+                              for d in record.get('temporal_decisions', []))
+        temporal_audit.extend(record.get('series_decisions', []))
+    if temporal_audit:
+        write_jsonl(output / "temporal-audit.jsonl", temporal_audit)
+    quality, errors = evaluate_predictions(rows, predictions, catalog_path=getattr(backend, 'catalog_path', None))
     write_json(output / "metrics.json", quality)
     write_jsonl(output / "errors.jsonl", errors)
     failed = sum("error" in p for p in predictions)
-    print(f"Final {len(predictions)}/{len(calls)}; failed: {failed}; "
-          f"temporal_postprocess_seconds: {post_seconds:.4f}", flush=True)
     # Only explicit execution/schema failures; fact mismatches are quality diagnostics.
     error_counts = dict.fromkeys(ERROR_TYPES, 0)
     error_counts.update(Counter(e["error"] for e in errors if e.get("error")))
@@ -133,17 +134,16 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     return {"calls": len(calls), "failed_calls": failed,
             "error_counts": error_counts,
             "normalization_counts": dict(normalization_counts),
-            "temporal_postprocess": dict(temporal_counts),
+            "history_settings": (backend.series_memory.settings()
+                                 if getattr(backend, 'series_memory', None) is not None else None),
+            "history": (backend.series_memory.stats()
+                        if getattr(backend, 'series_memory', None) is not None else None),
+            "temporal_postprocess": {"stage": "backend.extract", "included_in_measurement": True,
+                                     "mode": getattr(backend, "temporal_normalization", "off"),
+                                     "series_history_enabled": bool(getattr(backend, "series_history_enabled", False))},
             "warmup_batches": warmup_batches, "warmup_seconds": warmup_seconds,
             "warmup_errors": warmup_errors,
             "measurement_seconds": seconds,
-            "temporal_postprocess_seconds": post_seconds,
-            "processing_seconds_including_postprocess": seconds + post_seconds,
-            "calls_per_hour_including_postprocess": len(calls) * 3600 / (seconds + post_seconds),
-            "gpu_seconds_per_1000_calls_including_postprocess":
-                (seconds + post_seconds) * 1000 / len(calls) if backend.device == 'cuda' else None,
-            "postprocess_memory": post_memory.report(),
-            "combined_process_rss_sampled_peak_bytes": max(memory.peak, post_memory.peak),
             "calls_per_hour": len(calls) * 3600 / seconds,
             "successful_calls_per_hour": (len(calls) - failed) * 3600 / seconds,
             "gpu_seconds_per_1000_calls": seconds * 1000 / len(calls) if backend.device == "cuda" else None,
@@ -163,7 +163,7 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", default="data/organizer/val.jsonl")
+    parser.add_argument("--input", default=str(Path(CASE_DATA_DIR) / 'val.jsonl'))
     parser.add_argument("--model", required=True)
     parser.add_argument("--device", choices=("cpu", "cuda"), required=True)
     parser.add_argument("--batch-size", type=int, default=1)
@@ -201,10 +201,13 @@ def main():
               "failures_sha256": file_digest(args.failures) if args.failures else None,
               "limits": {"input": MAX_INPUT_TOKENS, "output": MAX_NEW_TOKENS},
               "prompt_lookup_tokens": PROMPT_LOOKUP_TOKENS,
-              "retry_on_token_limit": RETRY_ON_TOKEN_LIMIT,
-              "retry_repetition_penalty": RETRY_REPETITION_PENALTY,
+              "grammar_backend": JSON_GRAMMAR_BACKEND,
+              "grammar_threads": JSON_GRAMMAR_THREADS,
               "save_raw_responses": SAVE_RAW_RESPONSES,
-              "grammar_backend": JSON_GRAMMAR_BACKEND, "grammar_threads": JSON_GRAMMAR_THREADS}
+              "retry_on_token_limit": RETRY_ON_TOKEN_LIMIT,
+              "retry_repetition_penalty": RETRY_REPETITION_PENALTY}
+    provenance = run_context(val=args.input, catalog=catalog_for(args.input))
+    report['run_context'] = provenance
     try:
         report["hardware"] = environment()
         write_json(output / "environment.json", report["hardware"])
@@ -213,19 +216,25 @@ def main():
         from extractor import Extractor
         load_start = time.perf_counter()
         backend = Extractor(args.model, args.with_schema, args.device)
+        backend.catalog_path = catalog_for(args.input)
         sync = backend.torch.cuda.synchronize if args.device == "cuda" else lambda: None
         sync()
         report["model_load_seconds"] = time.perf_counter() - load_start
         report["constrained_json"] = bool(getattr(backend, "constrained_json", False))
+        report['model_contract'] = getattr(backend, 'model_contract', None)
         report["temporal_normalization"] = getattr(backend, "temporal_normalization", "off")
+        report['temporal_catalog_sha256'] = getattr(backend, 'temporal_catalog_sha256', None)
+        report['fact_recovery'] = getattr(backend, 'fact_recovery', False)
+        report['fact_recovery_policy'] = getattr(backend, 'fact_recovery_policy', None)
+        report["series_history_enabled"] = bool(getattr(backend, "series_history_enabled", False))
+        report["series_history_max_entries"] = getattr(getattr(backend, "series_memory", None), "max_entries", None)
         report["catalog_sha256"] = getattr(backend, "catalog_sha256", None)
         report["grammar_compile_seconds"] = getattr(backend, "grammar_compile_seconds", None)
         report["model_parameters"] = backend.model.num_parameters()
         report["dtype"] = str(backend.model.dtype)
         report["torch_threads"] = backend.torch.get_num_threads()
         report["model_revision"] = getattr(backend.model.config, "_commit_hash", None)
-        report.update(run_benchmark(rows, backend, output, args.batch_size, args.warmup_batches, sync,
-                                    catalog_path=args.input))
+        report.update(run_benchmark(rows, backend, output, args.batch_size, args.warmup_batches, sync))
         report["status"] = "complete"
     except BaseException as exc:
         report.update(status="failed", error=f"{type(exc).__name__}: {exc}")

@@ -90,6 +90,8 @@ def environment():
             "git_status": command_output(["git", "-C", str(root), "status", "--porcelain"]),
             "source_sha256": {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
                               for p in sorted((root / "src").glob("*.py"))},
+            "contract_assets_sha256": {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
+                                       for p in sorted((root / 'src/contracts').glob('*.json'))},
             "nvidia_smi": command_output(["nvidia-smi", "--query-gpu=index,uuid,name,driver_version,memory.total",
                                           "--format=csv"]),
             "image_reference": os.getenv("MWS_IMAGE_REFERENCE")}

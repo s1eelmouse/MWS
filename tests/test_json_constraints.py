@@ -249,6 +249,13 @@ class JsonConstraintTest(unittest.TestCase):
                             f"grammar rejected training target at {position}: {char!r}")
         self.assertTrue(matcher.accept_token(vocab["</s>"]))
         self.assertTrue(matcher.is_terminated())
+        # v2.1 permits unnamed objects; real compiled grammar must accept them.
+        unnamed = {**FACT, 'object': {**FACT['object'], 'name': ''}}
+        empty_matcher = xgr.GrammarMatcher(compiled)
+        for char in to_answer([unnamed]):
+            self.assertTrue(empty_matcher.accept_token(vocab[char]))
+        self.assertTrue(empty_matcher.accept_token(vocab['</s>']))
+        self.assertTrue(empty_matcher.is_terminated())
 
         def accepted_until_rejection(text):
             candidate = xgr.GrammarMatcher(compiled)

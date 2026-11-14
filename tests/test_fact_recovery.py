@@ -24,6 +24,74 @@ def client_fact():
 
 
 class FactRecoveryTest(unittest.TestCase):
+    def test_longest_catalog_name_and_plus_are_not_confused_with_shorter_tariffs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Люкс', 'Орбита-Люкс', 'Экстра', 'Экстра+']}), encoding='utf-8')
+            for value in ('Орбита-Люкс', 'Экстра+'):
+                result, _ = recover_facts([client_fact()], call('У меня тариф ' + value + '.'), str(catalog))
+                self.assertEqual(result[-1]['value'], value)
+
+    def test_catalog_word_in_device_name_is_not_recovered_as_a_tariff(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Мини']}), encoding='utf-8')
+            result, audit = recover_facts([client_fact()], call('У меня сейчас мини-приставка не работает.'), str(catalog))
+            self.assertEqual(len(result), 1)
+            self.assertFalse(audit)
+    def test_negation_question_future_and_hypothesis_never_create_a_status(self):
+        for text in ('Сейчас заявка 42 не выполнена.', 'Сейчас заявка 42 в работе?',
+                     'Если заявка 42 сейчас в работе, то ждите.',
+                     'Завтра заявка 42 будет в работе.', 'Вчера заявка 42 была в работе.'):
+            with self.subTest(text=text):
+                result, audit = recover_facts([], call(text))
+                self.assertEqual(result, [])
+                self.assertEqual(audit, [])
+
+    def test_status_identity_and_existing_current_are_checked_per_ticket(self):
+        existing = {'object': {'name': 'заявка 11', 'type': 'ticket'},
+                    'attribute': 'ticket_status', 'value': 'принята', 'polarity': 1,
+                    'valid_from': None, 'valid_to': None, 'source': {'turn_idx': 0}}
+        result, audit = recover_facts([existing], call('Сейчас статус заявки 42 — в работе.'))
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[-1]['object']['name'], 'заявка 42')
+        self.assertEqual(audit[-1]['source_turn_idx'], 0)
+        # No number and two known tickets is ambiguous; never borrow the first object.
+        result, audit = recover_facts([existing, {**existing, 'object': {'name': 'заявка 42', 'type': 'ticket'},
+                                             'valid_to': '2026-03-01T00:00:00'}],
+                                     call('Сейчас статус — выполнена.'))
+        self.assertEqual(len(result), 2)
+        self.assertFalse(audit)
+
+    def test_tariff_proposal_or_denial_is_not_a_current_tariff(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Пульс']}), encoding='utf-8')
+            for text in ('У меня не тариф Пульс.', 'Сейчас хочу тариф Пульс.',
+                         'У вас сейчас тариф Пульс?', 'Раньше у меня был тариф Пульс.'):
+                result, audit = recover_facts([client_fact()], call(text), str(catalog))
+                self.assertEqual(len(result), 1, text)
+                self.assertFalse(audit)
+
+    def test_two_different_clients_are_not_guessed(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Пульс']}), encoding='utf-8')
+            for source in ([client_fact(), {**client_fact(), 'object': {'name': 'Другой клиент', 'type': 'client'}}],):
+                result, audit = recover_facts(source, call('У меня сейчас тариф Пульс.'), str(catalog))
+                self.assertEqual(len(result), len(source))
+                self.assertFalse(audit)
+
+    def test_one_explicit_unnamed_client_is_preserved_without_inventing_a_name(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Пульс']}), encoding='utf-8')
+            source = [{**client_fact(), 'object': {'name': '', 'type': 'client'}}]
+            result, audit = recover_facts(source, call('У меня сейчас тариф Пульс.'), str(catalog))
+            self.assertEqual(len(result), 2)
+            self.assertEqual(result[-1]['object']['name'], '')
+            self.assertEqual(len(audit), 1)
+
     def test_missing_tariff_is_recovered_from_catalog_and_text(self):
         with tempfile.TemporaryDirectory() as temp:
             catalog = Path(temp) / 'catalog.json'

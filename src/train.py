@@ -8,12 +8,14 @@ import json
 import math
 import time
 from pathlib import Path
+import config as configuration
 
 from case_io import read_jsonl, validate_gold
-from config import ADAPTER_DIR, BASE_MODEL, MAX_SEQUENCE_TOKENS
+from config import ADAPTER_DIR, BASE_MODEL, MAX_SEQUENCE_TOKENS, CASE_DATA_DIR
 from training_data import (adapter_origin, check_output_directory, encode_row,
                            ensure_training_splits, file_digest, save_manifest)
-from schema import contract_signature
+from schema import contract_signature, contract_manifest
+from run_context import context as run_context, catalog_for
 
 
 class Rows:
@@ -56,8 +58,11 @@ def make_batch(rows: list, pad_id: int, tail_only: bool = True) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--train", default="data/organizer/train.jsonl")
-    parser.add_argument("--val", default="data/organizer/val.jsonl")
+    parser.add_argument("--train", default=str(Path(CASE_DATA_DIR) / 'train.jsonl'))
+    parser.add_argument("--val", default=str(Path(CASE_DATA_DIR) / 'val.jsonl'))
+    parser.add_argument("--catalog")
+    parser.add_argument("--allow-legacy-contract", action="store_true",
+                        help="explicitly initialize a NEW v2.1 cycle from the known v1 adapter")
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--batch-size", type=int, default=1)
@@ -78,7 +83,7 @@ def main():
         parser.error("--learning-rate must be finite and positive")
     if args.init_adapter_dir and args.resume_from_checkpoint:
         parser.error("Choose starting adapter weights OR resume an interrupted cycle")
-    origin = (adapter_origin(args.init_adapter_dir, args.output_dir, BASE_MODEL)
+    origin = (adapter_origin(args.init_adapter_dir, args.output_dir, BASE_MODEL, allow_legacy=args.allow_legacy_contract)
               if args.init_adapter_dir else None)
     if min(args.epochs, args.batch_size, args.save_steps, args.max_sequence_tokens) <= 0:
         parser.error("epochs, batch size, save steps and sequence budget must be positive")
@@ -89,9 +94,10 @@ def main():
     ensure_training_splits(train_rows, val_rows)
     for row in train_rows + val_rows:
         validate_gold(row)
+    provenance = run_context(train=args.train, val=args.val, catalog=catalog_for(args.val, args.catalog))
     if args.check_data:
         print(json.dumps({"train_calls": len(train_rows), "val_calls": len(val_rows),
-                          "model": BASE_MODEL, "gpu_run": False}, ensure_ascii=False, indent=2))
+                          "model": BASE_MODEL, "gpu_run": False, 'run_context': provenance}, ensure_ascii=False, indent=2))
         return
     output = check_output_directory(args.output_dir, args.resume_from_checkpoint)
     try:
@@ -104,7 +110,8 @@ def main():
     if not torch.cuda.is_available():
         raise SystemExit("CUDA GPU is unavailable. Data validation works here; training must run on the RTX PC.")
     set_seed(args.seed)
-    bf16 = torch.cuda.is_bf16_supported()
+    from gpu_precision import native_bf16_supported
+    bf16 = native_bf16_supported(torch)
     dtype = torch.bfloat16 if bf16 else torch.float16
     tok = AutoTokenizer.from_pretrained(BASE_MODEL)
     if tok.pad_token is None:
@@ -140,6 +147,7 @@ def main():
         "schema_sha256": file_digest(Path(__file__).with_name("schema.py")),
         "train_limit": args.limit, "max_sequence_tokens": args.max_sequence_tokens,
         "batch_size": args.batch_size, "four_bit": not args.no_4bit,
+        "contract_signature": contract_signature(), "run_context": provenance,
     }
     if origin or args.learning_rate != 2e-4:
         manifest.update(initial_adapter=origin, learning_rate=args.learning_rate,
@@ -151,7 +159,7 @@ def main():
                             learning_rate=args.learning_rate,
                             optimizer_policy=previous['optimizer_policy'])
     save_manifest(output / "experiment.json", manifest)
-    save_manifest(output / 'case_contract.json', {'signature': contract_signature()})
+    save_manifest(output / 'case_contract.json', contract_manifest())
     # Each resumed invocation gets its own journal; previous histories are retained.
     from measurements import environment, write_json
     from training_observer import make_observer
@@ -166,6 +174,11 @@ def main():
         "max_input_tokens": MAX_INPUT_TOKENS, "max_new_tokens": MAX_NEW_TOKENS,
         "trainable_parameters": sum(p.numel() for p in model.parameters() if p.requires_grad),
         "model_revision": getattr(model.config, "_commit_hash", None),
+        "run_context": provenance, "training_precision": str(dtype),
+        'postprocessing_used_for_training_loss': False,
+        'subsequent_inference_settings': {name: getattr(configuration, name) for name in
+                  ('TEMPORAL_NORMALIZATION', 'TEMPORAL_CATALOG_PATH', 'FACT_RECOVERY',
+                   'TEMPORAL_SERIES_HISTORY', 'JSON_CONSTRAINED', 'CATALOG_PATH')},
     })
     accumulate = max(1, 16 // args.batch_size)
     steps = args.max_steps if args.max_steps > 0 else math.ceil(
@@ -187,7 +200,7 @@ def main():
         train_dataset=Rows(encoded_train),
         eval_dataset=Rows(encoded_val) if encoded_val else None,
         data_collator=lambda rows: make_batch(rows, tok.pad_token_id, tail_only),
-        callbacks=[make_observer(attempt, torch)],
+        callbacks=[make_observer(attempt, torch, context=provenance)],
     )
     torch.cuda.reset_peak_memory_stats()
     torch.cuda.synchronize()
@@ -208,6 +221,7 @@ def main():
             "elapsed_seconds": time.perf_counter() - start,
             "cuda_peak_allocated_bytes": torch.cuda.max_memory_allocated(),
             "cuda_peak_reserved_bytes": torch.cuda.max_memory_reserved(),
+            "context_sha256": provenance['context_sha256'],
         })
         write_json(attempt / "loss-history.json", trainer.state.log_history)
     torch.cuda.synchronize()
@@ -220,6 +234,8 @@ def main():
         "peak_reserved_gib": torch.cuda.max_memory_reserved() / 2**30,
         "gpu": torch.cuda.get_device_name(0), "base_parameters": parameter_count,
         "torch": torch.__version__,
+        "context_sha256": provenance['context_sha256'], "contract_signature": contract_signature(),
+        "scorer_version": provenance['scoring']['scorer_version'], "training_precision": str(dtype),
     }
     stats_path = output / f"training_stats_step_{trainer.state.global_step}_{time.time_ns()}.json"
     with stats_path.open("x", encoding="utf-8") as stream:

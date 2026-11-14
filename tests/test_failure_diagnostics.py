@@ -37,7 +37,7 @@ class Inputs(dict):
 
 class DiagnosticTest(unittest.TestCase):
     def test_existing_model_contract_does_not_change(self):
-        self.assertEqual(contract_signature(), '40e9c449fffa0434ebd8cc5f7860cbe843c7d1ab9d5d28256392d20f24e72654')
+        self.assertEqual(contract_signature(), '43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad')
 
     def test_json_syntax_and_schema_are_distinguished(self):
         _, error = parse_answer_with_diagnostics('{"facts": [broken]}')

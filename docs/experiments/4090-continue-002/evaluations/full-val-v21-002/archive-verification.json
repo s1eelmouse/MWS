@@ -1,0 +1,44 @@
+{
+  "data_directory": "C:\\Users\\Tripozik\\Desktop\\MWS\\work\\verified-new-archive-1794686454686766400",
+  "validation": {
+    "train": {
+      "calls": 3926,
+      "facts": 18475,
+      "invalid_calls": 0,
+      "errors": [],
+      "nonliteral_quote_warnings": 1544,
+      "nonempty_quotes": 10205,
+      "empty_object_names": 730,
+      "facts_with_spans": 8663,
+      "contract_version": "2.1"
+    },
+    "val": {
+      "calls": 383,
+      "facts": 1845,
+      "invalid_calls": 0,
+      "errors": [],
+      "nonliteral_quote_warnings": 149,
+      "nonempty_quotes": 1039,
+      "empty_object_names": 81,
+      "facts_with_spans": 890,
+      "contract_version": "2.1"
+    }
+  },
+  "sha256": {
+    "train.jsonl": "0878bfd983e14c75b51f32f04d961c5b82b10fa243845a25fe1c811cb4882466",
+    "val.jsonl": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+    "baseline_pred.jsonl": "11a6685758b872c81b16bb5f3d6eac9667d91a92d40760d1153a0eacd7d02ab6",
+    "baseline_metrics.json": "1f61a4a41e50ff4773ae4797dadf7cf65450e75823099c823f9bc72a41a21add",
+    "catalog.json": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+    "schema.md": "3eb1d47f862195228d22750fa2c453899bed1c5803222da6903f1ea020914603",
+    "case_metrics.py": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+    "README.md": "2b33ac543bbaed8d5754722a9651e51031076eb234131c3836fdd03da4158b26",
+    "ANSWERS_v2.md": "3fd52cd5c38c2bbf97bc5ad90a4433d8ef78b1428d16830a348612d69b80c067",
+    "CHECKSUMS.txt": "e4a6eae9a8b556f82ed89858584a84daf2ae2459f29480af25d873743dfc6e97"
+  },
+  "warnings": [
+    "Organizer CHECKSUMS.txt self-checksum differs; other files verified"
+  ],
+  "metrics_version": "2.1",
+  "archive_sha256": "f77ff5a1fe91ad443e473b7c4770bd1d7a2eb8cbcea8915fee6a21727cbdf700"
+}

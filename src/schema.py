@@ -24,8 +24,7 @@ class StrictModel(BaseModel):
 
 
 class ObjectRef(StrictModel):
-    # Package 2.1 allows an empty name when the object is not named in the call.
-    name: str = ""
+    name: str = Field(min_length=0)
     id: str | None = None
     # 'other' occurs in organizer gold despite not being listed in schema.md.
     type: Literal["service", "device", "ticket", "client", "other"] | None = None
@@ -122,24 +121,43 @@ SYSTEM = (
 SYSTEM_WITH_SCHEMA = SYSTEM + " JSON-схема: " + json.dumps(Facts.model_json_schema(), ensure_ascii=False)
 
 
-LEGACY_CONTRACT_SIGNATURE = '3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274'
-
-
 def contract_signature():
     payload = {'system': SYSTEM, 'schema': Facts.model_json_schema(), 'target_version': 2}
     return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
 
 
-def check_model_contract(model_dir, with_schema=False):
+LEGACY_CONTRACT_SIGNATURE = '3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274'
+
+
+def legacy_contract_signature():
+    schema = json.loads(Path(__file__).with_name('contracts').joinpath('facts-v1.schema.json').read_text(encoding='utf-8'))
+    payload = {'system': SYSTEM, 'schema': schema, 'target_version': 1}
+    return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+
+
+def contract_manifest():
+    return {'signature': contract_signature(), 'contract_version': '2.1', 'target_version': 2}
+
+
+def check_model_contract(model_dir, with_schema=False, *, allow_legacy=False):
     path = Path(model_dir)
-    if not path.is_dir() or with_schema:
-        return
+    target = contract_signature()
+    if not path.is_dir():
+        return {'source_signature': None, 'target_signature': target, 'policy': 'unversioned_base',
+                'with_schema': with_schema}
     manifest = path / 'case_contract.json'
     if not manifest.is_file():
         raise ValueError('Local model lacks case_contract.json; it may use the legacy schema')
     signature = json.loads(manifest.read_text(encoding='utf-8')).get('signature')
-    if signature not in {contract_signature(), LEGACY_CONTRACT_SIGNATURE}:
-        raise ValueError('Model was trained with a different case contract')
+    if signature == target:
+        return {'source_signature': signature, 'target_signature': target, 'policy': 'exact',
+                'with_schema': with_schema}
+    if signature == LEGACY_CONTRACT_SIGNATURE and allow_legacy and legacy_contract_signature() == signature:
+        return {'source_signature': signature, 'target_signature': target,
+                'policy': 'explicit-v1-to-v21-empty-object-name', 'with_schema': with_schema,
+                'weights_modified': False}
+    raise ValueError('Model was trained with a different case contract; known v1 requires explicit '
+                     'ALLOW_LEGACY_CONTRACT=1 or --allow-legacy-contract, unknown signatures are rejected')
 
 
 def as_call(row: dict | CallInput) -> CallInput:

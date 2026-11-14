@@ -33,7 +33,7 @@ def file_digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def adapter_origin(directory, output_directory, base_model):
+def adapter_origin(directory, output_directory, base_model, *, allow_legacy=False):
     """Validate a local starting adapter and record its exact bytes before GPU loading."""
     directory, output = Path(directory).resolve(), Path(output_directory).resolve()
     if directory == output or directory in output.parents or output in directory.parents:
@@ -43,12 +43,12 @@ def adapter_origin(directory, output_directory, base_model):
     if config.get('base_model_name_or_path') != base_model or config.get('peft_type') != 'LORA':
         raise ValueError('Starting adapter must be LoRA for the selected base model')
     from schema import check_model_contract
-    check_model_contract(directory)
+    compatibility = check_model_contract(directory, allow_legacy=allow_legacy)
     weights = [p for p in directory.iterdir()
                if p.name in ('adapter_model.safetensors', 'adapter_model.bin')]
     if len(weights) != 1:
         raise ValueError('Starting adapter must have exactly one adapter weight file')
-    return {'directory': str(directory), 'files': {p.name: file_digest(p) for p in
+    return {'directory': str(directory), 'contract_compatibility': compatibility, 'files': {p.name: file_digest(p) for p in
             [config_path, directory / 'case_contract.json', *weights]}}
 
 

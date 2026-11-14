@@ -15,7 +15,19 @@ services:
       MODEL_DIR: /models/merged
       MAX_BATCH: ${MAX_BATCH:-1}
       WITH_SCHEMA: ${WITH_SCHEMA:-0}
+      ALLOW_LEGACY_CONTRACT: ${ALLOW_LEGACY_CONTRACT:-0}
+      TEMPORAL_SERIES_HISTORY: ${TEMPORAL_SERIES_HISTORY:-1}
+      TEMPORAL_NORMALIZATION: ${TEMPORAL_NORMALIZATION:-task}
+      FACT_RECOVERY: ${FACT_RECOVERY:-0}
+      CATALOG_PATH: /app/catalog.json
+      TEMPORAL_CATALOG_PATH: /app/catalog.json
     volumes:
+      - type: bind
+        source: ${CATALOG_FILE:-./data/organizer-v2.1/catalog.json}
+        target: /app/catalog.json
+        read_only: true
+        bind:
+          create_host_path: false
       - type: bind
         source: ${MODEL_PATH:-./out/merged-4090-continue-002}
         target: /models/merged

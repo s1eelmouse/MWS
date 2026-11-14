@@ -2,9 +2,12 @@
 
 Дополнительная эпоха с адаптера первой версии; новый оптимизатор, LR=0.0001.
 
+- [Новый val 2.1 и объединённые правила: проверка на V100](evaluations/full-val-v21-002/README.md).
 - [Алгоритм, параметры и воспроизведение](TRAINING.md).
 - [Фактически выполненный bash-сценарий](run-continue-002.sh).
 - [Результаты, сравнение и дальнейшие действия](REPORT.md).
+- [Объединённая память дат: контроль качества и ресурсов](evaluations/history-merged-005/README.md).
+- [Полный val с XGrammar и датами, 0 отказов](evaluations/full-val-003/README.md).
 - [Исследовательский разбор восстановления JSON](exploratory-analysis.json).
 - [Исходные метрики полного val](attachments/metrics.json).
 - [Исходный отчёт benchmark: время, память и окружение](attachments/benchmark-report.json).
@@ -23,7 +26,3 @@
 - [Исходники](code/src/) и [программные тесты](code/tests/).
 - [Сценарий повторения обучения и оценки](replay.sh).
 - [SHA256 и происхождение файлов](code-manifest.json).
-
-## Проверки готовой модели
-
-- [Полный val с XGrammar и датами, 0 отказов](evaluations/full-val-003/README.md).

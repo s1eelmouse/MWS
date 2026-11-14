@@ -58,10 +58,10 @@ class EvaluationTest(unittest.TestCase):
         report, _ = evaluate_predictions([CALL], [pred])
         self.assertEqual(report['official']['n_pred_facts'], 1)
         self.assertEqual(report['official']['fact_recall'], 1)
-        self.assertIsNone(report['official']['temporal_recall'])
+        self.assertIsNone(report['official']['temporal_recall'])  # action is not temporal in v2.1
         self.assertEqual(report['diagnostics']['invalid_or_failed_calls'], 1)
 
-    def test_state_binding_is_object_aware_in_v2_1(self):
+    def test_known_official_state_bug_is_not_silently_fixed(self):
         row = copy.deepcopy(CALL)
         row["facts"][0]["attribute"] = "service_state"
         row["facts"][0]["value"] = "работает нормально"
@@ -69,8 +69,8 @@ class EvaluationTest(unittest.TestCase):
         second["object"] = {"id": "synthetic:dev1", "name": "модем", "type": "device"}
         second["value"] = "красный индикатор"
         row["facts"].append(second)
-        report, _ = evaluate_predictions([row], [row])
-        self.assertEqual(report["official"]["state_accuracy"], 1.0)
+        report, _ = evaluate_predictions([row], [row], scorer_version='1')
+        self.assertEqual(report["official"]["state_accuracy"], .5)
         self.assertTrue(report["known_scorer_issues"])
 
     def test_per_attribute_error_types_explain_official_metrics(self):
@@ -89,6 +89,7 @@ class EvaluationTest(unittest.TestCase):
         self.assertEqual((action["valid_from_errors"], action["valid_to_errors"], action["date_errors"]), (1, 0, 1))
         self.assertEqual(action["source_turn_errors"], 0)
         self.assertIsNone(action["temporal_recall"])
+        self.assertEqual(action['temporal_eligible_matched_facts'], 0)
         self.assertEqual((service["matched_facts"], service["date_errors"], service["source_turn_errors"]), (1, 0, 1))
         self.assertEqual(service["grounding_turn"], 0)
         self.assertEqual(report["per_attribute"]["tariff"]["missed_facts"], 0)

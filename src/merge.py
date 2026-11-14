@@ -5,18 +5,19 @@ import shutil
 from pathlib import Path
 
 from config import ADAPTER_DIR, MERGED_DIR
-from schema import check_model_contract
+from schema import check_model_contract, contract_manifest
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--adapter-dir", default=ADAPTER_DIR)
     parser.add_argument("--output", default=MERGED_DIR)
+    parser.add_argument('--allow-legacy-contract', action='store_true')
     args = parser.parse_args()
     adapter, output = Path(args.adapter_dir), Path(args.output)
     if not (adapter / "adapter_config.json").is_file():
         parser.error("Adapter is not saved yet: adapter_config.json is missing")
-    check_model_contract(adapter)
+    compatibility = check_model_contract(adapter, allow_legacy=args.allow_legacy_contract)
     if output.exists() and any(output.iterdir()):
         parser.error("Output directory is not empty; choose a fresh model directory")
     import torch
@@ -35,7 +36,8 @@ def main():
     AutoTokenizer.from_pretrained(tokenizer_source).save_pretrained(output)
     if (adapter / "experiment.json").is_file():
         shutil.copyfile(adapter / "experiment.json", output / "experiment.json")
-    shutil.copyfile(adapter / 'case_contract.json', output / 'case_contract.json')
+    (output / 'case_contract.json').write_text(json.dumps(
+        {**contract_manifest(), 'source_contract': compatibility}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(f"Merged model saved in {output}")
 
 

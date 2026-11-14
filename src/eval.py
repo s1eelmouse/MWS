@@ -11,6 +11,8 @@ import requests
 from case_evaluation import evaluate_predictions
 from case_io import prediction_row, read_jsonl, write_jsonl
 from schema import as_call
+from config import CASE_DATA_DIR, SCORER_VERSION
+from run_context import context as run_context, catalog_for, file_info
 
 
 def ask(endpoint: str, row: dict, timeout=300):
@@ -28,7 +30,9 @@ def ask(endpoint: str, row: dict, timeout=300):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--gold", default="data/organizer/val.jsonl")
+    parser.add_argument("--gold", default=str(Path(CASE_DATA_DIR) / 'val.jsonl'))
+    parser.add_argument('--scorer-version', choices=('1', '2.1', '2.1-datefix'), default=SCORER_VERSION)
+    parser.add_argument('--catalog')
     parser.add_argument("--pred")
     parser.add_argument("--url", default="http://127.0.0.1:8000")
     parser.add_argument("--workers", type=int, default=1)
@@ -74,11 +78,16 @@ def main():
             "p50_seconds": statistics.median(durations),
             "p95_seconds": durations[min(len(durations)-1, int(len(durations)*.95))],
         }
-    report, errors = evaluate_predictions(gold, preds, catalog_path=args.gold)
+    catalog = catalog_for(args.gold, args.catalog)
+    report, errors = evaluate_predictions(gold, preds, scorer_version=args.scorer_version, catalog_path=catalog)
+    report['run_context'] = run_context(val=args.gold, catalog=catalog, scorer_version=args.scorer_version)
+    report['predictions_file'] = file_info(args.pred)
     if latency is not None:
         report["latency"] = latency
     if args.reference_metrics:
         reference = json.loads(Path(args.reference_metrics).read_text(encoding="utf-8"))
+        if str(reference.get('metrics_version', '1')) != report['official_metrics_version']:
+            parser.error('Published reference uses a different scorer version')
         report["published_reference_delta"] = {
             key: round(value-reference[key], 6)
             for key, value in report["official"].items()

@@ -8,7 +8,7 @@ from pydantic import Field
 
 from case_io import prediction_row
 from config import MERGED_DIR
-from schema import CallInput, Fact, StrictModel
+from schema import CallInput, Fact, StrictModel, contract_manifest
 
 MODEL_DIR = os.getenv("MODEL_DIR", MERGED_DIR)
 MAX_BATCH = int(os.getenv("MAX_BATCH", "1"))
@@ -63,8 +63,16 @@ def create_app(backend=None):
     def health():
         if app.state.extractor is None:
             raise HTTPException(503, "Model is not loaded")
-        return {"status": "ok", "model": MODEL_DIR, "schema": "organizer-call-v1",
-                "constrained_json": bool(getattr(app.state.extractor, "constrained_json", False))}
+        return {"status": "ok", "model": MODEL_DIR, "schema": "organizer-call-v2.1", 'contract': contract_manifest(),
+                'model_contract': getattr(app.state.extractor, 'model_contract', None),
+                "constrained_json": bool(getattr(app.state.extractor, "constrained_json", False)),
+                "temporal_normalization": getattr(app.state.extractor, "temporal_normalization", "off"),
+                'fact_recovery': getattr(app.state.extractor, 'fact_recovery', False),
+                'fact_recovery_policy': getattr(app.state.extractor, 'fact_recovery_policy', None),
+                "series_history_enabled": bool(getattr(app.state.extractor, "series_history_enabled", False)),
+                "history": (app.state.extractor.series_memory.stats()
+                            if getattr(app.state.extractor, 'series_memory', None) is not None else None),
+                "series_history_max_entries": getattr(getattr(app.state.extractor, "series_memory", None), "max_entries", None)}
 
     @app.get("/", include_in_schema=False)
     def root():

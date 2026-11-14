@@ -1,0 +1,1249 @@
+{
+  "commit": "ab912e408562d97bfbcf6ea23f507f4731be7182",
+  "source_hashes": {
+    "temporal.py": "79d483e26e23040971e2fef745160e9fec45d03579109415526b48b733dbd4f5",
+    "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+    "series_history.py": "69335920668e1925736fd9d40d6449e0a42e2d4316447fde730377c22ab87ede",
+    "postprocess_dates.py": "36c59778c10d0ceb76a58c268c61e9b0975074d3542d40c1ad98d2b45879442b",
+    "benchmark.py": "88835d520968df7b6f8756d077620d20ff042510e495839468fd857fdc1b76e4"
+  },
+  "contract_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+  "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+  "comparisons": {
+    "task": {
+      "before": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.3315,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.2888,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 212,
+            "valid_to_errors": 122,
+            "date_errors": 229,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.6471,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 30,
+            "valid_to_errors": 0,
+            "date_errors": 30,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.5954,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 53,
+            "valid_to_errors": 0,
+            "date_errors": 53,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "after": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.4008,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.323,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 190,
+            "valid_to_errors": 117,
+            "date_errors": 218,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.8235,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 15,
+            "valid_to_errors": 0,
+            "date_errors": 15,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.7786,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "transitions": {
+        "still_correct": 224,
+        "changed_matched_facts": 149,
+        "still_wrong": 417,
+        "fixed": 65,
+        "regressed": 15
+      },
+      "net_correct_pairs": 50
+    },
+    "task-history": {
+      "before": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.4008,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.323,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 190,
+            "valid_to_errors": 117,
+            "date_errors": 218,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.8235,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 15,
+            "valid_to_errors": 0,
+            "date_errors": 15,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.7786,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "after": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.4064,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.3354,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 184,
+            "valid_to_errors": 117,
+            "date_errors": 214,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.8235,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 15,
+            "valid_to_errors": 0,
+            "date_errors": 15,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.7786,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "transitions": {
+        "still_correct": 289,
+        "changed_matched_facts": 15,
+        "still_wrong": 428,
+        "fixed": 4
+      },
+      "net_correct_pairs": 4
+    },
+    "binding": {
+      "before": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.4008,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.323,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 190,
+            "valid_to_errors": 117,
+            "date_errors": 218,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.8235,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 15,
+            "valid_to_errors": 0,
+            "date_errors": 15,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.7786,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "after": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.3939,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.3075,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 195,
+            "valid_to_errors": 109,
+            "date_errors": 223,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.8235,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 15,
+            "valid_to_errors": 0,
+            "date_errors": 15,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.7786,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "transitions": {
+        "still_correct": 282,
+        "changed_matched_facts": 28,
+        "still_wrong": 430,
+        "fixed": 2,
+        "regressed": 7
+      },
+      "net_correct_pairs": -5
+    },
+    "binding-history": {
+      "before": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.4064,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.3354,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 184,
+            "valid_to_errors": 117,
+            "date_errors": 214,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.8235,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 15,
+            "valid_to_errors": 0,
+            "date_errors": 15,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.7786,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "after": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.4008,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.323,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 188,
+            "valid_to_errors": 109,
+            "date_errors": 218,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.8235,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 15,
+            "valid_to_errors": 0,
+            "date_errors": 15,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.7786,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "transitions": {
+        "still_correct": 286,
+        "changed_matched_facts": 29,
+        "still_wrong": 425,
+        "fixed": 3,
+        "regressed": 7
+      },
+      "net_correct_pairs": -4
+    },
+    "new-vs-legacy": {
+      "before": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.4147,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.354,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 174,
+            "valid_to_errors": 117,
+            "date_errors": 208,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.8235,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 15,
+            "valid_to_errors": 0,
+            "date_errors": 15,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.7786,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "after": {
+        "official": {
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1989,
+          "fact_precision": 0.3625,
+          "fact_recall": 0.3908,
+          "temporal_recall": 0.4064,
+          "n_temporal": 721,
+          "state_accuracy": 0.3467,
+          "n_state": 623,
+          "grounding_turn": 0.7656,
+          "grounding_span": null,
+          "n_grounded": 721
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 214,
+            "fact_precision": 0.5701,
+            "fact_recall": 0.2693,
+            "temporal_recall": 0.0738,
+            "grounding_turn": 0.9016,
+            "matched_facts": 122,
+            "missed_facts": 331,
+            "extra_facts": 92,
+            "valid_from_errors": 113,
+            "valid_to_errors": 50,
+            "date_errors": 113,
+            "source_turn_errors": 12
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 136,
+            "fact_precision": 0.4485,
+            "fact_recall": 0.4178,
+            "temporal_recall": 0.0656,
+            "grounding_turn": 0.6393,
+            "matched_facts": 61,
+            "missed_facts": 85,
+            "extra_facts": 75,
+            "valid_from_errors": 57,
+            "valid_to_errors": 32,
+            "date_errors": 57,
+            "source_turn_errors": 22
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 370,
+            "fact_precision": 0.8703,
+            "fact_recall": 0.805,
+            "temporal_recall": 0.3354,
+            "grounding_turn": 0.823,
+            "matched_facts": 322,
+            "missed_facts": 78,
+            "extra_facts": 48,
+            "valid_from_errors": 184,
+            "valid_to_errors": 117,
+            "date_errors": 214,
+            "source_turn_errors": 57
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 255,
+            "fact_precision": 0.3333,
+            "fact_recall": 0.231,
+            "temporal_recall": 0.8235,
+            "grounding_turn": 0.9294,
+            "matched_facts": 85,
+            "missed_facts": 283,
+            "extra_facts": 170,
+            "valid_from_errors": 15,
+            "valid_to_errors": 0,
+            "date_errors": 15,
+            "source_turn_errors": 6
+          },
+          "agreement": {
+            "attribute_kind": "static",
+            "n_gold_facts": 478,
+            "n_pred_facts": 1014,
+            "fact_precision": 0.1292,
+            "fact_recall": 0.2741,
+            "temporal_recall": 0.7786,
+            "grounding_turn": 0.4504,
+            "matched_facts": 131,
+            "missed_facts": 347,
+            "extra_facts": 883,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 72
+          }
+        },
+        "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+        "known_scorer_issues": [
+          "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+          "Organizer object-name matching can accept different objects.",
+          "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+        ]
+      },
+      "transitions": {
+        "still_correct": 293,
+        "changed_matched_facts": 17,
+        "still_wrong": 422,
+        "regressed": 6
+      },
+      "net_correct_pairs": -6
+    }
+  },
+  "history_manifests": {
+    "task-history": {
+      "seconds": 0.26743358420208097,
+      "counts": {
+        "temporal_decisions:action_assertion_time": 115,
+        "dates_changed": 508,
+        "temporal_decisions:task_mode_left_unchanged": 1276,
+        "temporal_decisions:already_consistent": 199,
+        "temporal_decisions:agreement_event_time": 311,
+        "temporal_decisions:action_explicit_time": 48,
+        "temporal_decisions:status_explicit_time": 34,
+        "temporal_decisions:interval_conflict": 4,
+        "temporal_decisions:multiple_objects_same_evidence": 2,
+        "series_accepted_carried": 16
+      }
+    },
+    "binding-history": {
+      "seconds": 0.3257492498960346,
+      "counts": {
+        "temporal_decisions:action_assertion_time": 115,
+        "dates_changed": 507,
+        "temporal_decisions:task_mode_left_unchanged": 1004,
+        "temporal_decisions:already_consistent": 181,
+        "temporal_decisions:agreement_event_time": 311,
+        "temporal_decisions:no_bound_event_time": 288,
+        "temporal_decisions:action_explicit_time": 48,
+        "temporal_decisions:bound_event_time": 33,
+        "temporal_decisions:interval_conflict": 4,
+        "temporal_decisions:ambiguous_ticket_reference": 1,
+        "temporal_decisions:conflicting_event_times": 2,
+        "temporal_decisions:multiple_objects_same_evidence": 2,
+        "series_accepted_carried": 16
+      }
+    }
+  },
+  "serving": {
+    "chronological_stream": {
+      "matches_offline_bulk": true,
+      "different_calls": 0
+    },
+    "file_order_batch_1": {
+      "matches_offline_bulk": true,
+      "different_calls": 0
+    },
+    "file_order_batch_2": {
+      "matches_offline_bulk": true,
+      "different_calls": 0
+    },
+    "cpu_history_median_seconds": 0.06713495799340308,
+    "cpu_history_seconds": [
+      0.06713495799340308,
+      0.08659479091875255,
+      0.07711679092608392,
+      0.06429595802910626,
+      0.05275666690431535
+    ]
+  },
+  "test_log_sha256": "9f99a458bb7066b86c75603c0a90fd0d9dfb1c7776d314df682116c05c249333",
+  "tests": {
+    "run": 183,
+    "passed": 182,
+    "skipped": 1,
+    "skip_reason": "real XGrammar integration unavailable"
+  },
+  "first_model_only": true,
+  "second_model_predictions_available": false,
+  "gold_passed_to_rules": false,
+  "input_hashes": {
+    "val.jsonl": "fb0dd73bba4b642ca18538751ce4a64d40a569aa7edd1a2a2b595af3c6b6ca83",
+    "train.jsonl": "62cb4af045ab12dbc854d71532b3b796ef501f4a232359e98549863ae0476fcb",
+    "raw_constrained_predictions.jsonl": "ff1a1ec411a27d823cbbba439b43406072841010d753e90511f187d8ced9eefd",
+    "dedup_control.jsonl": "2c67f5fccd4f4fb0296a81f496a84d3761d830b45885a904768a617bbff65ab9"
+  },
+  "counts": {
+    "calls": 383,
+    "gold_facts": 1845,
+    "raw_constrained_predictions": 2100,
+    "control_predictions_after_dedup": 1989,
+    "matched_facts": 721
+  },
+  "integrated_main": "ee4b6952599d57c0477cc36696908553482731cb",
+  "limitations": [
+    "Only the first model was evaluated; continue-002 new raw predictions are absent.",
+    "Legacy main on the same frozen control scores 0.4147; protected history scores lower.",
+    "Binding is experimental and scores below task.",
+    "CPU/mocked serving checks do not prove GPU/vLLM throughput or hidden-test quality."
+  ]
+}

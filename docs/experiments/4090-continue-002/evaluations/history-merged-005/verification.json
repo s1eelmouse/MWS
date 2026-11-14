@@ -1,0 +1,281 @@
+{
+  "protocol": "frozen-predictions-cpu-date-only-v1",
+  "calls": 383,
+  "reference_ref": "992b439",
+  "contract_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+  "file_sha256": {
+    "gold": "fb0dd73bba4b642ca18538751ce4a64d40a569aa7edd1a2a2b595af3c6b6ca83",
+    "pred_before_history": "40153b93fbf4c9e930b395b9420866ee3773c517c015467b60f6504245c61152",
+    "old_final": "b2789bd4e8b985daa0439e3848d1d8d435faed9b21d62020c712259edaecbdef"
+  },
+  "source_sha256": {
+    "series_history.py": "eb405601cc2ebeb374ecf54edf24eadd0acc7230f4a2835d0d721fb45a0bfb02",
+    "temporal.py": "da072bfafacf34257be24e011958e7c72154a7233c7dce4f24e3372d32c360ec",
+    "temporal_binding.py": "36ea9adf91b8c557341ee23109db36002b26fa088c8d2453ecab7d9c32e473b7"
+  },
+  "quality": {
+    "official": {
+      "n_calls": 383,
+      "n_gold_facts": 1845,
+      "n_pred_facts": 1896,
+      "fact_precision": 0.4008,
+      "fact_recall": 0.4119,
+      "temporal_recall": 0.4105,
+      "n_temporal": 760,
+      "state_accuracy": 0.3852,
+      "n_state": 623,
+      "grounding_turn": 0.7987,
+      "grounding_span": null,
+      "n_grounded": 760
+    },
+    "diagnostics": {
+      "invalid_or_failed_calls": 0,
+      "missing_calls": 0,
+      "format_valid_rate": 1.0,
+      "calls_with_invalid_sources": 0
+    },
+    "per_attribute": {
+      "service_state": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 453,
+        "n_pred_facts": 225,
+        "fact_precision": 0.6578,
+        "fact_recall": 0.3267,
+        "temporal_recall": 0.0946,
+        "grounding_turn": 0.9054,
+        "matched_facts": 148,
+        "missed_facts": 305,
+        "extra_facts": 77,
+        "valid_from_errors": 134,
+        "valid_to_errors": 49,
+        "date_errors": 134,
+        "source_turn_errors": 14
+      },
+      "tariff": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 146,
+        "n_pred_facts": 120,
+        "fact_precision": 0.525,
+        "fact_recall": 0.4315,
+        "temporal_recall": 0.0476,
+        "grounding_turn": 0.619,
+        "matched_facts": 63,
+        "missed_facts": 83,
+        "extra_facts": 57,
+        "valid_from_errors": 60,
+        "valid_to_errors": 30,
+        "date_errors": 60,
+        "source_turn_errors": 24
+      },
+      "ticket_status": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 400,
+        "n_pred_facts": 363,
+        "fact_precision": 0.8926,
+        "fact_recall": 0.81,
+        "temporal_recall": 0.3611,
+        "grounding_turn": 0.858,
+        "matched_facts": 324,
+        "missed_facts": 76,
+        "extra_facts": 39,
+        "valid_from_errors": 176,
+        "valid_to_errors": 109,
+        "date_errors": 207,
+        "source_turn_errors": 46
+      },
+      "action": {
+        "attribute_kind": "static",
+        "n_gold_facts": 368,
+        "n_pred_facts": 198,
+        "fact_precision": 0.4293,
+        "fact_recall": 0.231,
+        "temporal_recall": 0.8471,
+        "grounding_turn": 0.9412,
+        "matched_facts": 85,
+        "missed_facts": 283,
+        "extra_facts": 113,
+        "valid_from_errors": 13,
+        "valid_to_errors": 0,
+        "date_errors": 13,
+        "source_turn_errors": 5
+      },
+      "agreement": {
+        "attribute_kind": "static",
+        "n_gold_facts": 478,
+        "n_pred_facts": 990,
+        "fact_precision": 0.1414,
+        "fact_recall": 0.2929,
+        "temporal_recall": 0.7571,
+        "grounding_turn": 0.5429,
+        "matched_facts": 140,
+        "missed_facts": 338,
+        "extra_facts": 850,
+        "valid_from_errors": 34,
+        "valid_to_errors": 1,
+        "date_errors": 34,
+        "source_turn_errors": 64
+      }
+    },
+    "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+    "known_scorer_issues": [
+      "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+      "Organizer object-name matching can accept different objects.",
+      "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+    ]
+  },
+  "comparisons": {
+    "without_history": {
+      "before": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1896,
+        "fact_precision": 0.4008,
+        "fact_recall": 0.4119,
+        "temporal_recall": 0.4,
+        "n_temporal": 760,
+        "state_accuracy": 0.3852,
+        "n_state": 623,
+        "grounding_turn": 0.7987,
+        "grounding_span": null,
+        "n_grounded": 760
+      },
+      "after": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1896,
+        "fact_precision": 0.4008,
+        "fact_recall": 0.4119,
+        "temporal_recall": 0.4105,
+        "n_temporal": 760,
+        "state_accuracy": 0.3852,
+        "n_state": 623,
+        "grounding_turn": 0.7987,
+        "grounding_span": null,
+        "n_grounded": 760
+      },
+      "transitions": {
+        "still_correct": 304,
+        "changed_matched_facts": 19,
+        "still_wrong": 448,
+        "fixed": 8
+      },
+      "net_correct_pairs": 8
+    },
+    "vova_992b439": {
+      "before": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1896,
+        "fact_precision": 0.4008,
+        "fact_recall": 0.4119,
+        "temporal_recall": 0.4105,
+        "n_temporal": 760,
+        "state_accuracy": 0.3852,
+        "n_state": 623,
+        "grounding_turn": 0.7987,
+        "grounding_span": null,
+        "n_grounded": 760
+      },
+      "after": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1896,
+        "fact_precision": 0.4008,
+        "fact_recall": 0.4119,
+        "temporal_recall": 0.4105,
+        "n_temporal": 760,
+        "state_accuracy": 0.3852,
+        "n_state": 623,
+        "grounding_turn": 0.7987,
+        "grounding_span": null,
+        "n_grounded": 760
+      },
+      "transitions": {
+        "still_correct": 312,
+        "changed_matched_facts": 0,
+        "still_wrong": 448
+      },
+      "net_correct_pairs": 0
+    },
+    "old_full_val_003": {
+      "before": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1896,
+        "fact_precision": 0.4008,
+        "fact_recall": 0.4119,
+        "temporal_recall": 0.4237,
+        "n_temporal": 760,
+        "state_accuracy": 0.3852,
+        "n_state": 623,
+        "grounding_turn": 0.7987,
+        "grounding_span": null,
+        "n_grounded": 760
+      },
+      "after": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1896,
+        "fact_precision": 0.4008,
+        "fact_recall": 0.4119,
+        "temporal_recall": 0.4105,
+        "n_temporal": 760,
+        "state_accuracy": 0.3852,
+        "n_state": 623,
+        "grounding_turn": 0.7987,
+        "grounding_span": null,
+        "n_grounded": 760
+      },
+      "transitions": {
+        "still_correct": 312,
+        "changed_matched_facts": 19,
+        "still_wrong": 438,
+        "regressed": 10
+      },
+      "net_correct_pairs": -10
+    }
+  },
+  "history": {
+    "policy": "identified_ticket_explicit_priority_v3",
+    "max_entries": 10000,
+    "max_accounts": 512,
+    "max_payload_bytes": 8388608,
+    "max_account_payload_bytes": 32768,
+    "max_account_entries": 64,
+    "ttl_seconds": 3600,
+    "entries": 57,
+    "accounts": 55,
+    "serialized_payload_bytes": 20235,
+    "peak_serialized_payload_bytes": 20235,
+    "processing_seconds": 0.04770269998698495,
+    "counts": {
+      "history_replaced_entries": 44,
+      "series_accepted_carried": 20,
+      "history_interval_conflicts": 3
+    }
+  },
+  "counts": {
+    "history_replaced_entries": 44,
+    "series_accepted_carried": 20,
+    "history_interval_conflicts": 3
+  },
+  "reference_counts": {
+    "series_accepted_carried": 20
+  },
+  "stream_equals_batch": {
+    "1": true,
+    "2": true
+  },
+  "history_cpu_seconds_runs": [
+    0.07902959999046288,
+    0.08063310000579804,
+    0.06694570000399835,
+    0.0668127000099048,
+    0.08699879999039695
+  ],
+  "history_cpu_seconds_median": 0.07902959999046288,
+  "history_python_traced_peak_bytes": 1868096,
+  "gold_passed_to_rules": false,
+  "training_or_generation_run": false,
+  "resource_note": "Local Windows CPU, copying/sorting/history only; no GPU speed claim. tracemalloc measures Python allocations, not process RSS."
+}
