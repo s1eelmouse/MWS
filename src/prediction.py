@@ -5,6 +5,7 @@ speaker, so code fills speaker from the source turn. Dates that cannot be
 parsed, or intervals whose end precedes their start, become missing dates
 instead of discarding every fact in the call. Gold validation stays strict.
 """
+import json
 from datetime import datetime
 from typing import Literal
 
@@ -69,9 +70,9 @@ def sanitize_interval(valid_from, valid_to):
 
 
 def normalize_prediction(raw: RawFacts, call: CallInput):
-    """Fill diarization speaker and make date strings structurally valid."""
+    """Fill diarization speaker, make dates valid and remove exact duplicates."""
     turns = {turn.idx: turn for turn in call.turns}
-    facts, summary = [], {}
+    facts, seen, summary = [], set(), {}
     for fact in raw.facts:
         item = fact.model_dump(mode="json")
         turn = turns.get(item["source"]["turn_idx"])
@@ -82,6 +83,12 @@ def normalize_prediction(raw: RawFacts, call: CallInput):
             item["valid_from"], item["valid_to"])
         for key, value in changes.items():
             summary[key] = summary.get(key, 0) + value
+        key = json.dumps(item, sort_keys=True, ensure_ascii=False)
+        if key in seen:
+            summary["exact_duplicates_removed"] = summary.get(
+                "exact_duplicates_removed", 0) + 1
+            continue
+        seen.add(key)
         facts.append(item)
     return Facts.model_validate({"facts": facts}), summary
 

@@ -52,8 +52,9 @@ loss. В `events.jsonl` нет текстов диалогов, ответов �
 порядок полей — как в `to_answer`, поэтому формат ответа остаётся обучающим.
 `report.json` и `*.run.json` содержат `constrained_json` и
 `grammar_compile_seconds`; `report.json` также суммирует `normalization_counts`
-(speaker из диаризации, отброшенные даты, открытые обратные интервалы). `JSON_CONSTRAINED=0` отключает ограничение только для
-явного A/B; это фиксируется в `settings.json`. `JSON_GRAMMAR_BACKEND` задаёт
+(speaker из диаризации, отброшенные даты, открытые обратные интервалы, точные
+дубликаты). `JSON_CONSTRAINED=0` отключает ограничение только для явного A/B;
+это фиксируется в `settings.json`. `JSON_GRAMMAR_BACKEND` задаёт
 масочное ядро XGrammar: `auto`, `triton`, `torch_native`, `cpu` и т. п. На Windows
 CUDA `auto` выбирает `torch_native`, потому что у Triton нет Windows-сборки; на
 Linux без Python-заголовков Triton JIT тоже не собирается, тогда явно ставьте
