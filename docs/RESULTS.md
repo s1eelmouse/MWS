@@ -211,9 +211,11 @@ precision / recall 0.4149 / 0.4136, grounding 0.8047, 0 отказов. HTTP-р�
 обёртки `{"fact": {...}}`. **Но после constrained decoding модель стала лучшей:**
 0 отказов, формат 100 %, precision / recall 0.4008 / 0.4119, `temporal_recall`
 0.3566, `state_accuracy` 0.3852, grounding 0.7987 на полном val. С датами `task`
-`temporal_recall` 0.4237. Поэтому `continue-002` — основная модель, а не
-исследовательский артефакт. Исходные файлы — на сервере,
-`out/json-constrained-continue-002-full-001`.
+`temporal_recall` 0.4237. Поэтому `continue-002` — подтверждённая контрольная и
+fallback, а не исследовательский артефакт. Третья эпоха `continue-003` — кандидат:
+T 0.4377 с сериями / 0.4351 HTTP, S 0.3949, P/R 0.4149/0.4136, G 0.8047.
+Исходные файлы — на сервере, `out/json-constrained-continue-002-full-001` и
+`out/continue-003-full-001`.
 
 ### Технические проверки на части val
 
