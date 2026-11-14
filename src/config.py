@@ -44,6 +44,7 @@ TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "task").strip().low
 if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task"):
     raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative or task")
 CATALOG_PATH = os.getenv("CATALOG_PATH", "").strip()
+SAVE_RAW_RESPONSES = os.getenv("SAVE_RAW_RESPONSES", "0").strip().lower() in ("1", "true", "yes", "on")
 
 # Печать не должна ронять скрипт из-за символа, которого нет в кодировке консоли Windows.
 for _stream in (sys.stdout, sys.stderr):

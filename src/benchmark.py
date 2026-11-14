@@ -9,7 +9,8 @@ from pathlib import Path
 from case_io import prediction_row, read_jsonl, validate_gold, write_jsonl
 from case_evaluation import evaluate_predictions
 from config import (MAX_INPUT_TOKENS, MAX_NEW_TOKENS, PROMPT_LOOKUP_TOKENS,
-                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY)
+                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY,
+                    JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS, SAVE_RAW_RESPONSES)
 from measurements import (MemorySampler, distribution, environment, write_json, model_artifacts,
                           model_weights_bytes, ERROR_TYPES)
 from schema import as_call, contract_signature
@@ -29,6 +30,7 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     """Backend receives CallInput only; labels stay exclusively in the evaluator."""
     calls = [as_call(row) for row in rows]
     predictions, records, batches = [], [], []
+    cumulative_failed = 0
     warmup_errors = []
     warmup_start = time.perf_counter()
     for warmup_batch in range(warmup_batches):
@@ -47,7 +49,8 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
             (output / "predictions.jsonl").open("x", encoding="utf-8") as pred_file, \
             (output / "calls.jsonl").open("x", encoding="utf-8") as call_file, \
             (output / "batches.jsonl").open("x", encoding="utf-8") as batch_file, \
-            (output / "failures.jsonl").open("x", encoding="utf-8") as failure_file:
+            (output / "failures.jsonl").open("x", encoding="utf-8") as failure_file, \
+            (output / "raw-answers.jsonl").open("x", encoding="utf-8") as raw_file:
         for start in range(0, len(calls), batch_size):
             batch = calls[start:start + batch_size]
             details = []
@@ -79,21 +82,34 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
                           "error": prediction.get("error"),
                           "completion_latency_seconds": elapsed}
                 diagnostic = record.pop("diagnostic", None)
+                raw_fields = {key: record.pop(key) for key in
+                              ('raw_response', 'initial_raw_response') if key in record}
+                if raw_fields:
+                    raw_file.write(json.dumps({'call_id': call.call_id, **raw_fields},
+                                              ensure_ascii=False) + '\n')
                 if "error" in prediction:
+                    cumulative_failed += 1
                     failure_file.write(json.dumps({**record, **(diagnostic or {})}, ensure_ascii=False) + "\n")
                 records.append(record)
                 predictions.append(prediction)
                 pred_file.write(json.dumps(prediction, ensure_ascii=False) + "\n")
                 call_file.write(json.dumps(record, ensure_ascii=False) + "\n")
-            for stream in (pred_file, call_file, batch_file, failure_file):
+            for stream in (pred_file, call_file, batch_file, failure_file, raw_file):
                 stream.flush()
-            print(f"Measured {len(predictions)}/{len(calls)} calls", flush=True)
+            print(f"Completed {len(predictions)}/{len(calls)}; failed: {cumulative_failed}", flush=True)
     seconds = sum(batch["seconds"] for batch in batches)
     if memory.error:
         raise RuntimeError(f"Memory sampling failed: {memory.error}")
     temporal_mode = getattr(backend, "temporal_normalization", "off")
-    predictions, temporal_counts, temporal_audit = apply_temporal_postprocess(
-        calls, predictions, temporal_mode)
+    # These already include per-call prediction normalization; not a dates-off baseline.
+    write_jsonl(output / 'predictions-before-series.jsonl', predictions)
+    with MemorySampler(output / 'postprocess-memory.csv') as post_memory:
+        post_start = time.perf_counter()
+        predictions, temporal_counts, temporal_audit = apply_temporal_postprocess(
+            calls, predictions, temporal_mode)
+        post_seconds = time.perf_counter() - post_start
+    if post_memory.error:
+        raise RuntimeError(f'Postprocess memory sampling failed: {post_memory.error}')
     if temporal_counts:
         with (output / "predictions.jsonl").open("w", encoding="utf-8") as stream:
             for prediction in predictions:
@@ -104,6 +120,8 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     write_json(output / "metrics.json", quality)
     write_jsonl(output / "errors.jsonl", errors)
     failed = sum("error" in p for p in predictions)
+    print(f"Final {len(predictions)}/{len(calls)}; failed: {failed}; "
+          f"temporal_postprocess_seconds: {post_seconds:.4f}", flush=True)
     # Only explicit execution/schema failures; fact mismatches are quality diagnostics.
     error_counts = dict.fromkeys(ERROR_TYPES, 0)
     error_counts.update(Counter(e["error"] for e in errors if e.get("error")))
@@ -118,6 +136,13 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
             "warmup_batches": warmup_batches, "warmup_seconds": warmup_seconds,
             "warmup_errors": warmup_errors,
             "measurement_seconds": seconds,
+            "temporal_postprocess_seconds": post_seconds,
+            "processing_seconds_including_postprocess": seconds + post_seconds,
+            "calls_per_hour_including_postprocess": len(calls) * 3600 / (seconds + post_seconds),
+            "gpu_seconds_per_1000_calls_including_postprocess":
+                (seconds + post_seconds) * 1000 / len(calls) if backend.device == 'cuda' else None,
+            "postprocess_memory": post_memory.report(),
+            "combined_process_rss_sampled_peak_bytes": max(memory.peak, post_memory.peak),
             "calls_per_hour": len(calls) * 3600 / seconds,
             "successful_calls_per_hour": (len(calls) - failed) * 3600 / seconds,
             "gpu_seconds_per_1000_calls": seconds * 1000 / len(calls) if backend.device == "cuda" else None,
@@ -176,7 +201,9 @@ def main():
               "limits": {"input": MAX_INPUT_TOKENS, "output": MAX_NEW_TOKENS},
               "prompt_lookup_tokens": PROMPT_LOOKUP_TOKENS,
               "retry_on_token_limit": RETRY_ON_TOKEN_LIMIT,
-              "retry_repetition_penalty": RETRY_REPETITION_PENALTY}
+              "retry_repetition_penalty": RETRY_REPETITION_PENALTY,
+              "save_raw_responses": SAVE_RAW_RESPONSES,
+              "grammar_backend": JSON_GRAMMAR_BACKEND, "grammar_threads": JSON_GRAMMAR_THREADS}
     try:
         report["hardware"] = environment()
         write_json(output / "environment.json", report["hardware"])

@@ -6,7 +6,8 @@ from pathlib import Path
 
 from config import (CATALOG_PATH, JSON_CONSTRAINED, JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS,
                     MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS,
-                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY, TEMPORAL_NORMALIZATION)
+                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY, TEMPORAL_NORMALIZATION,
+                    SAVE_RAW_RESPONSES)
 from catalog_normalization import load_catalog
 from json_constraints import GrammarLogitsProcessor, compile_json_grammar
 from prediction import parse_prediction, salvage_sources
@@ -133,6 +134,8 @@ class Extractor:
                 details[index]["output_tokens"] = end if end is not None else len(tokens)
                 details[index]["generation_limit_reached"] = end is None and len(tokens) >= MAX_NEW_TOKENS
         for index, raw in zip(indices, answers):
+            if SAVE_RAW_RESPONSES and measurements is not None:
+                details[index]['raw_response'] = raw
             temporal_decisions = []
             facts, problem, normalization = parse_prediction(raw, calls[index],
                                                               temporal_decisions=temporal_decisions)
@@ -151,6 +154,9 @@ class Extractor:
                         [calls[index]], measurements=retry_details,
                         repetition_penalty=RETRY_REPETITION_PENALTY, allow_retry=False)
                     retry = retry_results[0]
+                    if SAVE_RAW_RESPONSES and measurements is not None:
+                        details[index]['initial_raw_response'] = raw
+                        details[index]['raw_response'] = retry_details[0].get('raw_response')
                     details[index]["retry"] = {
                         "reason": "output_token_limit",
                         "repetition_penalty": RETRY_REPETITION_PENALTY,

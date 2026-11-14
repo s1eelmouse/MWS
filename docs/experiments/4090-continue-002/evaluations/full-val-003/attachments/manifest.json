@@ -1,0 +1,38 @@
+{
+  "report.json": {
+    "bytes": 14322,
+    "sha256": "45cd4c658d49123784f33797edeb7d80cf342352c93a3ed8dc7d5802b0a96b70"
+  },
+  "metrics.json": {
+    "bytes": 3061,
+    "sha256": "8d882cf76bcb4181ab8b2055326242e3ce2775c51f1e763158ff2acaa20850f8"
+  },
+  "environment.json": {
+    "bytes": 5603,
+    "sha256": "553d78abc322f4bb6fd4716812d246376ee3eb00cb5e2a94f67deaa318ca79a9"
+  },
+  "memory.csv": {
+    "bytes": 1764729,
+    "sha256": "441a4b743644752ef29ca871f720c40af846cfc51de1dbeb6696fd2e459f6766"
+  },
+  "postprocess-memory.csv": {
+    "bytes": 258,
+    "sha256": "86bcc20e7f09f07babb6c12f6425bccfa44d2b9d2cea54df83a2af96a991b5e9"
+  },
+  "batches.jsonl": {
+    "bytes": 11523,
+    "sha256": "ce066946865760a815df632765709dee528ff3e3271ec44e9ef641f46ff6200c"
+  },
+  "run.sh": {
+    "bytes": 1967,
+    "sha256": "55c5adcb2fd844ee4293b69a7ad97a77b50a4e18315ee63cf311d6bf7454ee90"
+  },
+  "code-transfer-manifest.json": {
+    "bytes": 6535,
+    "sha256": "28e2f2e753bcf7406b0c6bdbc0d22ece9f5cc01d47873adc09ef6a75353f6ad0"
+  },
+  "series-date-comparison/comparison.json": {
+    "bytes": 6734,
+    "sha256": "3573dc8c356f55ba2db8f6c6462e709df35cbcf4ac00befabc61f29fe1a4f779"
+  }
+}
