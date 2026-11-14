@@ -7,7 +7,8 @@ from pathlib import Path
 from config import (CATALOG_PATH, JSON_CONSTRAINED, JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS,
                     MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS,
                     RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY, TEMPORAL_NORMALIZATION,
-                    TEMPORAL_SERIES_HISTORY, SAVE_RAW_RESPONSES)
+                    TEMPORAL_SERIES_HISTORY, SAVE_RAW_RESPONSES, ALLOW_LEGACY_CONTRACT,
+                    FACT_RECOVERY, TEMPORAL_CATALOG_PATH)
 from catalog_normalization import load_catalog
 from json_constraints import GrammarLogitsProcessor, compile_json_grammar
 from prediction import parse_prediction, salvage_sources
@@ -18,15 +19,23 @@ from series_history import new_series_memory
 
 class Extractor:
     def __init__(self, model_dir: str = MERGED_DIR, with_schema: bool = False, device: str = "auto"):
-        check_model_contract(model_dir, with_schema)
+        self.model_contract = check_model_contract(model_dir, with_schema, allow_legacy=ALLOW_LEGACY_CONTRACT)
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
         self.torch = torch
         self.with_schema = with_schema
         self.temporal_normalization = TEMPORAL_NORMALIZATION
+        self.fact_recovery = FACT_RECOVERY
+        self.fact_recovery_policy = 'explicit-current-per-object-v1' if FACT_RECOVERY else None
+        self.temporal_catalog_sha256 = None
+        if TEMPORAL_NORMALIZATION == 'case_v2':
+            from temporal_case_v2 import load_layers
+            load_layers(TEMPORAL_CATALOG_PATH)
+            self.temporal_catalog_sha256 = hashlib.sha256(Path(TEMPORAL_CATALOG_PATH).read_bytes()).hexdigest()
         self.series_history_enabled = TEMPORAL_SERIES_HISTORY
         self.series_memory = new_series_memory() if TEMPORAL_SERIES_HISTORY else None
         self.catalog_sha256 = None
+        self.catalog_path = CATALOG_PATH or None
         if CATALOG_PATH:
             load_catalog(CATALOG_PATH)
             self.catalog_sha256 = hashlib.sha256(Path(CATALOG_PATH).read_bytes()).hexdigest()

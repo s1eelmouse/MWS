@@ -11,7 +11,8 @@ from typing import Literal
 
 from pydantic import Field, field_validator
 
-from config import CATALOG_PATH, TEMPORAL_NORMALIZATION
+from config import (CATALOG_PATH, TEMPORAL_NORMALIZATION, TEMPORAL_MODES,
+                    TEMPORAL_CATALOG_PATH, FACT_RECOVERY)
 from catalog_normalization import load_catalog, normalize_catalog_facts
 from schema import (Attribute, CallInput, Facts, ObjectRef, Source, Speaker, StrictModel,
                     load_answer_payload, schema_error, source_problems)
@@ -73,7 +74,8 @@ def sanitize_interval(valid_from, valid_to):
 
 
 def normalize_prediction(raw: RawFacts, call: CallInput, *, temporal_mode=None,
-                         temporal_decisions=None, catalog_path=None):
+                         temporal_decisions=None, catalog_path=None, date_catalog_path=None,
+                         fact_recovery=None):
     """Fill diarization speaker, make dates valid and remove exact duplicates."""
     turns = {turn.idx: turn for turn in call.turns}
     facts, seen, summary = [], set(), {}
@@ -84,15 +86,27 @@ def normalize_prediction(raw: RawFacts, call: CallInput, *, temporal_mode=None,
         if catalog_changes:
             summary['catalog_fields_normalized'] = len(catalog_changes)
     temporal_mode = TEMPORAL_NORMALIZATION if temporal_mode is None else temporal_mode
-    if temporal_mode not in ('off', 'conservative', 'task', 'binding'):
+    if temporal_mode not in TEMPORAL_MODES:
         raise ValueError('Unknown temporal normalization mode')
-    if temporal_mode in ('conservative', 'task', 'binding'):
-        items, decisions = normalize_fact_dates(items, call, mode=temporal_mode)
+    if temporal_mode != 'off':
+        layers = None
+        if temporal_mode == 'case_v2':
+            from temporal_case_v2 import load_layers
+            layers = load_layers(TEMPORAL_CATALOG_PATH if date_catalog_path is None else date_catalog_path)
+        items, decisions = normalize_fact_dates(items, call, mode=temporal_mode, layers=layers)
         if temporal_decisions is not None:
             temporal_decisions.extend(decisions)
         changed = sum(len(d['changes']) for d in decisions)
         if changed:
             summary['temporal_dates_repaired'] = changed
+    recovery_enabled = FACT_RECOVERY if fact_recovery is None else fact_recovery
+    if recovery_enabled:
+        from fact_recovery import recover_facts
+        items, recovered = recover_facts(items, call, catalog_path)
+        if recovered:
+            summary['recovered_facts'] = len(recovered)
+            if temporal_decisions is not None:
+                temporal_decisions.extend(recovered)
     for item in items:
         turn = turns.get(item["source"]["turn_idx"])
         if turn is not None and item.get("speaker") != turn.speaker:
@@ -126,7 +140,8 @@ def salvage_sources(facts: Facts, call: CallInput):
 
 
 def parse_prediction(raw: str, call: CallInput, *, temporal_mode=None,
-                     temporal_decisions=None, catalog_path=None):
+                     temporal_decisions=None, catalog_path=None, date_catalog_path=None,
+                     fact_recovery=None):
     """Parse a model answer and normalize prediction-only fields.
 
     Returns (Facts | None, error | None, normalization summary | None).
@@ -145,7 +160,8 @@ def parse_prediction(raw: str, call: CallInput, *, temporal_mode=None,
     try:
         facts, summary = normalize_prediction(raw_facts, call, temporal_mode=temporal_mode,
                                               temporal_decisions=temporal_decisions,
-                                              catalog_path=catalog_path)
+                                              catalog_path=catalog_path, date_catalog_path=date_catalog_path,
+                                              fact_recovery=fact_recovery)
     except ValueError as exc:
         if not hasattr(exc, 'errors'):
             raise  # Configuration/catalog failures are not model schema errors.

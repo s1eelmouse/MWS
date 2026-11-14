@@ -203,13 +203,13 @@ class MeasurementTest(unittest.TestCase):
             output = root / "comparison"
             with patch.object(sys, "argv", ["compare_runs.py", "--reports", *reports,
                      "--gold", str(gold_path), "--baseline-pred", str(gold_path),
-                     "--output-dir", str(output)]):
+                     "--output-dir", str(output)]), patch('compare_runs.catalog_for', return_value=None):
                 main()
             with (output / "comparison.csv").open() as stream:
                 rows = list(csv.DictReader(stream))
             self.assertEqual(len(rows), 3)
             self.assertEqual(float(rows[0]["fact_recall"]), 1)
-            self.assertEqual(float(rows[0]["temporal_recall_delta_from_baseline"]), 0)
+            self.assertEqual(rows[0]["temporal_recall_delta_from_baseline"], '')  # action-only fixture: undefined T
             self.assertEqual(rows[0]["model_parameters"], "")
             self.assertEqual(rows[0]["errors_invalid_json"], "")
             self.assertEqual(rows[1]["model_parameters"], "123")
@@ -230,6 +230,23 @@ class MeasurementTest(unittest.TestCase):
             self.assertEqual(action["fact_recall"], "1.0")
             self.assertTrue(any(row["attribute_kind"] == "temporal" for row in attributes))
             ET.parse(output / "resources-quality.svg")
+
+    def test_comparison_rejects_changed_scoring_version_or_catalog(self):
+        base = {'status': 'complete', 'protocol': 'v2', 'dataset_sha256': 'same',
+                'selected_calls_sha256': 'same', 'contract_signature': 'same', 'limits': {},
+                'warmup_batches': 1, 'quality': {'scorer_sha256': 'same', 'scorer_version': '2.1',
+                                               'catalog_sha256': 'catalog-a'}}
+        for field, value in [('scorer_version', '2.1-datefix'), ('catalog_sha256', 'catalog-b')]:
+            different = {**base, 'quality': {**base['quality'], field: value}}
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'Scorer version'):
+                comparison_rows([base, base, different])
+
+    def test_resource_curve_rejects_different_fact_recovery_policies(self):
+        base = {'status': 'complete', 'protocol': 'v2', 'dataset_sha256': 'same',
+                'selected_calls_sha256': 'same', 'contract_signature': 'same', 'limits': {},
+                'warmup_batches': 1, 'quality': {'scorer_sha256': 'same'}, 'fact_recovery': False}
+        with self.assertRaisesRegex(ValueError, 'Different decoding'):
+            comparison_rows([base, base, {**base, 'fact_recovery': True}])
 
 
 if __name__ == "__main__":

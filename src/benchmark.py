@@ -10,20 +10,23 @@ from case_io import prediction_row, read_jsonl, validate_gold, write_jsonl
 from case_evaluation import evaluate_predictions
 from config import (MAX_INPUT_TOKENS, MAX_NEW_TOKENS, PROMPT_LOOKUP_TOKENS,
                     RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY,
-                    JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS, SAVE_RAW_RESPONSES)
+                    JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS, SAVE_RAW_RESPONSES, CASE_DATA_DIR)
+from run_context import context as run_context, catalog_for
 from measurements import (MemorySampler, distribution, environment, write_json, model_artifacts,
                           model_weights_bytes, ERROR_TYPES)
 from schema import as_call, contract_signature
 from training_data import file_digest
 
 
-def apply_temporal_postprocess(calls, predictions, mode, *, allow_series_history=False):
+def apply_temporal_postprocess(calls, predictions, mode, *, allow_series_history=False,
+                              date_catalog=None, fact_recovery=False, recovery_catalog_path=None):
     """Explicit CPU-only helper; runtime backends already normalize inside timing."""
-    if mode not in ('conservative', 'task', 'binding'):
+    if mode not in ('conservative', 'task', 'binding', 'case_v2'):
         return predictions, {}, []
     from postprocess_dates import process_predictions
     processed, audit, counts = process_predictions(
-        calls, predictions, mode=mode, allow_series_history=allow_series_history)
+        calls, predictions, mode=mode, allow_series_history=allow_series_history,
+        date_catalog=date_catalog, fact_recovery=fact_recovery, recovery_catalog_path=recovery_catalog_path)
     return processed, counts, audit
 
 
@@ -117,7 +120,7 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
         temporal_audit.extend(record.get('series_decisions', []))
     if temporal_audit:
         write_jsonl(output / "temporal-audit.jsonl", temporal_audit)
-    quality, errors = evaluate_predictions(rows, predictions)
+    quality, errors = evaluate_predictions(rows, predictions, catalog_path=getattr(backend, 'catalog_path', None))
     write_json(output / "metrics.json", quality)
     write_jsonl(output / "errors.jsonl", errors)
     failed = sum("error" in p for p in predictions)
@@ -160,7 +163,7 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", default="data/organizer/val.jsonl")
+    parser.add_argument("--input", default=str(Path(CASE_DATA_DIR) / 'val.jsonl'))
     parser.add_argument("--model", required=True)
     parser.add_argument("--device", choices=("cpu", "cuda"), required=True)
     parser.add_argument("--batch-size", type=int, default=1)
@@ -203,6 +206,8 @@ def main():
               "save_raw_responses": SAVE_RAW_RESPONSES,
               "retry_on_token_limit": RETRY_ON_TOKEN_LIMIT,
               "retry_repetition_penalty": RETRY_REPETITION_PENALTY}
+    provenance = run_context(val=args.input, catalog=catalog_for(args.input))
+    report['run_context'] = provenance
     try:
         report["hardware"] = environment()
         write_json(output / "environment.json", report["hardware"])
@@ -211,11 +216,16 @@ def main():
         from extractor import Extractor
         load_start = time.perf_counter()
         backend = Extractor(args.model, args.with_schema, args.device)
+        backend.catalog_path = catalog_for(args.input)
         sync = backend.torch.cuda.synchronize if args.device == "cuda" else lambda: None
         sync()
         report["model_load_seconds"] = time.perf_counter() - load_start
         report["constrained_json"] = bool(getattr(backend, "constrained_json", False))
+        report['model_contract'] = getattr(backend, 'model_contract', None)
         report["temporal_normalization"] = getattr(backend, "temporal_normalization", "off")
+        report['temporal_catalog_sha256'] = getattr(backend, 'temporal_catalog_sha256', None)
+        report['fact_recovery'] = getattr(backend, 'fact_recovery', False)
+        report['fact_recovery_policy'] = getattr(backend, 'fact_recovery_policy', None)
         report["series_history_enabled"] = bool(getattr(backend, "series_history_enabled", False))
         report["series_history_max_entries"] = getattr(getattr(backend, "series_memory", None), "max_entries", None)
         report["catalog_sha256"] = getattr(backend, "catalog_sha256", None)

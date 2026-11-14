@@ -9,6 +9,8 @@ import time
 from pathlib import Path
 
 from measurements import environment, write_json
+from config import CASE_DATA_DIR, SCORER_VERSION
+from run_context import context as run_context, catalog_for
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -54,9 +56,10 @@ def main():
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--train-new", action="store_true", help="explicitly create a new adapter")
     parser.add_argument("--model", help="existing merged model: skip training and merge")
-    parser.add_argument("--train", default=str(ROOT / "data/organizer/train.jsonl"))
-    parser.add_argument("--val", default=str(ROOT / "data/organizer/val.jsonl"))
-    parser.add_argument("--baseline-pred", default=str(ROOT / "data/organizer/baseline_pred.jsonl"))
+    parser.add_argument("--train", default=str(ROOT / CASE_DATA_DIR / 'train.jsonl'))
+    parser.add_argument("--val", default=str(ROOT / CASE_DATA_DIR / 'val.jsonl'))
+    parser.add_argument("--baseline-pred", default=str(ROOT / CASE_DATA_DIR / 'baseline_pred.jsonl'))
+    parser.add_argument('--allow-legacy-contract', action='store_true')
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--train-limit", type=int)
     parser.add_argument("--max-steps", type=int, default=-1)
@@ -78,6 +81,8 @@ def main():
         device, sep, batch = mode.partition(":")
         if device not in ("cpu", "cuda") or not sep or not batch.isdigit() or int(batch) < 1:
             parser.error("Modes must be cpu:N or cuda:N with N > 0")
+    if args.allow_legacy_contract:
+        os.environ['ALLOW_LEGACY_CONTRACT'] = '1'
     directory = Path(args.output_dir).resolve()
     directory.mkdir(parents=True, exist_ok=False)
     status = "failed"
@@ -87,6 +92,8 @@ def main():
         return py + [str(ROOT / "src" / (name + ".py")), *map(str, argv)]
     try:
         write_json(directory / "environment.json", environment())
+        write_json(directory / 'run-context.json', run_context(train=args.train, val=args.val,
+                   catalog=catalog_for(args.val), scorer_version=SCORER_VERSION))
         write_json(directory / "settings.json", {
             **vars(args), "environment": {key: os.getenv(key) for key in
                 ("BASE_MODEL", "MAX_INPUT_TOKENS", "MAX_NEW_TOKENS", "MAX_SEQUENCE_TOKENS",
@@ -95,7 +102,8 @@ def main():
                  "RETRY_REPETITION_PENALTY", "TEMPORAL_NORMALIZATION", "CATALOG_PATH",
                  "TEMPORAL_SERIES_HISTORY", "TEMPORAL_SERIES_MAX_ENTRIES",
                  "HISTORY_MAX_ACCOUNTS", "HISTORY_MAX_BYTES", "HISTORY_TTL_SECONDS",
-                 "SAVE_RAW_RESPONSES")}})
+                 "SAVE_RAW_RESPONSES", "CASE_DATA_DIR", "SCORER_VERSION", "ALLOW_LEGACY_CONTRACT",
+                 'FACT_RECOVERY', 'TEMPORAL_CATALOG_PATH')}})
         stage(directory, "tests", py + ["-m", "unittest", "discover", "-s", str(ROOT / "tests"), "-v"])
         stage(directory, "compile", py + ["-m", "compileall", "-q", str(ROOT / "src"), str(ROOT / "tests")])
         stage(directory, "check-data", script("train", "--check-data", "--train", args.train, "--val", args.val))
@@ -104,6 +112,8 @@ def main():
             extra = ["--limit", str(args.train_limit)] if args.train_limit else []
             if args.init_adapter_dir:
                 extra += ["--init-adapter-dir", args.init_adapter_dir]
+            if args.allow_legacy_contract:
+                extra += ['--allow-legacy-contract']
             if args.learning_rate != 2e-4:
                 extra += ["--learning-rate", str(args.learning_rate)]
             stage(directory, "train", script("train", "--train", args.train, "--val", args.val,

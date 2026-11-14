@@ -28,7 +28,10 @@ def main():
             props = torch.cuda.get_device_properties(0)
             report["gpu"] = props.name
             report["vram_gib"] = props.total_memory / 2**30
-            report["bf16_supported"] = torch.cuda.is_bf16_supported()
+            from gpu_precision import native_bf16_supported
+            report["compute_capability"] = list(torch.cuda.get_device_capability())
+            report["torch_cuda_arch_list"] = torch.cuda.get_arch_list()
+            report["bf16_supported"] = native_bf16_supported(torch)
     print(json.dumps(report, ensure_ascii=False, indent=2))
     if args.json:
         path = Path(args.json)

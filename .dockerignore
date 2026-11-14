@@ -8,6 +8,14 @@ venv
 out
 data
 docs
+!docs/
+docs/*
+!docs/migrations/
+docs/migrations/*
+!docs/migrations/4090-to-v100/
+!docs/migrations/4090-to-v100/**
+!docs/evaluations/
+!docs/evaluations/**
 case_data
 __pycache__
 **/__pycache__

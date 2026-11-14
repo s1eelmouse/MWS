@@ -3,11 +3,11 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 
 from config import (MAX_NEW_TOKENS, TEMPORAL_NORMALIZATION,
-                    TEMPORAL_SERIES_HISTORY)
+                    TEMPORAL_SERIES_HISTORY, FACT_RECOVERY, TEMPORAL_CATALOG_PATH)
 from series_history import new_series_memory
 from llm_api import chat
 from prediction import parse_prediction
-from schema import Facts, build_messages, source_problems
+from schema import Facts, build_messages, source_problems, contract_signature
 from serve import create_app
 
 ANSWER_FORMAT = {"type": "json_schema",
@@ -18,7 +18,17 @@ class VLLMExtractor:
     constrained_json = True  # response_format asks vLLM for schema-guided decoding
 
     def __init__(self):
+        self.model_contract = {'target_signature': contract_signature(), 'policy': 'external-backend-unverified'}
         self.temporal_normalization = TEMPORAL_NORMALIZATION
+        self.fact_recovery = FACT_RECOVERY
+        self.fact_recovery_policy = 'explicit-current-per-object-v1' if FACT_RECOVERY else None
+        self.temporal_catalog_sha256 = None
+        if TEMPORAL_NORMALIZATION == 'case_v2':
+            from pathlib import Path
+            import hashlib
+            from temporal_case_v2 import load_layers
+            load_layers(TEMPORAL_CATALOG_PATH)
+            self.temporal_catalog_sha256 = hashlib.sha256(Path(TEMPORAL_CATALOG_PATH).read_bytes()).hexdigest()
         self.series_history_enabled = TEMPORAL_SERIES_HISTORY
         self.series_memory = new_series_memory() if TEMPORAL_SERIES_HISTORY else None
 

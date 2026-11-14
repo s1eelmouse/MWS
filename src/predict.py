@@ -12,7 +12,9 @@ from schema import as_call
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", default="data/organizer/val.jsonl")
+    from config import CASE_DATA_DIR
+    from pathlib import Path
+    parser.add_argument("--input", default=str(Path(CASE_DATA_DIR) / 'val.jsonl'))
     parser.add_argument("--output", required=True, help="new file; each completed batch is flushed")
     parser.add_argument("--model", default=os.getenv("MODEL_DIR", MERGED_DIR))
     parser.add_argument("--with-schema", action="store_true")
@@ -56,6 +58,9 @@ def main():
         "batch_size": args.batch_size, "with_schema": args.with_schema,
         "constrained_json": bool(getattr(extractor, "constrained_json", False)),
         "temporal_normalization": getattr(extractor, "temporal_normalization", "off"),
+        'temporal_catalog_sha256': getattr(extractor, 'temporal_catalog_sha256', None),
+        'fact_recovery': getattr(extractor, 'fact_recovery', False),
+        'fact_recovery_policy': getattr(extractor, 'fact_recovery_policy', None),
         "series_history_enabled": bool(getattr(extractor, "series_history_enabled", False)),
         "series_history_max_entries": getattr(getattr(extractor, "series_memory", None), "max_entries", None),
         "catalog_sha256": getattr(extractor, "catalog_sha256", None),

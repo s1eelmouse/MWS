@@ -14,7 +14,7 @@ def find_problems(row: dict) -> list[str]:
 
 
 def inspect_rows(rows: list[dict]) -> dict:
-    bad, quotes, nonliteral = [], 0, 0
+    bad, quotes, nonliteral, empty_names, spans = [], 0, 0, 0, 0
     for row in rows:
         problems = find_problems(row)
         if problems:
@@ -22,7 +22,9 @@ def inspect_rows(rows: list[dict]) -> dict:
             continue
         turns = {turn["idx"]: turn["text"] for turn in row["turns"]}
         for fact in row["facts"]:
+            empty_names += fact['object']['name'] == ''
             source = fact["source"]
+            spans += source.get('span') is not None
             if source.get("quote"):
                 quotes += 1
                 nonliteral += source["quote"] not in turns[source["turn_idx"]]
@@ -30,6 +32,8 @@ def inspect_rows(rows: list[dict]) -> dict:
         "calls": len(rows), "facts": sum(len(row.get("facts", [])) for row in rows),
         "invalid_calls": len(bad), "errors": bad,
         "nonliteral_quote_warnings": nonliteral, "nonempty_quotes": quotes,
+        'empty_object_names': empty_names, 'facts_with_spans': spans,
+        'contract_version': '2.1',
     }
 
 

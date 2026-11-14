@@ -5,6 +5,8 @@ import html
 import json
 from pathlib import Path
 from measurements import write_json, model_weights_bytes, ERROR_TYPES
+from config import CASE_DATA_DIR
+from run_context import catalog_for
 
 QUALITY_METRICS = ("fact_precision", "fact_recall", "temporal_recall", "state_accuracy", "grounding_turn")
 
@@ -24,7 +26,7 @@ def attribute_rows(reports, baseline, report_paths):
                          "device": settings.get("device"), "batch_size": settings.get("batch_size"),
                          "attribute": attribute,
                          "attribute_kind": "temporal" if attribute in
-                             ("service_state", "tariff", "ticket_status") else "static",
+                             ("service_state", "tariff", "ticket_status", "agreement") else "static",
                          **metrics,
                          **{key + "_delta_from_baseline": delta(metrics.get(key), reference.get(key))
                             for key in ("fact_precision", "fact_recall")}})
@@ -46,7 +48,8 @@ def comparison_rows(reports):
     keys = ("protocol", "dataset_sha256", "selected_calls_sha256", "contract_signature", "limits")
     pipeline_keys = ("constrained_json", "temporal_normalization", "catalog_sha256", "grammar_backend", "grammar_threads",
                      "retry_on_token_limit", "retry_repetition_penalty", "series_history_enabled",
-                     "series_history_max_entries", "history_settings")
+                     "series_history_max_entries", "history_settings", 'fact_recovery',
+                     'fact_recovery_policy', 'temporal_catalog_sha256')
     for report in reports:
         if report.get("diagnostic_subset"):
             raise ValueError("Diagnostic failure subset cannot enter the resource-quality curve")
@@ -58,6 +61,9 @@ def comparison_rows(reports):
             raise ValueError("Different decoding, date rules, catalog, retry or history settings")
         if report["quality"]["scorer_sha256"] != reports[0]["quality"]["scorer_sha256"]:
             raise ValueError("Scorer differs")
+        if any(report['quality'].get(k) != reports[0]['quality'].get(k) for k in
+               ('scorer_version', 'patch_adapter_sha256', 'catalog_sha256')):
+            raise ValueError('Scorer version, local patch or scoring catalog differs')
         if report["warmup_batches"] != reports[0]["warmup_batches"]:
             raise ValueError("Warmup protocol differs")
     for device in ("cpu", "cuda"):
@@ -77,6 +83,16 @@ def comparison_rows(reports):
     for report in reports:
         cfg, quality = report["settings"], report["quality"]
         result.append({"model": cfg["model"], "device": cfg["device"], "dtype": report["dtype"], "batch_size": cfg["batch_size"],
+                       'fact_recovery': report.get('fact_recovery'),
+                       'fact_recovery_policy': report.get('fact_recovery_policy'),
+                       'temporal_normalization': report.get('temporal_normalization'),
+                       'temporal_catalog_sha256': report.get('temporal_catalog_sha256'),
+                       'scorer_version': quality.get('scorer_version', '1'),
+                       'scorer_sha256': quality.get('scorer_sha256'),
+                       'scorer_patch_sha256': quality.get('patch_adapter_sha256'),
+                       'scoring_catalog_sha256': quality.get('catalog_sha256'),
+                       'contract_signature': report.get('contract_signature'),
+                       'model_source_contract_signature': (report.get('model_contract') or {}).get('source_signature'),
                        "model_parameters": report.get("model_parameters"),
                        "model_weights_bytes": report.get("model_weights_bytes",
                            model_weights_bytes(report.get("model_artifacts"))),
@@ -105,7 +121,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reports", nargs="+", required=True)
     parser.add_argument("--baseline-pred", required=True)
-    parser.add_argument("--gold", default="data/organizer/val.jsonl")
+    parser.add_argument("--gold", default=str(Path(CASE_DATA_DIR) / 'val.jsonl'))
     parser.add_argument("--output-dir", required=True)
     args = parser.parse_args()
     reports = [json.loads(Path(p).read_text(encoding="utf-8")) for p in args.reports]
@@ -121,7 +137,13 @@ def main():
     all_ids = {g["call_id"] for g in read_jsonl(args.gold)}
     if any(r["call_id"] not in all_ids for r in all_pred):
         parser.error("Unknown baseline call IDs")
-    baseline, _ = evaluate_predictions(gold, [r for r in all_pred if r["call_id"] in ids])
+    baseline, _ = evaluate_predictions(gold, [r for r in all_pred if r["call_id"] in ids],
+        scorer_version=reports[0]['quality'].get('scorer_version', '1'), catalog_path=catalog_for(args.gold))
+    reference_quality = reports[0]['quality']
+    reference_identity = {**reference_quality, 'scorer_version': reference_quality.get('scorer_version', '1')}
+    if any(baseline.get(key) != reference_identity.get(key) for key in
+           ('scorer_sha256', 'scorer_version', 'patch_adapter_sha256', 'catalog_sha256')):
+        parser.error('Baseline scorer or catalog differs from measured reports')
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=False)
     write_json(output / "baseline.json", baseline)

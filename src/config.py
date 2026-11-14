@@ -5,7 +5,17 @@
 """
 import math
 import os
+from pathlib import Path
 import sys
+
+_DATA_ROOT = Path(__file__).resolve().parents[1] / 'data/organizer-v2.1'
+CASE_DATA_DIR = os.getenv("CASE_DATA_DIR", os.getenv('ORGANIZER_DIR', str(_DATA_ROOT)))
+# Compatibility alias for teammate commands; one authoritative dataset path.
+ORGANIZER_DIR = Path(CASE_DATA_DIR)
+SCORER_VERSION = os.getenv("SCORER_VERSION", "2.1").strip()
+if SCORER_VERSION not in ("1", "2.1", "2.1-datefix"):
+    raise ValueError("SCORER_VERSION must be 1, 2.1 or 2.1-datefix")
+ALLOW_LEGACY_CONTRACT = os.getenv("ALLOW_LEGACY_CONTRACT", "0").lower() in ("1", "true", "yes", "on")
 
 # Стартовая модель; альтернативы проверяются по полному числу параметров <= 1.5B.
 BASE_MODEL = os.getenv("BASE_MODEL", "Qwen/Qwen3-0.6B")
@@ -42,9 +52,12 @@ PROMPT_LOOKUP_TOKENS = int(os.getenv("PROMPT_LOOKUP_TOKENS", "0"))
 # "conservative" is the earlier rule set; "binding" is experimental status-event
 # binding; "off" preserves model dates. Cross-call memory is separately opt-in.
 TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "task").strip().lower()
-if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task", "binding"):
-    raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative, task or binding")
+TEMPORAL_MODES = ('off', 'conservative', 'task', 'binding', 'case_v2')
+if TEMPORAL_NORMALIZATION not in TEMPORAL_MODES:
+    raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative, task, binding or case_v2")
 CATALOG_PATH = os.getenv("CATALOG_PATH", "").strip()
+TEMPORAL_CATALOG_PATH = os.getenv('TEMPORAL_CATALOG_PATH', CATALOG_PATH or str(Path(CASE_DATA_DIR) / 'catalog.json')).strip()
+FACT_RECOVERY = os.getenv('FACT_RECOVERY', '0').strip().lower() in ('1', 'true', 'yes', 'on')
 SAVE_RAW_RESPONSES = os.getenv("SAVE_RAW_RESPONSES", "0").strip().lower() in ("1", "true", "yes", "on")
 TEMPORAL_SERIES_HISTORY = os.getenv("TEMPORAL_SERIES_HISTORY", "0").strip().lower() not in ("0", "false", "no", "off")
 TEMPORAL_SERIES_MAX_ENTRIES = int(os.getenv("TEMPORAL_SERIES_MAX_ENTRIES", "10000"))
@@ -57,8 +70,8 @@ if not math.isfinite(HISTORY_TTL_SECONDS) or HISTORY_TTL_SECONDS <= 0:
     raise ValueError("History TTL must be finite and positive")
 if TEMPORAL_SERIES_MAX_ENTRIES < 1:
     raise ValueError("TEMPORAL_SERIES_MAX_ENTRIES must be positive")
-if TEMPORAL_SERIES_HISTORY and TEMPORAL_NORMALIZATION not in ('task', 'binding'):
-    raise ValueError("TEMPORAL_SERIES_HISTORY requires task or binding mode")
+if TEMPORAL_SERIES_HISTORY and TEMPORAL_NORMALIZATION not in ('task', 'binding', 'case_v2'):
+    raise ValueError("TEMPORAL_SERIES_HISTORY requires task, binding or case_v2 mode")
 
 # Печать не должна ронять скрипт из-за символа, которого нет в кодировке консоли Windows.
 for _stream in (sys.stdout, sys.stderr):

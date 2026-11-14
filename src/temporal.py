@@ -611,8 +611,14 @@ def repair_task_dates(fact, call):
     return item, event
 
 
-def normalize_fact_dates(facts, call, mode='conservative'):
+def normalize_fact_dates(facts, call, mode='conservative', layers=None):
     """No mutation, dropping, reordering or access to gold labels."""
+    if mode == 'case_v2':
+        if layers is None:
+            raise ValueError('case_v2 needs the catalog value layers (catalog.json)')
+        from temporal_case_v2 import repair_case_v2_dates
+        output, decisions = repair_case_v2_dates(facts, call, layers)
+        return output, [{'fact_index': index, **decision} for index, decision in enumerate(decisions)]
     if mode not in ('conservative', 'task', 'binding'):
         raise ValueError('temporal mode must be conservative, task or binding')
     owners = {}

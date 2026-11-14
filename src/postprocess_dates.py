@@ -12,15 +12,18 @@ from catalog_normalization import load_catalog, normalize_catalog_facts
 from schema import Facts, as_call, contract_signature, source_problems
 from temporal import normalize_fact_dates
 from series_history import new_series_memory
+from config import TEMPORAL_MODES
 
 
 def process_predictions(calls, predictions, *, mode='conservative', catalog=None,
                         deduplicate=False, speaker_from_source=False, allow_series_history=False,
-                        memory=None):
-    if mode not in ('off', 'conservative', 'task', 'binding'):
+                        memory=None, date_catalog=None, fact_recovery=False, recovery_catalog_path=None):
+    if mode not in TEMPORAL_MODES:
         raise ValueError('Unknown temporal mode')
-    if allow_series_history and mode not in ('task', 'binding'):
-        raise ValueError('Series history requires task or binding mode')
+    if allow_series_history and mode not in ('task', 'binding', 'case_v2'):
+        raise ValueError('Series history requires task, binding or case_v2 mode')
+    if mode == 'case_v2' and date_catalog is None:
+        raise ValueError('case_v2 requires the date catalog')
     if memory is not None and not allow_series_history:
         raise ValueError('Explicit memory requires allow_series_history=True')
     by_id = {row['call_id']: row for row in predictions}
@@ -41,12 +44,17 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
             items, decisions = normalize_catalog_facts(items, catalog)
             audit.extend({'call_id': call.call_id, 'component': 'catalog', **d} for d in decisions)
             counts['catalog_fields_normalized'] += len(decisions)
-        if mode in ('conservative', 'task', 'binding'):
-            items, decisions = normalize_fact_dates(items, call, mode=mode)
+        if mode != 'off':
+            items, decisions = normalize_fact_dates(items, call, mode=mode, layers=date_catalog)
             audit.extend({'call_id': call.call_id, 'component': 'temporal', **d} for d in decisions)
             for d in decisions:
                 counts['temporal_decisions:' + d['reason']] += 1
                 counts['dates_changed'] += len(d['changes'])
+        if fact_recovery:
+            from fact_recovery import recover_facts
+            items, decisions = recover_facts(items, call, recovery_catalog_path)
+            audit.extend({'call_id': call.call_id, **decision} for decision in decisions)
+            counts['recovered_facts'] += len(decisions)
         turns = {turn.idx: turn for turn in call.turns}
         seen, final = set(), []
         for index, item in enumerate(items):
@@ -88,7 +96,10 @@ def main():
     parser.add_argument('--input', required=True, help='calls; gold fields are stripped at the boundary')
     parser.add_argument('--pred', required=True)
     parser.add_argument('--output-dir', required=True)
-    parser.add_argument('--mode', choices=['off', 'conservative', 'task', 'binding'], default='task')
+    parser.add_argument('--mode', choices=TEMPORAL_MODES, default='task')
+    parser.add_argument('--date-catalog', help='case_v2 value layers only; no catalog value rewriting')
+    parser.add_argument('--fact-recovery', action='store_true')
+    parser.add_argument('--recovery-catalog', help='catalog for optional missing-tariff recovery')
     parser.add_argument('--catalog', help='optional exact catalog normalization; separate from date-only A/B')
     parser.add_argument('--deduplicate', action='store_true')
     parser.add_argument('--speaker-from-source', action='store_true')
@@ -103,20 +114,31 @@ def main():
         parser.error('Input contains no calls')
     predictions = read_jsonl(args.pred)
     resolver = load_catalog(args.catalog) if args.catalog else None
+    layers = None
+    if args.mode == 'case_v2':
+        if not args.date_catalog:
+            parser.error('case_v2 requires --date-catalog')
+        from temporal_case_v2 import load_layers
+        layers = load_layers(args.date_catalog)
     start = time.perf_counter()
     results, audit, counts = process_predictions(
         calls, predictions, mode=args.mode, catalog=resolver,
         deduplicate=args.deduplicate, speaker_from_source=args.speaker_from_source,
-        allow_series_history=args.allow_series_history)
+        allow_series_history=args.allow_series_history, date_catalog=layers,
+        fact_recovery=args.fact_recovery, recovery_catalog_path=args.recovery_catalog or args.catalog)
     elapsed = time.perf_counter() - start
     manifest = {
         'settings': vars(args), 'calls': len(calls), 'counts': counts,
         'processing_seconds': elapsed, 'contract_signature': contract_signature(),
+        'contract_version': '2.1',
         'input_sha256': hashlib.sha256(Path(args.input).read_bytes()).hexdigest(),
         'prediction_sha256': hashlib.sha256(Path(args.pred).read_bytes()).hexdigest(),
         'catalog_sha256': hashlib.sha256(Path(args.catalog).read_bytes()).hexdigest() if args.catalog else None,
+        'date_catalog_sha256': hashlib.sha256(Path(args.date_catalog).read_bytes()).hexdigest() if args.date_catalog else None,
+        'recovery_catalog_sha256': hashlib.sha256(Path(args.recovery_catalog or args.catalog).read_bytes()).hexdigest()
+                                   if args.recovery_catalog or args.catalog else None,
         'source_sha256': {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                          for name in ['temporal.py', 'temporal_binding.py', 'series_history.py',
+                          for name in ['temporal.py', 'temporal_binding.py', 'temporal_case_v2.py', 'fact_recovery.py', 'series_history.py',
                                        'catalog_normalization.py', 'postprocess_dates.py']},
         'gold_fields_passed_to_rules': False,
         'history_scope': 'earlier_same_account_ticket' if args.allow_series_history else 'single_call',

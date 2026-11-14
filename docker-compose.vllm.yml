@@ -56,6 +56,18 @@ services:
       VLLM_URL: http://vllm:8001/v1
       VLLM_MODEL: extractor
       MAX_BATCH: ${MAX_BATCH:-1}
+      TEMPORAL_NORMALIZATION: ${TEMPORAL_NORMALIZATION:-task}
+      TEMPORAL_SERIES_HISTORY: ${TEMPORAL_SERIES_HISTORY:-1}
+      FACT_RECOVERY: ${FACT_RECOVERY:-0}
+      CATALOG_PATH: /app/catalog.json
+      TEMPORAL_CATALOG_PATH: /app/catalog.json
+    volumes:
+      - type: bind
+        source: ${CATALOG_FILE:-./data/organizer-v2.1/catalog.json}
+        target: /app/catalog.json
+        read_only: true
+        bind:
+          create_host_path: false
     depends_on:
       vllm:
         condition: service_healthy

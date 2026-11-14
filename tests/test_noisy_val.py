@@ -50,5 +50,32 @@ class NoisyValTest(unittest.TestCase):
             self.assertTrue(corrupt_text("да нет", 1.0, random.Random(seed)))
 
 
+class NoisyCatalogTest(unittest.TestCase):
+    def test_catalog_is_preserved_and_conflicting_destination_is_rejected(self):
+        import json
+        import tempfile
+        from unittest.mock import patch
+        import make_noisy_val
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            row = {'call_id': 'synthetic:call0', 'started_at': '2026-11-13T12:00:00',
+                   'turns': [{'idx': 0, 'speaker': 'client', 'text': 'вчера перезагрузил роутер'}], 'facts': []}
+            (root / 'val.jsonl').write_text(json.dumps(row, ensure_ascii=False) + '\n', encoding='utf-8')
+            (root / 'catalog.json').write_text('{"actions": ["перезагрузка роутера"]}', encoding='utf-8')
+            output = root / 'noisy/val.jsonl'
+            argv = ['make_noisy_val.py', '--input', str(root / 'val.jsonl'), '--output', str(output)]
+            with patch.object(sys, 'argv', argv):
+                make_noisy_val.main()
+            self.assertEqual((output.parent / 'catalog.json').read_bytes(), (root / 'catalog.json').read_bytes())
+            manifest = json.loads(output.with_suffix('.manifest.json').read_text(encoding='utf-8'))
+            self.assertTrue(manifest['catalog_next_to_output'])
+            self.assertIsNotNone(manifest['catalog_sha256'])
+            (output.parent / 'catalog.json').write_text('{}', encoding='utf-8')
+            argv[-1] = str(output.parent / 'other.jsonl')
+            with patch.object(sys, 'argv', argv), self.assertRaises(SystemExit):
+                make_noisy_val.main()
+            self.assertFalse((output.parent / 'other.jsonl').exists())
+
+
 if __name__ == "__main__":
     unittest.main()
