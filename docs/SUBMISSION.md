@@ -13,7 +13,7 @@
 | Merged-модель 002/003 | локально `/home/user/hackathon/artifacts-4090/` | скопированы с 4090 |
 | Конфиг инференса | `README.md`, `MODEL.md` | 12288/16384/4096, XGrammar, `task` |
 | Docker CPU | `compactfactextraction:cpu` | образ собран; `/health` и короткий `/extract` проверены; полный датовый звонок на CPU >240 с |
-| Отчёт | `MODEL.md`, `RESULTS.md`, `DEFENSE.md` | готово |
+| Отчёт | `MODEL.md`, `RESULTS.md`, `DEFENSE.md`, `TRAINING_REPORT.md` | готово |
 | Презентация | `docs/defense-deck.pptx` / `.pdf`, `SLIDES.md` | deck собран; проверить числа, шрифты и тайминг |
 | Демо/видео | `DEMO.md` | сценарий; записать видео |
 

@@ -1,8 +1,8 @@
 # Защита: как мы решали проблемы и улучшали модель
 
 Документ для подготовки к защите 16.11.2026. Числа — полный val, официальный
-оценщик. Ссылки на детали: [RESULTS.md](RESULTS.md), [DETERMINISTIC.md](DETERMINISTIC.md),
-[MODEL.md](MODEL.md), [VALIDATION.md](VALIDATION.md).
+оценщик. Ссылки на детали: [RESULTS.md](RESULTS.md), [TRAINING_REPORT.md](TRAINING_REPORT.md),
+[DETERMINISTIC.md](DETERMINISTIC.md), [MODEL.md](MODEL.md), [VALIDATION.md](VALIDATION.md).
 
 > **Внимание: пакет организаторов 2.1.** Числа ниже — по старому пакету. Новый
 > baseline: T 0.4706, S 0.5345, P/R 0.3348/0.3805; цель T ≥0.4506 / S ≥0.5145,
