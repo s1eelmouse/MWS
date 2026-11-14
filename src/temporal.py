@@ -5,6 +5,7 @@ expressions use the supplied call timestamp; the machine clock is never read.
 """
 from dataclasses import asdict, dataclass
 from datetime import date, datetime, timedelta
+from functools import lru_cache
 import calendar
 import copy
 import re
@@ -45,8 +46,8 @@ MONTHS = {
 }
 WEEKDAYS = {
     'понедельник': 0, 'понедельника': 0, 'вторник': 1, 'вторника': 1,
-    'среду': 2, 'среды': 2, 'четверг': 3, 'четверга': 3,
-    'пятницу': 4, 'пятницы': 4, 'субботу': 5, 'субботы': 5,
+    'среда': 2, 'среду': 2, 'среды': 2, 'четверг': 3, 'четверга': 3,
+    'пятница': 4, 'пятницу': 4, 'пятницы': 4, 'суббота': 5, 'субботу': 5, 'субботы': 5,
     'воскресенье': 6, 'воскресенья': 6,
 }
 RELATIVE = {
@@ -373,8 +374,66 @@ def _clauses(text):
     yield text[start:]
 
 
+ASR_CONFUSIONS = {
+    'о': 'а', 'а': 'о', 'е': 'и', 'и': 'е', 'я': 'е', 'ё': 'е', 'э': 'е',
+    'т': 'д', 'д': 'т', 'с': 'з', 'з': 'с', 'б': 'п', 'п': 'б', 'в': 'ф', 'ф': 'в',
+    'г': 'к', 'к': 'г', 'ж': 'ш', 'ш': 'ж', 'щ': 'ш', 'ц': 'с', 'ы': 'и',
+}
+CUE_WORDS = (
+    'вчера', 'сегодня', 'позавчера', 'послезавтра', 'завтра', 'назад', 'через',
+    'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье',
+)
+CUE_STOP = {
+    'вера', 'вечер', 'вечера', 'вечеру', 'вечерам', 'путаница', 'путаницу',
+    'завтрак', 'завтрака', 'над', 'нада', 'еда', 'еду',
+}
+
+
+def _one_edit_variants(word):
+    variants = set()
+    for index, char in enumerate(word):
+        replacement = ASR_CONFUSIONS.get(char)
+        if replacement:
+            variants.add(word[:index] + replacement + word[index + 1:])
+        variants.add(word[:index] + word[index + 1:])
+        if index + 1 < len(word):
+            variants.add(word[:index] + word[index + 1] + char + word[index + 2:])
+        variants.add(word[:index] + char + char + word[index + 1:])
+    return {item for item in variants if item and item != word}
+
+
+@lru_cache(maxsize=1)
+def _cue_variant_map():
+    """Typical ASR corruptions of cue words, matched exactly, never by loose distance."""
+    mapping = {}
+    for cue in CUE_WORDS:
+        first = _one_edit_variants(cue)
+        second = set()
+        for item in first:
+            second.update(_one_edit_variants(item))
+        for item in {cue} | first | second:
+            if item in CUE_STOP:
+                continue
+            mapping.setdefault(item, cue)
+    return mapping
+
+
+def _canonicalize_cues(text):
+    mapping = _cue_variant_map()
+    parts = []
+    for token in re.findall(r'[а-яёa-z0-9]+|[^а-яёa-z0-9]+', text, flags=re.I):
+        lower = token.lower().replace('ё', 'е')
+        cue = mapping.get(lower)
+        if cue and cue != lower:
+            parts.append(cue)
+        else:
+            parts.append(lower if token[:1].isalpha() else token)
+    return ''.join(parts)
+
+
 def _cue_dates(text, anchor, *, future=False):
     """Return (date, label, position) for explicit calendar cues in one clause."""
+    text = _canonicalize_cues(text)
     lower = text.lower().replace('ё', 'е')
     found = []
     if not future and re.search(r'не\s+вчера\s+родил', lower):
@@ -406,7 +465,7 @@ def _cue_dates(text, anchor, *, future=False):
             if amount:
                 days = 7 * amount if match.group(2).startswith('недел') else amount
                 found.append((anchor + timedelta(days=days), f'через {amount}', match.start()))
-        for match in re.finditer(r'\bв\s+(понедельник|вторник|среду|четверг|пятницу|субботу|воскресенье)\b', lower):
+        for match in re.finditer(r'\bв\s+(понедельник|вторник|сред[ау]|четверг|пятниц[ау]|суббот[ау]|воскресенье)\b', lower):
             target = WEEKDAYS[match.group(1)]
             found.append((anchor + timedelta(days=(target - anchor.weekday()) % 7),
                           'в ' + match.group(1), match.start()))
