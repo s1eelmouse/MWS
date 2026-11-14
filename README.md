@@ -15,6 +15,8 @@
 | [docs/MODEL.md](docs/MODEL.md) | Финальная модель: рецепт, конфиг инференса, качество, ограничения |
 | [docs/DEFENSE.md](docs/DEFENSE.md) | Как решали проблемы и улучшали модель: хронология, числа, отвергнутые гипотезы, Q&A |
 | [docs/EXAMPLES.md](docs/EXAMPLES.md) | Небольшие синтетические примеры: подтверждение, отказ, смена состояния, относительные даты |
+| [docs/SLIDES.md](docs/SLIDES.md) | Каркас презентации на 10 слайдов с финальными числами |
+| [docs/DEMO.md](docs/DEMO.md) | Сценарий живого демо, curl-команды и резервный план |
 | [docs/DECISION_NEXT_MODEL.md](docs/DECISION_NEXT_MODEL.md) | Решение по 1.7B и следующей эпохе |
 | [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) | Как запускать обучение с журналами и замеры CPU/GPU, методика замеров |
 | [docs/RESULTS.md](docs/RESULTS.md) | Таблицы результатов для отчёта и из каких файлов их заполнять |
