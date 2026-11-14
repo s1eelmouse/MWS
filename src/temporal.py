@@ -4,7 +4,7 @@ Calendar periods remain periods. Ambiguous dates are not guessed. All relative
 expressions use the supplied call timestamp; the machine clock is never read.
 """
 from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 import calendar
 import copy
 import re
@@ -361,8 +361,200 @@ def repair_fact_dates(fact, call):
     return item, event
 
 
-def normalize_fact_dates(facts, call):
+TASK_STOP = {'в', 'во', 'на', 'и', 'с', 'со', 'не', 'нет', 'для', 'у', 'по', 'уже', 'это',
+             'все', 'тариф', 'заявка', 'клиент', 'оператор', 'услуга'}
+
+
+def _clauses(text):
+    start = 0
+    for separator in CLAUSE_BREAK.finditer(text):
+        yield text[start:separator.start()]
+        start = separator.end()
+    yield text[start:]
+
+
+def _cue_dates(text, anchor, *, future=False):
+    """Return (date, label, position) for explicit calendar cues in one clause."""
+    lower = text.lower().replace('ё', 'е')
+    found = []
+    if not future and re.search(r'не\s+вчера\s+родил', lower):
+        return found
+    match = re.search(r'\bвчера\b|вчерашн', lower)
+    if match and not future:
+        found.append((anchor - timedelta(days=1), 'вчера', match.start()))
+    match = re.search(r'\bсегодня\b|сейчас', lower)
+    if match and not future:
+        found.append((anchor, 'сегодня', match.start()))
+    for match in re.finditer(r'(\d+|один|одну|два|две|три|четыре|пять|шесть|семь|восемь|девять|десять)\s+'
+                             r'(день|дня|дней)\s+назад', lower):
+        amount = _number(match.group(1))
+        if amount:
+            found.append((anchor - timedelta(days=amount), f'{amount} дней назад', match.start()))
+    for match in re.finditer(r'\b(?:с|со)\s+([а-я]+)', lower):
+        target = WEEKDAYS.get(match.group(1))
+        if target is not None:
+            back = (anchor.weekday() - target) % 7 or 7
+            found.append((anchor - timedelta(days=back), 'с ' + match.group(1), match.start()))
+    if future:
+        if re.search(r'послезавтра', lower):
+            found.append((anchor + timedelta(days=2), 'послезавтра', lower.find('послезавтра')))
+        elif re.search(r'\bзавтра\b', lower):
+            found.append((anchor + timedelta(days=1), 'завтра', lower.find('завтра')))
+        for match in re.finditer(r'через\s+(\d+|один|одну|два|две|три|четыре|пять|шесть|семь|восемь|девять|десять)\s+'
+                                 r'(день|дня|дней|неделю|недели|недель)', lower):
+            amount = _number(match.group(1))
+            if amount:
+                days = 7 * amount if match.group(2).startswith('недел') else amount
+                found.append((anchor + timedelta(days=days), f'через {amount}', match.start()))
+        for match in re.finditer(r'\bв\s+(понедельник|вторник|среду|четверг|пятницу|субботу|воскресенье)\b', lower):
+            target = WEEKDAYS[match.group(1)]
+            found.append((anchor + timedelta(days=(target - anchor.weekday()) % 7),
+                          'в ' + match.group(1), match.start()))
+    return found
+
+
+def _value_clauses(turn_text, value):
+    words = [word for word in re.findall(r'[а-яa-z0-9]+', value.lower().replace('ё', 'е'))
+             if len(word) >= 4 and word not in TASK_STOP]
+    if not words:
+        return []
+    clauses = []
+    for clause in _clauses(turn_text):
+        normalized = re.findall(r'[а-яa-z0-9]+', clause.lower().replace('ё', 'е'))
+        if all(any(word.startswith(token[:5]) for word in normalized) for token in words):
+            clauses.append(clause)
+    return clauses
+
+
+def _iso_day(value):
+    return value.isoformat() + 'T00:00:00'
+
+
+def _date_change_allowed(item, field, value):
+    try:
+        proposed = _datetime(value)
+        other = item.get('valid_to' if field == 'valid_from' else 'valid_from')
+        if not other:
+            return True
+        current = _datetime(other)
+        return proposed <= current if field == 'valid_from' else current <= proposed
+    except (TypeError, ValueError):
+        return False
+
+
+def _task_status(fact, call, turn):
+    pattern = STATUS_PATTERNS.get(fact['value'].strip().lower())
+    if not pattern:
+        return copy.deepcopy(fact), None
+    anchor = _datetime(call.started_at).date()
+    for clause in _clauses(turn.text):
+        if not re.search(pattern, clause.lower().replace('ё', 'е')):
+            continue
+        found = _cue_dates(clause, anchor)
+        dates = sorted({item[0] for item in found})
+        if len(dates) != 1:
+            continue
+        position = min(item[2] for item in found)
+        before = clause.lower().replace('ё', 'е')[max(0, position - 12):position]
+        field = 'valid_to' if re.search(r'\bдо\s*$', before) else 'valid_from'
+        item = copy.deepcopy(fact)
+        value = _iso_day(dates[0])
+        if not _date_change_allowed(item, field, value):
+            return item, {'status': 'abstained', 'reason': 'interval_conflict',
+                          'changes': [], 'evidence': []}
+        if item.get(field) != value:
+            item[field] = value
+            return item, {'status': 'changed', 'reason': 'status_explicit_time',
+                          'changes': [{'field': field, 'before': fact.get(field), 'after': value}],
+                          'evidence': [{'text': found[0][1], 'field': field}]}
+        return item, {'status': 'unchanged', 'reason': 'already_consistent', 'changes': [],
+                      'evidence': [{'text': found[0][1], 'field': field}]}
+    return copy.deepcopy(fact), None
+
+
+def _task_action(fact, call, turn):
+    anchor = _datetime(call.started_at).date()
+    chunks = _value_clauses(turn.text, fact['value']) or [turn.text]
+    found = []
+    for chunk in chunks:
+        found.extend(_cue_dates(chunk, anchor))
+    dates = sorted({item[0] for item in found})
+    value = _iso_day(dates[0]) if len(dates) == 1 else call.started_at
+    if fact.get('valid_from') == value:
+        return copy.deepcopy(fact), {'status': 'unchanged', 'reason': 'already_consistent',
+                                     'changes': []}
+    if not _date_change_allowed(fact, 'valid_from', value):
+        return copy.deepcopy(fact), {'status': 'abstained', 'reason': 'interval_conflict',
+                                     'changes': []}
+    item = copy.deepcopy(fact)
+    item['valid_from'] = value
+    return item, {'status': 'changed',
+                  'reason': 'action_explicit_time' if len(dates) == 1 else 'action_assertion_time',
+                  'changes': [{'field': 'valid_from', 'before': fact.get('valid_from'), 'after': value}],
+                  'evidence': [{'text': found[0][1]}] if found else []}
+
+
+def _task_agreement(fact, call, turn):
+    anchor = _datetime(call.started_at).date()
+    chunks = _value_clauses(turn.text, fact['value']) or [turn.text]
+    found = []
+    for chunk in chunks:
+        found.extend(_cue_dates(chunk, anchor, future=True))
+    dates = sorted({item[0] for item in found})
+    if len(dates) != 1:
+        return copy.deepcopy(fact), None
+    value = _iso_day(dates[0])
+    if fact.get('valid_from') == value:
+        return copy.deepcopy(fact), {'status': 'unchanged', 'reason': 'already_consistent',
+                                     'changes': []}
+    if not _date_change_allowed(fact, 'valid_from', value):
+        return copy.deepcopy(fact), {'status': 'abstained', 'reason': 'interval_conflict',
+                                     'changes': []}
+    item = copy.deepcopy(fact)
+    item['valid_from'] = value
+    return item, {'status': 'changed', 'reason': 'agreement_event_time',
+                  'changes': [{'field': 'valid_from', 'before': fact.get('valid_from'), 'after': value}],
+                  'evidence': [{'text': found[0][1]}]}
+
+
+def repair_task_dates(fact, call):
+    """Deterministic task-mode binding: explicit cue wins, undated action is call time."""
+    item = copy.deepcopy(fact)
+    event = {'attribute': fact['attribute'], 'source_turn_idx': fact['source']['turn_idx'],
+             'status': 'unchanged', 'reason': None, 'changes': [], 'evidence': []}
+    if fact.get('polarity', 1) != 1:
+        event['reason'] = 'negative_fact'
+        return item, event
+    for field in ('valid_from', 'valid_to'):
+        if fact.get(field):
+            try:
+                _datetime(fact[field])
+            except (TypeError, ValueError):
+                event['reason'] = 'invalid_model_date_left_for_sanitizer'
+                return item, event
+    turn = next((t for t in call.turns if t.idx == fact['source']['turn_idx']), None)
+    if turn is None:
+        event['reason'] = 'source_missing'
+        return item, event
+    if fact['attribute'] == 'ticket_status':
+        item, decision = _task_status(fact, call, turn)
+    elif fact['attribute'] == 'action':
+        item, decision = _task_action(fact, call, turn)
+    elif fact['attribute'] == 'agreement':
+        item, decision = _task_agreement(fact, call, turn)
+    else:
+        decision = None
+    if decision:
+        event.update(decision)
+    else:
+        event['reason'] = 'task_mode_left_unchanged'
+    return item, event
+
+
+def normalize_fact_dates(facts, call, mode='conservative'):
     """No mutation, dropping, reordering or access to gold labels."""
+    if mode not in ('conservative', 'task'):
+        raise ValueError('temporal mode must be conservative or task')
     owners = {}
     for fact in facts:
         key = (fact['source']['turn_idx'], fact['attribute'], _norm(fact['value']))
@@ -376,8 +568,10 @@ def normalize_fact_dates(facts, call):
             decision = {'attribute': fact['attribute'], 'source_turn_idx': fact['source']['turn_idx'],
                         'status': 'abstained', 'reason': 'multiple_objects_same_evidence',
                         'changes': [], 'evidence': []}
-        else:
+        elif mode == 'conservative':
             item, decision = repair_fact_dates(fact, call)
+        else:
+            item, decision = repair_task_dates(fact, call)
         output.append(item)
         decisions.append({'fact_index': index, **decision})
     return output, decisions
