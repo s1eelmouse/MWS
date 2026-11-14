@@ -1,0 +1,14 @@
+# PyTorch ставится отдельно, чтобы подобралась сборка под видеокарту:
+#   uv pip install torch --torch-backend=auto
+# В Kaggle и Colab он уже установлен.
+transformers>=4.56,<6
+peft>=0.17,<1
+accelerate>=1.0,<2
+bitsandbytes>=0.45,<1
+pydantic>=2.7,<3
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+requests>=2.31,<3
+
+# Только для демо с агентом (src/mcp_server.py):
+#   uv pip install "mcp>=2"

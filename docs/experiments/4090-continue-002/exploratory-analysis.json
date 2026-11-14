@@ -1,0 +1,121 @@
+{
+  "original_metrics_recomputed_identically": true,
+  "exploratory_recovery_counts": {
+    "recovered_calls": 320,
+    "incomplete_or_no_subtrees": 17,
+    "schema_failure": 9,
+    "source_failure": 1
+  },
+  "duplicates_in_recovered_calls": 35,
+  "exploratory_metrics": {
+    "official": {
+      "n_calls": 383,
+      "n_gold_facts": 1845,
+      "n_pred_facts": 1828,
+      "fact_precision": 0.3879,
+      "fact_recall": 0.3843,
+      "temporal_recall": 0.3653,
+      "n_temporal": 709,
+      "state_accuracy": 0.366,
+      "n_state": 623,
+      "grounding_turn": 0.7969,
+      "grounding_span": null,
+      "n_grounded": 709
+    },
+    "diagnostics": {
+      "invalid_or_failed_calls": 27,
+      "missing_calls": 0,
+      "format_valid_rate": 0.9295039164490861,
+      "calls_with_invalid_sources": 0
+    },
+    "per_attribute": {
+      "service_state": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 453,
+        "n_pred_facts": 221,
+        "fact_precision": 0.629,
+        "fact_recall": 0.3068,
+        "temporal_recall": 0.1295,
+        "grounding_turn": 0.9209,
+        "matched_facts": 139,
+        "missed_facts": 314,
+        "extra_facts": 82,
+        "valid_from_errors": 121,
+        "valid_to_errors": 39,
+        "date_errors": 121,
+        "source_turn_errors": 11
+      },
+      "tariff": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 146,
+        "n_pred_facts": 122,
+        "fact_precision": 0.4836,
+        "fact_recall": 0.4041,
+        "temporal_recall": 0.0847,
+        "grounding_turn": 0.6441,
+        "matched_facts": 59,
+        "missed_facts": 87,
+        "extra_facts": 63,
+        "valid_from_errors": 54,
+        "valid_to_errors": 28,
+        "date_errors": 54,
+        "source_turn_errors": 21
+      },
+      "ticket_status": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 400,
+        "n_pred_facts": 340,
+        "fact_precision": 0.8971,
+        "fact_recall": 0.7625,
+        "temporal_recall": 0.2918,
+        "grounding_turn": 0.8525,
+        "matched_facts": 305,
+        "missed_facts": 95,
+        "extra_facts": 35,
+        "valid_from_errors": 195,
+        "valid_to_errors": 114,
+        "date_errors": 216,
+        "source_turn_errors": 45
+      },
+      "action": {
+        "attribute_kind": "static",
+        "n_gold_facts": 368,
+        "n_pred_facts": 198,
+        "fact_precision": 0.3889,
+        "fact_recall": 0.2092,
+        "temporal_recall": 0.7662,
+        "grounding_turn": 0.9481,
+        "matched_facts": 77,
+        "missed_facts": 291,
+        "extra_facts": 121,
+        "valid_from_errors": 18,
+        "valid_to_errors": 0,
+        "date_errors": 18,
+        "source_turn_errors": 4
+      },
+      "agreement": {
+        "attribute_kind": "static",
+        "n_gold_facts": 478,
+        "n_pred_facts": 947,
+        "fact_precision": 0.1362,
+        "fact_recall": 0.2699,
+        "temporal_recall": 0.6822,
+        "grounding_turn": 0.5116,
+        "matched_facts": 129,
+        "missed_facts": 349,
+        "extra_facts": 818,
+        "valid_from_errors": 41,
+        "valid_to_errors": 0,
+        "date_errors": 41,
+        "source_turn_errors": 63
+      }
+    },
+    "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+    "known_scorer_issues": [
+      "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
+      "Organizer object-name matching can accept different objects.",
+      "temporal_recall and grounding are conditional on matched facts; timestamps compare by day."
+    ]
+  },
+  "warning": "Not a production repair or final result; subtree extraction only, no fact value correction, selected on schema/source checks, evaluated on known val."
+}

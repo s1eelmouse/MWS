@@ -1,0 +1,9 @@
+{
+  "elapsed_seconds": 2012.8676161289986,
+  "completed_global_steps": 246,
+  "peak_allocated_gib": 3.592108726501465,
+  "peak_reserved_gib": 14.654296875,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "base_parameters": 596049920,
+  "torch": "2.14.1+cu130"
+}
