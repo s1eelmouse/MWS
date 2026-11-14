@@ -1,0 +1,44 @@
+{
+  "scorer_version": "2.1",
+  "baseline": {
+    "metrics_version": "2.1",
+    "n_calls": 383,
+    "n_gold_facts": 1845,
+    "n_pred_facts": 2097,
+    "fact_precision": 0.3348,
+    "fact_recall": 0.3805,
+    "temporal_recall": 0.4706,
+    "n_temporal": 442,
+    "state_accuracy": 0.5345,
+    "n_state": 623,
+    "grounding_turn": 0.7835,
+    "grounding_span": null,
+    "n_grounded": 702
+  },
+  "model": {
+    "metrics_version": "2.1",
+    "n_calls": 383,
+    "n_gold_facts": 1845,
+    "n_pred_facts": 1970,
+    "fact_precision": 0.4792,
+    "fact_recall": 0.5117,
+    "temporal_recall": 0.4709,
+    "n_temporal": 584,
+    "state_accuracy": 0.4767,
+    "n_state": 623,
+    "grounding_turn": 0.715,
+    "grounding_span": null,
+    "n_grounded": 944
+  },
+  "delta": {
+    "fact_precision": 0.1444,
+    "fact_recall": 0.1312,
+    "temporal_recall": 0.0003,
+    "state_accuracy": -0.0578,
+    "grounding_turn": -0.0685
+  },
+  "target_minimum": {
+    "temporal_recall": 0.4506,
+    "state_accuracy": 0.5145
+  }
+}

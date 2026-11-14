@@ -1,0 +1,24 @@
+{
+  "train": {
+    "calls": 3926,
+    "facts": 18475,
+    "invalid_calls": 0,
+    "errors": [],
+    "nonliteral_quote_warnings": 1544,
+    "nonempty_quotes": 10205,
+    "empty_object_names": 730,
+    "facts_with_spans": 8663,
+    "contract_version": "2.1"
+  },
+  "val": {
+    "calls": 383,
+    "facts": 1845,
+    "invalid_calls": 0,
+    "errors": [],
+    "nonliteral_quote_warnings": 149,
+    "nonempty_quotes": 1039,
+    "empty_object_names": 81,
+    "facts_with_spans": 890,
+    "contract_version": "2.1"
+  }
+}
