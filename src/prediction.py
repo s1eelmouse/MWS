@@ -11,8 +11,9 @@ from typing import Literal
 
 from pydantic import Field, field_validator
 
-from config import CATALOG_PATH, TEMPORAL_NORMALIZATION
+from config import CATALOG_PATH, FACT_RECOVERY, TEMPORAL_NORMALIZATION
 from catalog_normalization import load_catalog, normalize_catalog_facts
+from fact_recovery import recover_facts
 from schema import (Attribute, CallInput, Facts, ObjectRef, Source, Speaker, StrictModel,
                     load_answer_payload, schema_error, source_problems)
 from temporal import normalize_fact_dates
@@ -93,6 +94,10 @@ def normalize_prediction(raw: RawFacts, call: CallInput, *, temporal_mode=None,
         changed = sum(len(d['changes']) for d in decisions)
         if changed:
             summary['temporal_dates_repaired'] = changed
+    if FACT_RECOVERY:
+        items, recovered = recover_facts(items, call, catalog_path)
+        if recovered:
+            summary['recovered_facts'] = len(recovered)
     for item in items:
         turn = turns.get(item["source"]["turn_idx"])
         if turn is not None and item.get("speaker") != turn.speaker:
