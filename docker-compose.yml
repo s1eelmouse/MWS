@@ -17,7 +17,7 @@ services:
       WITH_SCHEMA: ${WITH_SCHEMA:-0}
     volumes:
       - type: bind
-        source: ${MODEL_PATH:-./out/merged}
+        source: ${MODEL_PATH:-./out/merged-4090-continue-002}
         target: /models/merged
         read_only: true
         bind:
