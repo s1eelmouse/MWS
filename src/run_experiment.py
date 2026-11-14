@@ -1,6 +1,7 @@
 """Run tests, training and three inference measurements into an exclusive experiment directory."""
 import argparse
 import json
+import math
 import os
 import subprocess
 import sys
@@ -60,10 +61,17 @@ def main():
     parser.add_argument("--train-limit", type=int)
     parser.add_argument("--max-steps", type=int, default=-1)
     parser.add_argument("--eval-limit", type=int)
+    parser.add_argument("--init-adapter-dir",
+                        help="start a new training cycle from existing adapter weights")
+    parser.add_argument("--learning-rate", type=float, default=2e-4)
     parser.add_argument("--modes", nargs="+", default=["cuda:1", "cuda:4", "cpu:1"])
     args = parser.parse_args()
     if bool(args.model) == args.train_new:
         parser.error("Choose --model EXISTING_MERGED_MODEL or --train-new")
+    if args.init_adapter_dir and not args.train_new:
+        parser.error("--init-adapter-dir requires --train-new")
+    if not math.isfinite(args.learning_rate) or args.learning_rate <= 0:
+        parser.error("--learning-rate must be finite and positive")
     if len(args.modes) < 3 or len(set(args.modes)) != len(args.modes):
         parser.error("Provide at least three distinct device:batch configurations")
     for mode in args.modes:
@@ -90,6 +98,10 @@ def main():
         model = args.model
         if not model:
             extra = ["--limit", str(args.train_limit)] if args.train_limit else []
+            if args.init_adapter_dir:
+                extra += ["--init-adapter-dir", args.init_adapter_dir]
+            if args.learning_rate != 2e-4:
+                extra += ["--learning-rate", str(args.learning_rate)]
             stage(directory, "train", script("train", "--train", args.train, "--val", args.val,
                   "--epochs", args.epochs, "--batch-size", 1, "--save-steps", 50,
                   "--max-steps", args.max_steps, "--output-dir", directory / "adapter", *extra))

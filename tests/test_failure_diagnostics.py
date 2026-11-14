@@ -107,6 +107,17 @@ class DiagnosticTest(unittest.TestCase):
                 with self.assertRaises(SystemExit):main()
             self.assertFalse(output.exists())
 
+    def test_pipeline_rejects_invalid_learning_rate_before_writing(self):
+        from run_experiment import main
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'must-not-exist'
+            argv = ['run_experiment.py', '--train-new', '--learning-rate', '0',
+                    '--output-dir', str(output)]
+            with patch.object(sys, 'argv', argv):
+                with self.assertRaises(SystemExit):
+                    main()
+            self.assertFalse(output.exists())
+
     def test_subset_cli_filters_before_limit_and_records_provenance(self):
         from benchmark import main
         from case_io import write_jsonl
