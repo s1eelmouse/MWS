@@ -7,8 +7,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from prediction import parse_prediction, sanitize_interval
-from schema import as_call, source_problems
+from prediction import parse_prediction, salvage_sources, sanitize_interval
+from schema import Facts, as_call, source_problems
 from test_case_schema import CALL, FACT
 
 
@@ -84,6 +84,18 @@ class PredictionNormalizationTest(unittest.TestCase):
         facts, error, _ = self.parse(fact)
         self.assertIsNone(error)
         self.assertTrue(source_problems(facts, as_call(CALL)))
+
+    def test_partial_invalid_sources_drop_only_the_bad_fact(self):
+        call = as_call(CALL)
+        good = copy.deepcopy(FACT)
+        bad = copy.deepcopy(FACT)
+        bad["source"]["turn_idx"] = 999
+        bad["value"] = "другой факт"
+        salvaged, dropped = salvage_sources(Facts.model_validate({"facts": [good, bad]}), call)
+        self.assertEqual(len(salvaged.facts), 1)
+        self.assertEqual(salvaged.facts[0].value, good["value"])
+        self.assertEqual(dropped, 1)
+        self.assertIsNone(salvage_sources(Facts.model_validate({"facts": [bad]}), call)[0])
 
     def test_missing_required_field_is_still_invalid_schema(self):
         facts, error, summary = parse_prediction('{"facts":[{}]}', as_call(CALL))

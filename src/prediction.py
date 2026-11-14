@@ -14,7 +14,7 @@ from pydantic import Field, field_validator
 from config import CATALOG_PATH, TEMPORAL_NORMALIZATION
 from catalog_normalization import load_catalog, normalize_catalog_facts
 from schema import (Attribute, CallInput, Facts, ObjectRef, Source, Speaker, StrictModel,
-                    load_answer_payload, schema_error)
+                    load_answer_payload, schema_error, source_problems)
 from temporal import normalize_fact_dates
 
 
@@ -110,6 +110,19 @@ def normalize_prediction(raw: RawFacts, call: CallInput, *, temporal_mode=None,
         seen.add(key)
         facts.append(item)
     return Facts.model_validate({"facts": facts}), summary
+
+
+def salvage_sources(facts: Facts, call: CallInput):
+    """Keep valid facts when only some sources are invalid; never repair a source."""
+    valid, dropped = [], 0
+    for fact in facts.facts:
+        if source_problems(Facts(facts=[fact]), call):
+            dropped += 1
+        else:
+            valid.append(fact)
+    if not valid:
+        return None, dropped
+    return Facts(facts=valid), dropped
 
 
 def parse_prediction(raw: str, call: CallInput, *, temporal_mode=None,
