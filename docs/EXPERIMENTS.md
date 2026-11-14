@@ -205,6 +205,23 @@ benchmark. Второй цикл без constrained decoding давал 347 от
 `continue-003` (ещё одна эпоха от 002) — кандидат: P/R 0.4149/0.4136, temporal
 0.4377 / 0.4351, state 0.3949, 0 отказов на чистом val; шумный прогон ждёт сервер.
 
+## V100 / Volta
+
+V100 — sm_70 и не поддерживает нативный BF16. `src/train.py` уже проверяет
+`torch.cuda.is_bf16_supported()` и автоматически переключается на FP16
+(`fp16=True` в Trainer и `bnb_4bit_compute_dtype=torch.float16`). Что проверить
+на новом сервере до полного запуска:
+
+1. `python src/doctor.py` — должны быть `compute_capability: 7.0`,
+   `bf16_supported: false`, достаточный VRAM.
+2. Короткий QLoRA-прогон (`--limit 64 --max-steps 30`): работает ли 4-bit NF4
+   на Volta в установленной версии bitsandbytes. Если нет — `--no-4bit`:
+   0,6B LoRA в FP16 должен помещаться в 16 ГБ, но скорость будет ниже.
+3. `JSON_GRAMMAR_BACKEND=torch_native`; Triton на sm_70 может не собраться.
+4. vLLM/FlashAttention на V100 не гарантированы; для сервиса использовать
+   Transformers-путь.
+5. Ресурсные числа V100 — отдельный стенд, не сравнивать с RTX 4090.
+
 ## Docker на подготовленном NVIDIA-сервере
 
 Используется отдельный `Dockerfile.train`, образ сервиса не изменён. Данные

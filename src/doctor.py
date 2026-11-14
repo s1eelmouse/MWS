@@ -28,6 +28,8 @@ def main():
             props = torch.cuda.get_device_properties(0)
             report["gpu"] = props.name
             report["vram_gib"] = props.total_memory / 2**30
+            report["compute_capability"] = f"{props.major}.{props.minor}"
+            report["device_count"] = torch.cuda.device_count()
             report["bf16_supported"] = torch.cuda.is_bf16_supported()
     print(json.dumps(report, ensure_ascii=False, indent=2))
     if args.json:
