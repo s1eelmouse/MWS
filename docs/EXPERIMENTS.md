@@ -62,6 +62,10 @@ Linux без Python-заголовков Triton JIT тоже не собирае
 enum, но не истинность фактов, не ISO-формат дат и не порядок
 `valid_from`/`valid_to` — их проверяет pydantic-контракт `src/schema.py`.
 На полном val 383/383 звонков прошли без отказов (`format_valid_rate = 1.0`).
+Если ответ упёрся в `max_new_tokens`, extractor делает один повтор только для
+этого звонка с `RETRY_REPETITION_PENALTY=1.2`; обычные звонки не меняются.
+Повтор записывается в `calls.jsonl` (`retry`), отключить можно
+`RETRY_ON_TOKEN_LIMIT=0`.
 
 ## Единая методика
 

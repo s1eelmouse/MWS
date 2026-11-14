@@ -8,7 +8,8 @@ from pathlib import Path
 
 from case_io import prediction_row, read_jsonl, validate_gold, write_jsonl
 from case_evaluation import evaluate_predictions
-from config import MAX_INPUT_TOKENS, MAX_NEW_TOKENS, PROMPT_LOOKUP_TOKENS
+from config import (MAX_INPUT_TOKENS, MAX_NEW_TOKENS, PROMPT_LOOKUP_TOKENS,
+                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY)
 from measurements import (MemorySampler, distribution, environment, write_json, model_artifacts,
                           model_weights_bytes, ERROR_TYPES)
 from schema import as_call, contract_signature
@@ -154,7 +155,9 @@ def main():
               "diagnostic_subset": bool(args.failures),
               "failures_sha256": file_digest(args.failures) if args.failures else None,
               "limits": {"input": MAX_INPUT_TOKENS, "output": MAX_NEW_TOKENS},
-              "prompt_lookup_tokens": PROMPT_LOOKUP_TOKENS}
+              "prompt_lookup_tokens": PROMPT_LOOKUP_TOKENS,
+              "retry_on_token_limit": RETRY_ON_TOKEN_LIMIT,
+              "retry_repetition_penalty": RETRY_REPETITION_PENALTY}
     try:
         report["hardware"] = environment()
         write_json(output / "environment.json", report["hardware"])

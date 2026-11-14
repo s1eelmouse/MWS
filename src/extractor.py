@@ -3,7 +3,8 @@ import threading
 import time
 
 from config import (JSON_CONSTRAINED, JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS,
-                    MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS)
+                    MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS,
+                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY)
 from json_constraints import GrammarLogitsProcessor, compile_json_grammar
 from prediction import parse_prediction
 from schema import as_call, check_model_contract, source_problems
@@ -75,7 +76,7 @@ class Extractor:
             half = len(calls) // 2
             return self._extract_safely(calls[:half]) + self._extract_safely(calls[half:])
 
-    def _extract_batch(self, calls, measurements=None):
+    def _extract_batch(self, calls, measurements=None, repetition_penalty=None, allow_retry=True):
         results = [None] * len(calls)
         details = [{"call_id": c.call_id, "input_tokens": None, "output_tokens": 0,
                     "generation_limit_reached": False} for c in calls]
@@ -108,11 +109,13 @@ class Extractor:
                    and not getattr(self, "constrained_json", False) else {})
         processor = self._json_logits_processor()
         grammar = {"logits_processor": [processor]} if processor is not None else {}
+        generation = ({"repetition_penalty": repetition_penalty}
+                      if repetition_penalty is not None else {})
         with self.lock, self.torch.inference_mode():
             enc = self.tok(prompts, return_tensors="pt", padding=True, add_special_tokens=False).to(self.device)
             out = self.model.generate(
                 **enc, max_new_tokens=MAX_NEW_TOKENS, do_sample=False,
-                pad_token_id=self.tok.pad_token_id, **speedup, **grammar)
+                pad_token_id=self.tok.pad_token_id, **speedup, **grammar, **generation)
             generated = out[:, enc["input_ids"].shape[1]:]
             answers = self.tok.batch_decode(generated, skip_special_tokens=True)
             eos = self.model.generation_config.eos_token_id
@@ -125,9 +128,40 @@ class Extractor:
             facts, problem, normalization = parse_prediction(raw, calls[index])
             if normalization:
                 details[index]["normalization"] = normalization
+            retry_problem = None
             if details[index]["generation_limit_reached"]:
                 problem = {"error": "output_token_limit", "reason": "max_new_tokens_without_eos",
                            "parse_diagnostic": problem}
+                if RETRY_ON_TOKEN_LIMIT and allow_retry:
+                    initial_output_tokens = details[index]["output_tokens"]
+                    retry_details = []
+                    retry_results = self._extract_batch(
+                        [calls[index]], measurements=retry_details,
+                        repetition_penalty=RETRY_REPETITION_PENALTY, allow_retry=False)
+                    retry = retry_results[0]
+                    details[index]["retry"] = {
+                        "reason": "output_token_limit",
+                        "repetition_penalty": RETRY_REPETITION_PENALTY,
+                        "initial_output_tokens": initial_output_tokens,
+                        "output_tokens": retry_details[0].get("output_tokens"),
+                        "generation_limit_reached": retry_details[0].get("generation_limit_reached"),
+                        "error": retry.get("error"),
+                    }
+                    if "error" not in retry:
+                        results[index] = retry
+                        details[index]["output_tokens"] = retry_details[0].get("output_tokens")
+                        details[index]["generation_limit_reached"] = retry_details[0].get(
+                            "generation_limit_reached")
+                        if retry_details[0].get("normalization"):
+                            details[index]["normalization"] = retry_details[0]["normalization"]
+                        continue
+                    if retry_details[0].get("diagnostic"):
+                        retry_problem = {
+                            **retry_details[0]["diagnostic"],
+                            "retry_from": "output_token_limit",
+                            "retry_repetition_penalty": RETRY_REPETITION_PENALTY,
+                        }
+                        problem = retry_problem
             elif facts is not None:
                 problems = source_problems(facts, calls[index])
                 if problems:
@@ -136,7 +170,8 @@ class Extractor:
             if problem:
                 results[index] = {"error": problem["error"]}
                 if measurements is not None:
-                    details[index]["diagnostic"] = {**problem, "raw_response": raw}
+                    details[index]["diagnostic"] = (retry_problem if retry_problem is not None
+                                                    else {**problem, "raw_response": raw})
             else:
                 results[index] = facts.model_dump(mode="json")
         return results

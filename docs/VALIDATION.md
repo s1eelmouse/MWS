@@ -8,7 +8,7 @@
 Проверено локально в Python 3.12 с `xgrammar 0.2.9`, `transformers 5.23.0`,
 `torch 2.15.0`:
 
-- `python -m unittest discover -s tests`: **97 тестов, 92 успешно, 5 skipped**
+- `python -m unittest discover -s tests`: **99 тестов, 94 успешно, 5 skipped**
   (пропущены тесты с ML-зависимостями, не относящиеся к грамматике; на сервере
   с torch/xgrammar проходят все).
 - `tests/test_json_constraints.py` проверяет компиляцию схемы, компактные
@@ -23,6 +23,9 @@
 - `tests/test_adapter_origin.py` проверяет новый цикл с готового адаптера:
   отдельный output-dir, LoRA для той же базовой модели, подпись контракта и
   хеши исходных файлов.
+- `tests/test_retry_on_token_limit.py` проверяет один повтор только для
+  `output_token_limit` с `repetition_penalty=1.2`, запись `retry` в детали и
+  сохранение явной ошибки, если повтор тоже не завершился.
 - Реальная Qwen3-0.6B tokenizer: схема компилируется; грамматика принимает эталонный
   ответ `to_answer([FACT])` посимвольно и завершается на EOS. Базовая Qwen3-0.6B на
   коротком `data/sample_case.jsonl` с `with_schema=True` вернула валидный
@@ -74,12 +77,14 @@ Triton JIT на сервере не собирается без Python-заго�
    grounding 0.7758. Recall и состояния выросли; `temporal_recall` всё ещё ниже
    отсечения 0.371.
 4. **Полный шумный val (383 звонка)**, `--level 0.15 --seed 42`,
-   `json-constrained-noisy-015-full-001`: 3 отказа `output_token_limit`,
-   `invalid_json = 0`, формат 99,2 %. Относительно чистого constrained+dedup:
-   precision / recall 0.3625 / 0.3908 → 0.3438 / 0.3604,
-   `temporal_recall` 0.3315 → 0.3188, `state_accuracy` 0.3467 → 0.3082,
-   grounding 0.7656 → 0.7549. Прогон 3 205 с; это стресс-тест, не замена скрытому
-   adversarial-срезу.
+   `json-constrained-noisy-015-full-001` + targeted retry: 3 звонка сначала
+   упёрлись в `output_token_limit`, повтор с `repetition_penalty=1.2` восстановил
+   все 3. Итог: **0 отказов, `invalid_json = 0`, формат 100 %**. Относительно
+   чистого constrained+dedup: precision / recall 0.3625 / 0.3908 →
+   0.3445 / 0.3631, `temporal_recall` 0.3315 → 0.3194, `state_accuracy`
+   0.3467 → 0.3114, grounding 0.7656 → 0.7537. Качество пересчитано после замены
+   3 предсказаний; 3 205 с — исходный прогон без retry. Это стресс-тест, не
+   замена скрытому adversarial-срезу.
 
 ## Проверка адаптации замеров 4090 — 14.11.2026
 
