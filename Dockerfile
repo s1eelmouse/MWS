@@ -21,6 +21,9 @@ RUN groupadd --gid 10001 app \
     && mkdir -p /models/merged /cache/huggingface \
     && chown -R app:app /models /cache
 
+COPY case_data/catalog.json /app/catalog.json
+ENV CATALOG_PATH=/app/catalog.json
+
 FROM base AS api
 
 COPY requirements-cpu.txt ./
