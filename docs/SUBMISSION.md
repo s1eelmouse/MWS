@@ -16,7 +16,7 @@
 | Конфиг инференса | `README.md`, `MODEL.md` | 12288/16384/4096, XGrammar, `task` |
 | Docker CPU | `compactfactextraction:cpu` | образ собран; `/health` и короткий `/extract` проверены; полный датовый звонок на CPU >240 с |
 | Отчёт | `MODEL.md`, `RESULTS.md`, `DEFENSE.md` | готово |
-| Презентация | `SLIDES.md` | каркас; собрать слайды |
+| Презентация | `docs/defense-deck.pptx` / `.pdf`, `SLIDES.md` | deck собран; проверить числа, шрифты и тайминг |
 | Демо/видео | `DEMO.md` | сценарий; записать видео |
 
 ## 2. Перед загрузкой
