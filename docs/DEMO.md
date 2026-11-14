@@ -6,10 +6,12 @@
 ## Подготовка
 
 ```bash
-export MODEL_DIR=out/merged-4090-continue-003   # или 002, если 003 не подтверждён
+export MODEL_DIR=out/merged-4090-continue-003   # текущий кандидат; 002 — старый fallback
 export JSON_CONSTRAINED=1
 export JSON_GRAMMAR_BACKEND=torch_native
 export TEMPORAL_NORMALIZATION=task
+export FACT_RECOVERY=1
+export CATALOG_PATH=data/organizer_v2_1/catalog.json
 python -m uvicorn serve:app --app-dir src --host 0.0.0.0 --port 8000
 ```
 
@@ -57,15 +59,18 @@ curl -fsS -X POST http://127.0.0.1:8000/extract \
 
 ## Метрики
 
-Открыть `report.json` полного прогона:
+Открыть `report.json` полного прогона 2.1:
 
-- `quality.official.temporal_recall = 0.4377` (continue-003, чистый val);
-- `state_accuracy = 0.3949`;
-- `format_valid_rate = 1.0`, `failed_calls = 0`;
-- шумный `continue-002`: T 0.4074, S 0.3451, формат 100 %.
+- `continue-003` без recovery: T 0.4492, S 0.4350, P/R 0.5003/0.4986;
+- `continue-003` + recovery на сохранённых предсказаниях: **T 0.4663,
+  S 0.5152**, P/R 0.4929/0.5279, G 0.7023;
+- `format_valid_rate = 1.0`, `failed_calls = 0`.
+
+Шумный val 2.1 для 003/004 ещё не прогнан; старые шумные числа относятся к
+пакету 1 и на защите не показываются как финальные.
 
 Важно: пакетный результат с переносом серий не равен HTTP-ответу на один звонок.
-Для демо одного звонка это нормально; не приписывать HTTP-сервису пакетные 0.4377.
+Для демо одного звонка это нормально; не приписывать HTTP-сервису пакетные 0.4663.
 
 ## Если демо не идёт
 
