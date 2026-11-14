@@ -49,6 +49,24 @@ class TaskModeTest(unittest.TestCase):
         result, _ = normalize_fact_dates([fact], call, mode='task')
         self.assertEqual(result[0]['valid_from'], '2026-03-02T00:00:00')
 
+    def test_asr_variants_of_cues_are_recovered(self):
+        call, fact = fixture('Вчира заявку приняли.')
+        result, _ = normalize_fact_dates([fact], call, mode='task')
+        self.assertEqual(result[0]['valid_from'], '2026-02-28T00:00:00')
+
+        call, fact = fixture('Чирез два дня мастер приедет.', attribute='agreement',
+                             value='выезд специалиста', valid_from='2026-02-27T00:00:00',
+                             start='2026-03-01T12:00:00')
+        result, _ = normalize_fact_dates([fact], call, mode='task')
+        self.assertEqual(result[0]['valid_from'], '2026-03-03T00:00:00')
+
+    def test_common_words_that_resemble_cues_are_not_rewritten(self):
+        for text in ('Вечера ждали.', 'Путаницу устроили.', 'Над столом висит роутер.'):
+            call, fact = fixture(text)
+            result, decision = normalize_fact_dates([fact], call, mode='task')
+            self.assertEqual(result, [fact], text)
+            self.assertIn(decision[0]['reason'], ('task_mode_left_unchanged', 'already_consistent'))
+
     def test_negative_fact_is_not_redated(self):
         call, fact = fixture('Вчера заявку приняли.')
         fact['polarity'] = -1
