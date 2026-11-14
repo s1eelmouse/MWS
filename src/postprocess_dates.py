@@ -29,9 +29,11 @@ def _series_key(call):
 
 
 def process_predictions(calls, predictions, *, mode='conservative', catalog=None,
-                        deduplicate=False, speaker_from_source=False):
-    if mode not in ('off', 'conservative', 'task'):
+                        deduplicate=False, speaker_from_source=False, layers=None):
+    if mode not in ('off', 'conservative', 'task', 'case_v2'):
         raise ValueError('Unknown temporal mode')
+    if mode == 'case_v2' and layers is None:
+        raise ValueError('case_v2 needs the catalog value layers (catalog.json)')
     by_id = {row['call_id']: row for row in predictions}
     if len(by_id) != len(predictions) or len({call.call_id for call in calls}) != len(calls):
         raise ValueError('Duplicate call IDs')
@@ -51,8 +53,8 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
             items, decisions = normalize_catalog_facts(items, catalog)
             audit.extend({'call_id': call.call_id, 'component': 'catalog', **d} for d in decisions)
             counts['catalog_fields_normalized'] += len(decisions)
-        if mode in ('conservative', 'task'):
-            items, decisions = normalize_fact_dates(items, call, mode=mode)
+        if mode != 'off':
+            items, decisions = normalize_fact_dates(items, call, mode=mode, layers=layers)
             audit.extend({'call_id': call.call_id, 'component': 'temporal', **d} for d in decisions)
             for d in decisions:
                 counts['temporal_decisions:' + d['reason']] += 1
@@ -75,7 +77,7 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
                 continue
             seen.add(key)
             final.append(item)
-        if mode == 'task' and call.series:
+        if mode in ('task', 'case_v2') and call.series:
             account = call.series.get('account_id', call.call_id)
             for index, item in enumerate(final):
                 if item.get('attribute') != 'ticket_status':
@@ -108,8 +110,10 @@ def main():
     parser.add_argument('--input', required=True, help='calls; gold fields are stripped at the boundary')
     parser.add_argument('--pred', required=True)
     parser.add_argument('--output-dir', required=True)
-    parser.add_argument('--mode', choices=['off', 'conservative', 'task'], default='task')
+    parser.add_argument('--mode', choices=['off', 'conservative', 'task', 'case_v2'], default='task')
     parser.add_argument('--catalog', help='optional exact catalog normalization; separate from date-only A/B')
+    parser.add_argument('--date-catalog', help='catalog.json for --mode case_v2: tells catalog values '
+                        'from free formulations, changes dates only')
     parser.add_argument('--deduplicate', action='store_true')
     parser.add_argument('--speaker-from-source', action='store_true')
     args = parser.parse_args()
@@ -121,9 +125,15 @@ def main():
         parser.error('Input contains no calls')
     predictions = read_jsonl(args.pred)
     resolver = load_catalog(args.catalog) if args.catalog else None
+    layers = None
+    if args.mode == 'case_v2':
+        if not args.date_catalog:
+            parser.error('--mode case_v2 requires --date-catalog catalog.json')
+        from temporal_case_v2 import load_layers
+        layers = load_layers(args.date_catalog)
     start = time.perf_counter()
     results, audit, counts = process_predictions(
-        calls, predictions, mode=args.mode, catalog=resolver,
+        calls, predictions, mode=args.mode, catalog=resolver, layers=layers,
         deduplicate=args.deduplicate, speaker_from_source=args.speaker_from_source)
     elapsed = time.perf_counter() - start
     manifest = {
@@ -132,8 +142,11 @@ def main():
         'input_sha256': hashlib.sha256(Path(args.input).read_bytes()).hexdigest(),
         'prediction_sha256': hashlib.sha256(Path(args.pred).read_bytes()).hexdigest(),
         'catalog_sha256': hashlib.sha256(Path(args.catalog).read_bytes()).hexdigest() if args.catalog else None,
+        'date_catalog_sha256': (hashlib.sha256(Path(args.date_catalog).read_bytes()).hexdigest()
+                                if args.date_catalog else None),
         'source_sha256': {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                          for name in ['temporal.py', 'catalog_normalization.py', 'postprocess_dates.py']},
+                          for name in ['temporal.py', 'temporal_case_v2.py', 'catalog_normalization.py',
+                                       'postprocess_dates.py']},
         'gold_fields_passed_to_rules': False,
     }
     output.mkdir(parents=True, exist_ok=False)

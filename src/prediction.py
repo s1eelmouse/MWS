@@ -11,7 +11,8 @@ from typing import Literal
 
 from pydantic import Field, field_validator
 
-from config import CATALOG_PATH, FACT_RECOVERY, TEMPORAL_NORMALIZATION
+from config import (CATALOG_PATH, FACT_RECOVERY, TEMPORAL_CATALOG_PATH, TEMPORAL_MODES,
+                    TEMPORAL_NORMALIZATION)
 from catalog_normalization import load_catalog, normalize_catalog_facts
 from fact_recovery import recover_facts
 from schema import (Attribute, CallInput, Facts, ObjectRef, Source, Speaker, StrictModel,
@@ -85,10 +86,16 @@ def normalize_prediction(raw: RawFacts, call: CallInput, *, temporal_mode=None,
         if catalog_changes:
             summary['catalog_fields_normalized'] = len(catalog_changes)
     temporal_mode = TEMPORAL_NORMALIZATION if temporal_mode is None else temporal_mode
-    if temporal_mode not in ('off', 'conservative', 'task'):
+    if temporal_mode not in TEMPORAL_MODES:
         raise ValueError('Unknown temporal normalization mode')
-    if temporal_mode in ('conservative', 'task'):
-        items, decisions = normalize_fact_dates(items, call, mode=temporal_mode)
+    if temporal_mode != 'off':
+        layers = None
+        if temporal_mode == 'case_v2':
+            if not TEMPORAL_CATALOG_PATH:
+                raise ValueError('case_v2 requires TEMPORAL_CATALOG_PATH (catalog.json)')
+            from temporal_case_v2 import load_layers
+            layers = load_layers(TEMPORAL_CATALOG_PATH)
+        items, decisions = normalize_fact_dates(items, call, mode=temporal_mode, layers=layers)
         if temporal_decisions is not None:
             temporal_decisions.extend(decisions)
         changed = sum(len(d['changes']) for d in decisions)

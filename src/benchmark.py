@@ -19,10 +19,15 @@ from training_data import file_digest
 
 def apply_temporal_postprocess(calls, predictions, mode):
     """Apply the batch rules (including series carry) after all calls exist."""
-    if mode not in ('conservative', 'task'):
+    if mode not in ('conservative', 'task', 'case_v2'):
         return predictions, {}, []
     from postprocess_dates import process_predictions
-    processed, audit, counts = process_predictions(calls, predictions, mode=mode)
+    layers = None
+    if mode == 'case_v2':
+        from config import TEMPORAL_CATALOG_PATH
+        from temporal_case_v2 import load_layers
+        layers = load_layers(TEMPORAL_CATALOG_PATH)
+    processed, audit, counts = process_predictions(calls, predictions, mode=mode, layers=layers)
     return processed, counts, audit
 
 

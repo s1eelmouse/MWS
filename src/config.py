@@ -41,9 +41,12 @@ PROMPT_LOOKUP_TOKENS = int(os.getenv("PROMPT_LOOKUP_TOKENS", "0"))
 
 # Deterministic date binding. "task" uses explicit text cues and the call timestamp;
 # "conservative" is the earlier, narrower rule set; "off" preserves model dates.
+# "case_v2" follows organizer scorer v2.x (src/temporal_case_v2.py) and needs catalog.json
+# to tell catalog values from free formulations.
+TEMPORAL_MODES = ("off", "conservative", "task", "case_v2")
 TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "task").strip().lower()
-if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task"):
-    raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative or task")
+if TEMPORAL_NORMALIZATION not in TEMPORAL_MODES:
+    raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative, task or case_v2")
 _DEFAULT_CATALOG = Path("data/organizer_v2_1/catalog.json")
 _FALLBACK_CATALOG = Path("case_data/catalog.json")
 _catalog_default = str(_DEFAULT_CATALOG) if _DEFAULT_CATALOG.is_file() else (
@@ -51,6 +54,10 @@ _catalog_default = str(_DEFAULT_CATALOG) if _DEFAULT_CATALOG.is_file() else (
 CATALOG_PATH = os.getenv("CATALOG_PATH", _catalog_default).strip()
 # Deterministic recovery of a missing current tariff/status for package 2.1.
 FACT_RECOVERY = os.getenv("FACT_RECOVERY", "1").strip().lower() not in ("0", "false", "no", "off")
+# Read by case_v2 only; unlike CATALOG_PATH it does not rewrite object names or tariff values.
+TEMPORAL_CATALOG_PATH = os.getenv("TEMPORAL_CATALOG_PATH", CATALOG_PATH).strip()
+if TEMPORAL_NORMALIZATION == "case_v2" and not TEMPORAL_CATALOG_PATH:
+    raise ValueError("TEMPORAL_NORMALIZATION=case_v2 requires TEMPORAL_CATALOG_PATH (catalog.json)")
 SAVE_RAW_RESPONSES = os.getenv("SAVE_RAW_RESPONSES", "0").strip().lower() in ("1", "true", "yes", "on")
 
 # Печать не должна ронять скрипт из-за символа, которого нет в кодировке консоли Windows.

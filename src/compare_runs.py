@@ -116,7 +116,8 @@ def main():
     all_ids = {g["call_id"] for g in read_jsonl(args.gold)}
     if any(r["call_id"] not in all_ids for r in all_pred):
         parser.error("Unknown baseline call IDs")
-    baseline, _ = evaluate_predictions(gold, [r for r in all_pred if r["call_id"] in ids])
+    baseline, _ = evaluate_predictions(gold, [r for r in all_pred if r["call_id"] in ids],
+                                       catalog_path=args.gold)
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=False)
     write_json(output / "baseline.json", baseline)

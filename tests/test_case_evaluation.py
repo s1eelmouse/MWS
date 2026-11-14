@@ -73,6 +73,20 @@ class EvaluationTest(unittest.TestCase):
         self.assertEqual(report["official"]["state_accuracy"], 1.0)
         self.assertTrue(report["known_scorer_issues"])
 
+    def test_report_shows_whether_the_scorer_had_a_catalog(self):
+        import json
+        import tempfile
+        import official_case_metrics
+        with tempfile.TemporaryDirectory() as directory:
+            gold = Path(directory) / "val.jsonl"
+            report, _ = evaluate_predictions([CALL], [CALL], catalog_path=gold)
+            self.assertEqual(report["scorer_catalog_entries"], 0)
+            (Path(directory) / "catalog.json").write_text(
+                json.dumps({"actions": ["перезагрузка роутера"]}, ensure_ascii=False), encoding="utf-8")
+            report, _ = evaluate_predictions([CALL], [CALL], catalog_path=gold)
+            self.assertEqual(report["scorer_catalog_entries"], 1)
+        official_case_metrics.load_catalog("missing/catalog.json")
+
     def test_per_attribute_error_types_explain_official_metrics(self):
         state = {**copy.deepcopy(FACT), "attribute": "service_state", "value": "периодические обрывы",
                  "object": {"id": "synthetic:svc0", "type": "service", "name": "домашний интернет"}}
