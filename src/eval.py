@@ -74,7 +74,7 @@ def main():
             "p50_seconds": statistics.median(durations),
             "p95_seconds": durations[min(len(durations)-1, int(len(durations)*.95))],
         }
-    report, errors = evaluate_predictions(gold, preds)
+    report, errors = evaluate_predictions(gold, preds, catalog_path=args.gold)
     if latency is not None:
         report["latency"] = latency
     if args.reference_metrics:

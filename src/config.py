@@ -5,6 +5,7 @@
 """
 import math
 import os
+from pathlib import Path
 import sys
 
 # Стартовая модель; альтернативы проверяются по полному числу параметров <= 1.5B.
@@ -43,7 +44,13 @@ PROMPT_LOOKUP_TOKENS = int(os.getenv("PROMPT_LOOKUP_TOKENS", "0"))
 TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "task").strip().lower()
 if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task"):
     raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative or task")
-CATALOG_PATH = os.getenv("CATALOG_PATH", "").strip()
+_DEFAULT_CATALOG = Path("data/organizer_v2_1/catalog.json")
+_FALLBACK_CATALOG = Path("case_data/catalog.json")
+_catalog_default = str(_DEFAULT_CATALOG) if _DEFAULT_CATALOG.is_file() else (
+    str(_FALLBACK_CATALOG) if _FALLBACK_CATALOG.is_file() else "")
+CATALOG_PATH = os.getenv("CATALOG_PATH", _catalog_default).strip()
+# Deterministic recovery of a missing current tariff/status for package 2.1.
+FACT_RECOVERY = os.getenv("FACT_RECOVERY", "1").strip().lower() not in ("0", "false", "no", "off")
 SAVE_RAW_RESPONSES = os.getenv("SAVE_RAW_RESPONSES", "0").strip().lower() in ("1", "true", "yes", "on")
 
 # Печать не должна ронять скрипт из-за символа, которого нет в кодировке консоли Windows.

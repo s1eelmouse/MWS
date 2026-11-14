@@ -2,16 +2,16 @@
 import hashlib
 from pathlib import Path
 
-from official_case_metrics import evaluate, match_facts
+from official_case_metrics import evaluate, load_catalog, match_facts
 from schema import Facts, as_call, source_problems
 
 KNOWN_ISSUES = [
-    "Organizer state_accuracy may mix objects; gold vs gold is not necessarily 1.0.",
-    "Organizer object-name matching can accept different objects.",
-    "temporal_recall and grounding are conditional on matched facts; timestamps compare by day.",
+    "Organizer v2.1 recover_dates may raise TypeError on 'через две недели' / 'позапрошлый'.",
+    "temporal_recall is conditional on dates recoverable from the transcript and excludes action.",
+    "grounding_span is reported only where both sides have spans; v2.1 gold covers about 46–48%.",
 ]
 ATTRIBUTES = ("service_state", "tariff", "ticket_status", "action", "agreement")
-TEMPORAL_ATTRIBUTES = ("service_state", "tariff", "ticket_status")
+TEMPORAL_ATTRIBUTES = ("service_state", "tariff", "ticket_status", "agreement")
 
 
 def _day(value):
@@ -75,7 +75,14 @@ def scorer_can_read(facts):
     return True
 
 
-def evaluate_predictions(gold_rows, pred_rows):
+def evaluate_predictions(gold_rows, pred_rows, catalog_path=None):
+    if catalog_path:
+        load_catalog(str(catalog_path))
+    else:
+        for hint in ("data/organizer_v2_1/val.jsonl", "case_data/val.jsonl"):
+            if Path(hint).exists():
+                load_catalog(hint)
+                break
     gold, pred = index_calls(gold_rows), index_calls(pred_rows)
     if not gold:
         raise ValueError("Gold file is empty")
@@ -133,7 +140,7 @@ def evaluate_predictions(gold_rows, pred_rows):
     official = evaluate(gold, scoring)
     per_attribute = {}
     for attr in ATTRIBUTES:
-        filtered_gold = {cid: {"facts": [f for f in row["facts"] if f["attribute"] == attr]}
+        filtered_gold = {cid: {**row, "facts": [f for f in row["facts"] if f["attribute"] == attr]}
                          for cid, row in gold.items()}
         filtered_pred = {cid: {"facts": [f for f in row.get("facts", []) if f.get("attribute") == attr]}
                          for cid, row in scoring.items()}

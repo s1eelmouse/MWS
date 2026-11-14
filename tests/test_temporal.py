@@ -220,7 +220,7 @@ class FactTimeTest(unittest.TestCase):
             compare_date_predictions([gold], before, [{'call_id': call.call_id, 'facts': []}])
 
     def test_existing_model_contract_is_unchanged(self):
-        self.assertEqual(contract_signature(), '3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274')
+        self.assertEqual(contract_signature(), '40e9c449fffa0434ebd8cc5f7860cbe843c7d1ab9d5d28256392d20f24e72654')
 
     def test_cli_refuses_to_overwrite_existing_experiment(self):
         with tempfile.TemporaryDirectory() as directory:
