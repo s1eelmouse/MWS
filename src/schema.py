@@ -174,24 +174,34 @@ def to_answer(facts: list | dict) -> str:
     return json.dumps({"facts": result}, ensure_ascii=False, separators=(",", ":"))
 
 
-def parse_answer_with_diagnostics(raw: str):
+def schema_error(exc: ValueError) -> dict:
+    return {"error": "invalid_schema", "reason": "schema_validation",
+            "validation_errors": exc.errors(include_input=False, include_context=False,
+                                            include_url=False)}
+
+
+def load_answer_payload(raw: str):
+    """Return the JSON object from a model answer, or an explicit syntax error."""
     raw = raw.rsplit("</think>", 1)[-1]
     start, end = raw.find("{"), raw.rfind("}")
     if start < 0 or end <= start:
         return None, {"error": "invalid_json", "reason": "missing_json_object"}
-    candidate = raw[start:end + 1]
     try:
-        payload = json.loads(candidate)
+        return json.loads(raw[start:end + 1]), None
     except json.JSONDecodeError as exc:
         return None, {"error": "invalid_json", "reason": "json_syntax",
                       "json_error": {"message": exc.msg, "line": exc.lineno,
                                      "column": exc.colno, "position": exc.pos}}
+
+
+def parse_answer_with_diagnostics(raw: str):
+    payload, error = load_answer_payload(raw)
+    if error:
+        return None, error
     try:
         return Facts.model_validate(payload), None
     except ValueError as exc:
-        return None, {"error": "invalid_schema", "reason": "schema_validation",
-                      "validation_errors": exc.errors(include_input=False, include_context=False,
-                                                      include_url=False)}
+        return None, schema_error(exc)
 
 
 def parse_answer(raw: str) -> Facts | None:

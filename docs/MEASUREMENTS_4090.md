@@ -15,6 +15,9 @@
 - Ошибки синтаксиса JSON, схемы, источника и достижения лимита различаются.
   `failures.jsonl` сохраняет call_id, raw_response, подробности ошибки и длины.
   Raw-ответы сохраняются только для отказов в benchmark; обычный HTTP-ответ их не раскрывает.
+- Локальная генерация ограничена схемой `Facts` через XGrammar. В `report.json`
+  появились `constrained_json` и `grammar_compile_seconds`. Для A/B можно один раз
+  повторить срез с `JSON_CONSTRAINED=0`; в остальных прогонах оставлять включённым.
 - `benchmark --failures FILE` проверяет только call_id со значением error из старого
   JSONL. Такой диагностический срез запрещено включать в итоговую кривую.
 - Сравнение контролирует также сведения об оборудовании и число потоков внутри
@@ -36,8 +39,13 @@ export PROMPT_LOOKUP_TOKENS=0
 export OMP_NUM_THREADS=8
 export MKL_NUM_THREADS=8
 python -c "import psutil; print(psutil.__version__)"
+python -c "import importlib.metadata as m; print(m.version('xgrammar'))"
 python -m unittest discover -s tests -v
 ```
+
+Если `xgrammar` ещё нет, поставить только его, не переустанавливая torch/transformers:
+`pip install "xgrammar>=0.2.8,<1"`. При первом запуске `benchmark.py` или сервиса
+грамматика компилируется один раз; время попадёт в `grammar_compile_seconds`.
 
 Пакет psutil нужен для RSS памяти процесса. Это не сервис и не внешний аккаунт.
 На сервере версии PyTorch/Transformers не менять ради подключения метрик.

@@ -88,8 +88,13 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     # Only explicit execution/schema failures; fact mismatches are quality diagnostics.
     error_counts = dict.fromkeys(ERROR_TYPES, 0)
     error_counts.update(Counter(e["error"] for e in errors if e.get("error")))
+    normalization_counts = Counter()
+    for record in records:
+        for key, value in (record.get("normalization") or {}).items():
+            normalization_counts[key] += value
     return {"calls": len(calls), "failed_calls": failed,
             "error_counts": error_counts,
+            "normalization_counts": dict(normalization_counts),
             "warmup_batches": warmup_batches, "warmup_seconds": warmup_seconds,
             "warmup_errors": warmup_errors,
             "measurement_seconds": seconds,
@@ -161,6 +166,8 @@ def main():
         sync = backend.torch.cuda.synchronize if args.device == "cuda" else lambda: None
         sync()
         report["model_load_seconds"] = time.perf_counter() - load_start
+        report["constrained_json"] = bool(getattr(backend, "constrained_json", False))
+        report["grammar_compile_seconds"] = getattr(backend, "grammar_compile_seconds", None)
         report["model_parameters"] = backend.model.num_parameters()
         report["dtype"] = str(backend.model.dtype)
         report["torch_threads"] = backend.torch.get_num_threads()

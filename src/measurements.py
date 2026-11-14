@@ -70,7 +70,8 @@ def command_output(argv):
 def environment():
     import psutil
     packages = {}
-    for name in ("torch", "transformers", "peft", "accelerate", "bitsandbytes", "psutil"):
+    for name in ("torch", "transformers", "peft", "accelerate", "bitsandbytes", "xgrammar",
+                 "psutil"):
         try:
             packages[name] = importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError:

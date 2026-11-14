@@ -16,6 +16,16 @@ MAX_INPUT_TOKENS = int(os.getenv("MAX_INPUT_TOKENS", "12288"))
 MAX_SEQUENCE_TOKENS = int(os.getenv("MAX_SEQUENCE_TOKENS", "16384"))
 MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "4096"))
 
+# Constrained decoding against the Facts schema. It guarantees JSON syntax and the
+# contract shape before validation. Set JSON_CONSTRAINED=0 only for an explicit A/B run.
+JSON_CONSTRAINED = os.getenv("JSON_CONSTRAINED", "1").strip().lower() not in ("0", "false", "no", "off")
+JSON_GRAMMAR_THREADS = int(os.getenv("JSON_GRAMMAR_THREADS", "8"))
+JSON_GRAMMAR_BACKEND = os.getenv("JSON_GRAMMAR_BACKEND", "auto").strip().lower()
+if JSON_GRAMMAR_THREADS < 1:
+    raise ValueError("JSON_GRAMMAR_THREADS must be at least 1")
+if JSON_GRAMMAR_BACKEND not in ("auto", "cpu", "cuda", "triton", "torch_compile", "torch_native"):
+    raise ValueError("JSON_GRAMMAR_BACKEND must be auto, cpu, triton, torch_compile or torch_native")
+
 # Ускорение одиночного запроса. Факты — цитаты из обращения, поэтому модель за один шаг
 # проверяет сразу несколько токенов, скопированных из запроса. Ответ тот же, шагов меньше.
 PROMPT_LOOKUP_TOKENS = int(os.getenv("PROMPT_LOOKUP_TOKENS", "0"))

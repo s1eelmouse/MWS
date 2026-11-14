@@ -4,7 +4,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 from config import MAX_NEW_TOKENS
 from llm_api import chat
-from schema import Facts, build_messages, parse_answer, source_problems
+from prediction import parse_prediction
+from schema import Facts, build_messages, source_problems
 from serve import create_app
 
 ANSWER_FORMAT = {"type": "json_schema",
@@ -12,6 +13,8 @@ ANSWER_FORMAT = {"type": "json_schema",
 
 
 class VLLMExtractor:
+    constrained_json = True  # response_format asks vLLM for schema-guided decoding
+
     def extract(self, calls, batch_size=1):
         def ask(call):
             try:
@@ -22,9 +25,9 @@ class VLLMExtractor:
                     chat_template_kwargs={"enable_thinking": False})
             except Exception:
                 return {"error": "backend_failed"}
-            facts = parse_answer(raw)
+            facts, problem, _ = parse_prediction(raw, call)
             if facts is None:
-                return {"error": "invalid_json"}
+                return {"error": problem["error"]}
             if source_problems(facts, call):
                 return {"error": "invalid_source"}
             return facts.model_dump(mode="json")

@@ -81,7 +81,9 @@ def main():
         write_json(directory / "environment.json", environment())
         write_json(directory / "settings.json", {
             **vars(args), "environment": {key: os.getenv(key) for key in
-                ("BASE_MODEL", "MAX_INPUT_TOKENS", "MAX_NEW_TOKENS", "MAX_SEQUENCE_TOKENS", "PROMPT_LOOKUP_TOKENS")}})
+                ("BASE_MODEL", "MAX_INPUT_TOKENS", "MAX_NEW_TOKENS", "MAX_SEQUENCE_TOKENS",
+                 "PROMPT_LOOKUP_TOKENS", "JSON_CONSTRAINED", "JSON_GRAMMAR_THREADS",
+                 "JSON_GRAMMAR_BACKEND")}})
         stage(directory, "tests", py + ["-m", "unittest", "discover", "-s", str(ROOT / "tests"), "-v"])
         stage(directory, "compile", py + ["-m", "compileall", "-q", str(ROOT / "src"), str(ROOT / "tests")])
         stage(directory, "check-data", script("train", "--check-data", "--train", args.train, "--val", args.val))

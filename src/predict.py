@@ -52,6 +52,8 @@ def main():
         "model": args.model, "calls": completed, "failed": failed,
         "wall_seconds": elapsed, "calls_per_hour": completed / elapsed * 3600,
         "batch_size": args.batch_size, "with_schema": args.with_schema,
+        "constrained_json": bool(getattr(extractor, "constrained_json", False)),
+        "grammar_compile_seconds": getattr(extractor, "grammar_compile_seconds", None),
     }
     with output.with_suffix(".run.json").open("x", encoding="utf-8") as stream:
         json.dump(report, stream, ensure_ascii=False, indent=2)

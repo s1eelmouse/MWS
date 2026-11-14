@@ -44,6 +44,23 @@ out/experiment-001/
 эпохи. Официальное качество считается после самостоятельной генерации, а не из
 loss. В `events.jsonl` нет текстов диалогов, ответов или эталонов.
 
+## Constrained decoding и JSON
+
+Локальный `Extractor` по умолчанию компилирует `Facts.model_json_schema()` в
+токенную грамматику XGrammar и передаёт её в `model.generate()` как
+`LogitsProcessor`. Грамматика компактная (`any_whitespace=False`, `(",", ":")`),
+порядок полей — как в `to_answer`, поэтому формат ответа остаётся обучающим.
+`report.json` и `*.run.json` содержат `constrained_json` и
+`grammar_compile_seconds`; `report.json` также суммирует `normalization_counts`
+(speaker из диаризации, отброшенные даты, открытые обратные интервалы). `JSON_CONSTRAINED=0` отключает ограничение только для
+явного A/B; это фиксируется в `settings.json`. `JSON_GRAMMAR_BACKEND` задаёт
+масочное ядро XGrammar: `auto`, `triton`, `torch_native`, `cpu` и т. п. На Windows
+CUDA `auto` выбирает `torch_native`, потому что у Triton нет Windows-сборки; на
+Linux без Python-заголовков Triton JIT тоже не собирается, тогда явно ставьте
+`JSON_GRAMMAR_BACKEND=torch_native`. Грамматика гарантирует синтаксис JSON, типы и
+enum, но не истинность фактов, не ISO-формат дат и не порядок
+`valid_from`/`valid_to` — их проверяет pydantic-контракт `src/schema.py`.
+
 ## Единая методика
 
 - Один исходный val и один порядок call_id; файлы и выбранные ID закреплены SHA256.

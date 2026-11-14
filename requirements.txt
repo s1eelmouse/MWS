@@ -2,6 +2,8 @@
 #   uv pip install torch --torch-backend=auto
 # В Kaggle и Colab он уже установлен.
 transformers>=4.56,<6
+# Constrained JSON decoding against the Facts schema; uses the tokenizer and logits.
+xgrammar>=0.2.8,<1
 peft>=0.17,<1
 accelerate>=1.0,<2
 bitsandbytes>=0.45,<1
