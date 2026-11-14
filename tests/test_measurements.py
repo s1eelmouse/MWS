@@ -180,7 +180,7 @@ class MeasurementTest(unittest.TestCase):
                 rows = list(csv.DictReader(stream))
             self.assertEqual(len(rows), 3)
             self.assertEqual(float(rows[0]["fact_recall"]), 1)
-            self.assertEqual(float(rows[0]["temporal_recall_delta_from_baseline"]), 0)
+            self.assertEqual(rows[0]["temporal_recall_delta_from_baseline"], "")
             self.assertEqual(rows[0]["model_parameters"], "")
             self.assertEqual(rows[0]["errors_invalid_json"], "")
             self.assertEqual(rows[1]["model_parameters"], "123")

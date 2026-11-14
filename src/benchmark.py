@@ -26,7 +26,8 @@ def apply_temporal_postprocess(calls, predictions, mode):
     return processed, counts, audit
 
 
-def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda: None):
+def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda: None,
+                  catalog_path=None):
     """Backend receives CallInput only; labels stay exclusively in the evaluator."""
     calls = [as_call(row) for row in rows]
     predictions, records, batches = [], [], []
@@ -116,7 +117,7 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
                 stream.write(json.dumps(prediction, ensure_ascii=False) + "\n")
         if temporal_audit:
             write_jsonl(output / "temporal-audit.jsonl", temporal_audit)
-    quality, errors = evaluate_predictions(rows, predictions)
+    quality, errors = evaluate_predictions(rows, predictions, catalog_path=catalog_path)
     write_json(output / "metrics.json", quality)
     write_jsonl(output / "errors.jsonl", errors)
     failed = sum("error" in p for p in predictions)
@@ -223,7 +224,8 @@ def main():
         report["dtype"] = str(backend.model.dtype)
         report["torch_threads"] = backend.torch.get_num_threads()
         report["model_revision"] = getattr(backend.model.config, "_commit_hash", None)
-        report.update(run_benchmark(rows, backend, output, args.batch_size, args.warmup_batches, sync))
+        report.update(run_benchmark(rows, backend, output, args.batch_size, args.warmup_batches, sync,
+                                    catalog_path=args.input))
         report["status"] = "complete"
     except BaseException as exc:
         report.update(status="failed", error=f"{type(exc).__name__}: {exc}")
