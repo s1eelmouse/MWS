@@ -19,7 +19,7 @@ services:
     ipc: host
     volumes:
       - type: bind
-        source: ${MODEL_PATH:-./out/merged}
+        source: ${MODEL_PATH:-./out/merged-4090-continue-002}
         target: /models/merged
         read_only: true
         bind:
