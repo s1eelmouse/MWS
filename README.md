@@ -260,6 +260,10 @@ train и val не перемешиваются и не переразбиваю�
   последние эпохи. Если на третьей эпохе `eval_loss` вырастет, можно вернуться ко второй.
 - Продолжить прерванный запуск: тот же набор аргументов плюс
   `--resume-from-checkpoint out/full-001/checkpoints/checkpoint-N`.
+- Начать **новый** цикл с готового адаптера, а не продолжить старое расписание:
+  `--init-adapter-dir out/full-001 --learning-rate 1e-4 --output-dir out/cycle-002`.
+  Создаётся новый оптимизатор, а исходный адаптер и хеши его файлов попадают в
+  `experiment.json` (`initial_adapter`, `learning_rate`).
 - В папку `out/full-001` пишутся `experiment.json` (модель, seed, хеши train/val и
   схемы) и отчёт времени и памяти. Каждый запуск и каждое продолжение получают
   свою папку `attempt-*`: окружение, настройки, `events.jsonl` с loss, `eval_loss`

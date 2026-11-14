@@ -182,6 +182,19 @@ python src/benchmark.py --model out/experiment-001/merged --device cuda \
 После завершения выполнить merge в новый каталог и новый `run_experiment --model`.
 Весь pipeline автоматически с середины не возобновляется.
 
+## Новый цикл с готового адаптера
+
+`--init-adapter-dir` запускает новый цикл с новыми optimizer/scheduler и LR, а не
+resume. Исходный адаптер проверяется до GPU: отдельный каталог, LoRA той же базовой
+модели, подпись контракта, один файл весов; хеши пишутся в `experiment.json`.
+
+    python src/run_experiment.py --train-new --init-adapter-dir out/4090-baseline-001 \
+      --learning-rate 0.0001 --epochs 1 --output-dir out/experiment-continue-002
+
+Прямой запуск: `src/train.py --init-adapter-dir ... --learning-rate ...`, затем merge и
+benchmark. Второй цикл уже дал 347 отказов (344 `invalid_json`) и recall 0.039 из-за
+обёртки `{"fact": ...}`; первую модель он не заменяет.
+
 ## Docker на подготовленном NVIDIA-сервере
 
 Используется отдельный `Dockerfile.train`, образ сервиса не изменён. Данные
