@@ -1,0 +1,126 @@
+{
+  "experiment_id": "4090-baseline-001",
+  "collected_at_utc": "2026-11-14T03:22:27.848970+00:00",
+  "files": {
+    "data/organizer/package_manifest.json": {
+      "bytes": 1187,
+      "sha256": "4ab6058a5e68dd850c9d7fe2adaf4ec17b42e0435fec3e404ea75ac986172dc8"
+    },
+    "out/4090-baseline-001/adapter_config.json": {
+      "bytes": 1171,
+      "sha256": "b2b895f685e716ebddf65cc9548fbc16d4940b783b368f03fb4f8073ac655312"
+    },
+    "out/4090-baseline-001/case_contract.json": {
+      "bytes": 86,
+      "sha256": "25200469c953c6a40845ca537c5c543369fdbcca0638044849245dd30d94edc4"
+    },
+    "out/4090-baseline-001/checkpoints/checkpoint-200/trainer_state.json": {
+      "bytes": 4488,
+      "sha256": "39a63c17bf9c93ea2b76896aeba444c75bb495b5c290f2e36e758ca64c66c353"
+    },
+    "out/4090-baseline-001/checkpoints/checkpoint-200/training_args.bin": {
+      "bytes": 5329,
+      "sha256": "ec2049eb550820b6c1babc3feeb087a5b2a3dbbb8c7eb914411c5faf5a0a4a4a"
+    },
+    "out/4090-baseline-001/checkpoints/checkpoint-246/trainer_state.json": {
+      "bytes": 5215,
+      "sha256": "bdc9d68112d640e34c262d4a565d9bcfe0450ca06eeeb2efc139aaa71a81b94c"
+    },
+    "out/4090-baseline-001/checkpoints/checkpoint-246/training_args.bin": {
+      "bytes": 5329,
+      "sha256": "ec2049eb550820b6c1babc3feeb087a5b2a3dbbb8c7eb914411c5faf5a0a4a4a"
+    },
+    "out/4090-baseline-001/experiment.json": {
+      "bytes": 430,
+      "sha256": "e7ec8d302106d632464fc07dc50ec84a6843817e7d8dc3d1d032a77529eb780c"
+    },
+    "out/4090-baseline-001/training_stats_step_246_1794621180964993592.json": {
+      "bytes": 251,
+      "sha256": "29667983fb6d4e3c0d7f5bc1500799535bf79f1ff5dbe3d493af093e847bb23b"
+    },
+    "out/4090-baseline-001.log": {
+      "bytes": 40205,
+      "sha256": "086852a8208a1cdda68b7ff5defacd6fcd696486656fb8b754eaa848728de152"
+    },
+    "out/doctor-4090-001.json": {
+      "bytes": 491,
+      "sha256": "a72527bb0455a2d259077cce4432e6bcf54f7ee5207f23d5b055c6c2c7d1fd43"
+    },
+    "out/errors-4090-baseline-001-full.jsonl": {
+      "bytes": 39973,
+      "sha256": "2e7376272a3a285ee13572c50579d9f4039ce6bd7ce3d4e573e4115fea5473ba"
+    },
+    "out/eval-4090-baseline-001-full.json": {
+      "bytes": 1597,
+      "sha256": "b701a76873334f43ddac026b932ef77e33b2ba367367cfeab35abc69f5f9f698"
+    },
+    "out/eval-4090-baseline-001-preview.json": {
+      "bytes": 1549,
+      "sha256": "0611b4e3306a936f5fe53dc8c8383fee5b7567ac2819eb1064118a0d28fc02c4"
+    },
+    "out/eval-organizer-baseline-full-001.json": {
+      "bytes": 1597,
+      "sha256": "3ca32930dda789b928156012ca2e652a5098d871f2e740d195ab0cdfa94cf7b4"
+    },
+    "out/pred-4090-baseline-001-full.run.json": {
+      "bytes": 198,
+      "sha256": "dbfc3f69c11ab60f80fb155d3e11ecf62023c95af8edd94ad5716813ca80e422"
+    },
+    "out/repro-4090-baseline-001/base-model-revision.txt": {
+      "bytes": 40,
+      "sha256": "4e949c8025d7f0c86b6cdba6e103f387df67ae45a5851c600aefb581a8f0f59c"
+    },
+    "out/repro-4090-baseline-001/doctor-4090-001.json": {
+      "bytes": 491,
+      "sha256": "a72527bb0455a2d259077cce4432e6bcf54f7ee5207f23d5b055c6c2c7d1fd43"
+    },
+    "out/repro-4090-baseline-001/requirements-4090-001.txt": {
+      "bytes": 1374,
+      "sha256": "00378c7e6d9ede41ea53fd414cbfd8a04cd5c1dd0e8dce908fa96a35b3b29af5"
+    },
+    "out/repro-4090-baseline-001/run-description.txt": {
+      "bytes": 666,
+      "sha256": "22b2cdcfa5467f03869e3aa1cc45252fb230c74db0444146b11f82e310d43466"
+    },
+    "out/requirements-4090-001.txt": {
+      "bytes": 1374,
+      "sha256": "00378c7e6d9ede41ea53fd414cbfd8a04cd5c1dd0e8dce908fa96a35b3b29af5"
+    }
+  },
+  "missing_optional_or_expected_files": [
+    "out/eval-4090-baseline-001-preview-v2.json"
+  ],
+  "source_sha256": {
+    "src/case_evaluation.py": "28bc0244120124feb5f3a0a5e9851dc5b93df42c18c976e5cd9f97d75374fcbd",
+    "src/case_io.py": "9f11ead7c5bfdbcd5363dbd9cbdb29ef1260db0409802b999f5003c26a26da1e",
+    "src/check_data.py": "d0d5bff1f9d4288f7c09d7a8c707e999ba960af5d9d276b4cd81bf3e67a96f25",
+    "src/config.py": "08ecf03a888b2e1f2f597754959f3130cb35bfec54ae58007cac40472a65d62e",
+    "src/doctor.py": "36e1b8f82425110f38c1ae3c038cc817e34feb5f2d9c6a5045d956a4582ed156",
+    "src/eval.py": "ea28d87cc12ce199d2bb49905c24941d7a79bdcff7b8baf2ffa111a2cd272c96",
+    "src/extractor.py": "89ed94aad4951a2778c4bf1861bae8a6b91b945d9ab8b888c74c62ab3c216bc3",
+    "src/llm_api.py": "c4e251de4e3cb6b2915b6f5493e16c65d9fb7bda483d9a474aa4b1e6661d144f",
+    "src/mcp_server.py": "7239ab15ef09b98273b2e51239a026d004adbd2bd5cf3be5aaadb7b901e47ccc",
+    "src/merge.py": "31f810974fb2158762c640eacb2e6732776e432024a88bf0b4b99014866a794d",
+    "src/official_case_metrics.py": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+    "src/predict.py": "2ac736b493ca0b31bed98c2fcebd544eb667a2f77620cffa41b61d49a87e9a50",
+    "src/prepare_case.py": "d02a283e926ebdce43348ba11b4e30fa3446775f03a4e9c28f7a610d92ccfc79",
+    "src/schema.py": "22823858c62d988a35709d80e17fe488fb0607b1768fbdec377027ff059f2498",
+    "src/serve.py": "f14a17558cb56a5a33d5431b4e2ece182241268323241448a581bbf1ab26ec73",
+    "src/serve_vllm.py": "ebbdd42f07db7d673cd2eaf328beec8530ebb36aec8d2ea7274b1729cda390aa",
+    "src/train.py": "f666b4071ac3d3d42e46b8882406d77893f2fcb7cdfa194b1ddef37394ca064f",
+    "src/training_data.py": "456c35836ecf44f12f213769f7dd0c8cceda0887692298524aadbd0a14e821e7"
+  },
+  "source_archive_sha256": "aa56b74272aa1d5dfb51f7ddd119f5ac0f87414fe75e34fbf892236a40b16e1b",
+  "base_model_cached_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "checkpoint_directories": [
+    "out/4090-baseline-001/checkpoints/checkpoint-200",
+    "out/4090-baseline-001/checkpoints/checkpoint-246"
+  ],
+  "excluded": [
+    "model weights",
+    "dataset rows",
+    "full predictions",
+    "SSH keys",
+    ".env"
+  ]
+}

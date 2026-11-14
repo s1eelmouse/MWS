@@ -1,0 +1,73 @@
+{
+  "archive_filename": "checkpoint-reports-4090-baseline-001.tar.gz",
+  "archive_bytes": 21647,
+  "archive_sha256": "02f177acbf6c9a312125a5c0b065d680114556d4a4bac0441163d3795c64e396",
+  "manifest_entries_verified": 21,
+  "archive_members_verified": 22,
+  "all_member_sizes_and_sha256_match": true,
+  "manifest_collected_at_utc": "2026-11-14T03:22:27.848970+00:00",
+  "missing_optional_or_expected_files": [
+    "out/eval-4090-baseline-001-preview-v2.json"
+  ],
+  "error_rows": 383,
+  "unique_call_ids": 383,
+  "error_counts": {
+    "invalid_json": 22
+  },
+  "matched_facts_from_error_rows": 678,
+  "predicted_facts_from_error_rows": 1956,
+  "local_source_comparison": {
+    "src/case_evaluation.py": "byte_identical",
+    "src/case_io.py": "byte_identical",
+    "src/check_data.py": "byte_identical",
+    "src/config.py": "byte_identical",
+    "src/doctor.py": "byte_identical",
+    "src/eval.py": "byte_identical",
+    "src/extractor.py": "byte_identical",
+    "src/llm_api.py": "byte_identical",
+    "src/mcp_server.py": "byte_identical",
+    "src/merge.py": "byte_identical",
+    "src/official_case_metrics.py": "byte_identical",
+    "src/predict.py": "byte_identical",
+    "src/prepare_case.py": "byte_identical",
+    "src/schema.py": "byte_identical",
+    "src/serve.py": "byte_identical",
+    "src/serve_vllm.py": "byte_identical",
+    "src/train.py": "byte_identical",
+    "src/training_data.py": "byte_identical"
+  },
+  "local_case_data_byte_hash_matches": {
+    "train.jsonl": "identical_after_LF_to_CRLF",
+    "val.jsonl": "identical_after_LF_to_CRLF",
+    "baseline_pred.jsonl": "identical_after_LF_to_CRLF",
+    "baseline_metrics.json": "identical_after_LF_to_CRLF",
+    "catalog.json": "identical_after_LF_to_CRLF",
+    "schema.md": "identical_after_LF_to_CRLF",
+    "case_metrics.py": "identical_after_LF_to_CRLF",
+    "README.md": "identical_after_LF_to_CRLF"
+  },
+  "training_arguments_inspection": "pickletools opcode inspection; no deserialization/execution",
+  "training_arguments_subset": {
+    "learning_rate": 0.0002,
+    "lr_scheduler_type": "cosine",
+    "warmup_steps": 12,
+    "optim": "adamw_torch_fused",
+    "weight_decay": 0.0,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.999,
+    "adam_epsilon": 1e-08,
+    "gradient_accumulation_steps": 16,
+    "bf16": true,
+    "fp16": false,
+    "save_total_limit": 2,
+    "data_seed": 42
+  },
+  "excluded_from_backup": [
+    "model weights",
+    "dataset rows",
+    "full predictions",
+    "SSH keys",
+    ".env"
+  ],
+  "previous_summary_matches_original_server_metrics": true
+}
