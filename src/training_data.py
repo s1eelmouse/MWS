@@ -33,6 +33,24 @@ def file_digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def adapter_origin(directory, output_directory, base_model):
+    """Validate a local starting adapter and record its exact bytes before GPU loading."""
+    directory, output = Path(directory).resolve(), Path(output_directory).resolve()
+    if directory == output or directory in output.parents or output in directory.parents:
+        raise ValueError('Starting adapter and new output must be separate directories')
+    config_path = directory / 'adapter_config.json'
+    config = json.loads(config_path.read_text(encoding='utf-8'))
+    if config.get('base_model_name_or_path') != base_model or config.get('peft_type') != 'LORA':
+        raise ValueError('Starting adapter must be LoRA for the selected base model')
+    from schema import check_model_contract
+    check_model_contract(directory)
+    weights = [p for p in directory.iterdir() if p.name in ('adapter_model.safetensors', 'adapter_model.bin')]
+    if len(weights) != 1:
+        raise ValueError('Starting adapter must have exactly one adapter weight file')
+    return {'directory': str(directory), 'files': {p.name: file_digest(p) for p in
+            [config_path, directory / 'case_contract.json', *weights]}}
+
+
 def ensure_training_splits(train_rows, val_rows):
     if not train_rows:
         raise ValueError("Training file is empty")

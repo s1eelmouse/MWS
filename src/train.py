@@ -12,7 +12,7 @@ from pathlib import Path
 from case_io import read_jsonl, validate_gold
 from config import ADAPTER_DIR, BASE_MODEL, MAX_SEQUENCE_TOKENS
 from training_data import (check_output_directory, encode_row, ensure_training_splits,
-                           file_digest, save_manifest)
+                           file_digest, save_manifest, adapter_origin)
 from schema import contract_signature
 
 
@@ -68,9 +68,16 @@ def main():
     parser.add_argument("--max-sequence-tokens", type=int, default=MAX_SEQUENCE_TOKENS)
     parser.add_argument("--output-dir", default=ADAPTER_DIR)
     parser.add_argument("--resume-from-checkpoint")
+    parser.add_argument("--init-adapter-dir", help="start a NEW cycle from adapter weights, with a fresh optimizer")
+    parser.add_argument("--learning-rate", type=float, default=2e-4)
     parser.add_argument("--check-data", action="store_true",
                         help="validate data and split isolation without GPU or model downloads")
     args = parser.parse_args()
+    if not math.isfinite(args.learning_rate) or args.learning_rate <= 0:
+        parser.error('--learning-rate must be finite and positive')
+    if args.init_adapter_dir and args.resume_from_checkpoint:
+        parser.error('Choose starting adapter weights OR resume an interrupted cycle')
+    origin = adapter_origin(args.init_adapter_dir, args.output_dir, BASE_MODEL) if args.init_adapter_dir else None
     if min(args.epochs, args.batch_size, args.save_steps, args.max_sequence_tokens) <= 0:
         parser.error("epochs, batch size, save steps and sequence budget must be positive")
     if args.max_steps == 0 or args.max_steps < -1:
@@ -87,7 +94,7 @@ def main():
     output = check_output_directory(args.output_dir, args.resume_from_checkpoint)
     try:
         import torch
-        from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+        from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
         from transformers import (AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig,
                                   Trainer, TrainingArguments, set_seed)
     except ImportError as exc:
@@ -117,9 +124,12 @@ def main():
     if not args.no_4bit:
         model = prepare_model_for_kbit_training(model)
     model.config.use_cache = False
-    model = get_peft_model(model, LoraConfig(
-        r=16, lora_alpha=32, lora_dropout=.05,
-        task_type="CAUSAL_LM", target_modules="all-linear"))
+    if origin:
+        model = PeftModel.from_pretrained(model, origin['directory'], is_trainable=True)
+    else:
+        model = get_peft_model(model, LoraConfig(
+            r=16, lora_alpha=32, lora_dropout=.05,
+            task_type="CAUSAL_LM", target_modules="all-linear"))
     model.print_trainable_parameters()
     tail_only = "logits_to_keep" in inspect.signature(model.get_base_model().forward).parameters
     manifest = {
@@ -129,6 +139,15 @@ def main():
         "train_limit": args.limit, "max_sequence_tokens": args.max_sequence_tokens,
         "batch_size": args.batch_size, "four_bit": not args.no_4bit,
     }
+    if origin or args.learning_rate != 2e-4:
+        manifest.update(initial_adapter=origin, learning_rate=args.learning_rate,
+                        optimizer_policy='fresh cycle; checkpoint resume restores optimizer')
+    if args.resume_from_checkpoint:
+        previous = json.loads((output / 'experiment.json').read_text(encoding='utf-8'))
+        if previous.get('initial_adapter'):
+            manifest.update(initial_adapter=previous['initial_adapter'],
+                            learning_rate=args.learning_rate,
+                            optimizer_policy=previous['optimizer_policy'])
     save_manifest(output / "experiment.json", manifest)
     save_manifest(output / 'case_contract.json', {'signature': contract_signature()})
     # Each resumed invocation gets its own journal; previous histories are retained.
@@ -139,7 +158,8 @@ def main():
     write_json(attempt / "environment.json", environment())
     from config import MAX_INPUT_TOKENS, MAX_NEW_TOKENS
     write_json(attempt / "settings.json", {
-        **vars(args), "model": BASE_MODEL, "learning_rate": 2e-4,
+        **vars(args), "model": BASE_MODEL, "learning_rate": args.learning_rate,
+        "initial_adapter": origin,
         "lora_r": 16, "lora_alpha": 32, "lora_dropout": .05,
         "max_input_tokens": MAX_INPUT_TOKENS, "max_new_tokens": MAX_NEW_TOKENS,
         "trainable_parameters": sum(p.numel() for p in model.parameters() if p.requires_grad),
@@ -152,7 +172,7 @@ def main():
         model=model,
         args=TrainingArguments(
             output_dir=str(output / "checkpoints"), num_train_epochs=args.epochs,
-            max_steps=args.max_steps, learning_rate=2e-4,
+            max_steps=args.max_steps, learning_rate=args.learning_rate,
             per_device_train_batch_size=args.batch_size, per_device_eval_batch_size=1,
             gradient_accumulation_steps=accumulate, gradient_checkpointing=True,
             gradient_checkpointing_kwargs={"use_reentrant": False},

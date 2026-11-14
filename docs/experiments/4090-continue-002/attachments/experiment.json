@@ -1,0 +1,22 @@
+{
+  "model": "Qwen/Qwen3-0.6B",
+  "base_parameters": 596049920,
+  "seed": 42,
+  "train_sha256": "041dacaa1f6974b2c5b915eaa0f58eeafa537b0c6aa77d5282df533677029d6a",
+  "val_sha256": "a2cd8a6e3583e0c0db8cc700bef0387775ad44d0639723781cea2543baf7019e",
+  "schema_sha256": "63118114e856dd3b28a921ed9676216fdd9d525f566a15a87362eebc29aec050",
+  "train_limit": null,
+  "max_sequence_tokens": 16384,
+  "batch_size": 1,
+  "four_bit": true,
+  "initial_adapter": {
+    "directory": "/home/ubuntu/mws/out/4090-baseline-001",
+    "files": {
+      "adapter_config.json": "b2b895f685e716ebddf65cc9548fbc16d4940b783b368f03fb4f8073ac655312",
+      "case_contract.json": "25200469c953c6a40845ca537c5c543369fdbcca0638044849245dd30d94edc4",
+      "adapter_model.safetensors": "a4ced9870766e7301805b536a2911c9572c56b71f7cd22ef539bb020b08ee5d6"
+    }
+  },
+  "learning_rate": 0.0001,
+  "optimizer_policy": "fresh cycle; checkpoint resume restores optimizer"
+}

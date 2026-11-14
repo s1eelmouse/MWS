@@ -1,0 +1,30 @@
+name: compactfactextraction
+
+services:
+  extractor:
+    build:
+      context: .
+      target: extractor
+      args:
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cpu}
+    image: compactfactextraction:${TAG:-cpu}
+    init: true
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      MODEL_DIR: /models/merged
+      MAX_BATCH: ${MAX_BATCH:-1}
+      WITH_SCHEMA: ${WITH_SCHEMA:-0}
+    volumes:
+      - type: bind
+        source: ${MODEL_PATH:-./out/merged}
+        target: /models/merged
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: volume
+        source: hf-cache
+        target: /cache/huggingface
+
+volumes:
+  hf-cache:

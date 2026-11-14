@@ -5,3 +5,9 @@ src/official_case_metrics.py -text
 # Данные организаторов: те же байты, что в выданном пакете, на любой ОС —
 # иначе SHA256 в experiment.json расходятся с пакетом (CRLF из Windows-копии).
 case_data/** -text
+
+# Скрипты Linux должны запускаться после checkout на Windows без CRLF.
+*.sh text eol=lf
+
+# Исторические снимки кода сверяются с серверными SHA256, включая переводы строк.
+docs/experiments/*/code/** -text
