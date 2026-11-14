@@ -13,6 +13,26 @@ FILES = (
     "train.jsonl", "val.jsonl", "baseline_pred.jsonl", "baseline_metrics.json",
     "catalog.json", "schema.md", "case_metrics.py", "README.md",
 )
+OPTIONAL_FILES = ("ANSWERS_v2.md", "CHECKSUMS.txt")  # present since package v2
+
+
+def verify_checksums(source: Path) -> int:
+    """Compare files with the organizer CHECKSUMS.txt, if the package has one.
+
+    The list cannot contain a valid hash of itself, so CHECKSUMS.txt is skipped.
+    """
+    listing = source / "CHECKSUMS.txt"
+    if not listing.is_file():
+        return 0
+    checked = 0
+    for line in listing.read_text(encoding="utf-8").splitlines():
+        expected, _, name = line.strip().partition("  ")
+        if not name or name == "CHECKSUMS.txt":
+            continue
+        if not (source / name).is_file() or digest(source / name) != expected:
+            raise ValueError(f"{name} does not match organizer CHECKSUMS.txt; re-download the package")
+        checked += 1
+    return checked
 
 
 def digest(path):
@@ -26,6 +46,9 @@ def prepare(source: Path, target: Path) -> dict:
     for name in FILES:
         if not (source / name).is_file():
             raise ValueError(f"Missing organizer file: {name}")
+    checked = verify_checksums(source)
+    names = FILES + tuple(name for name in OPTIONAL_FILES if (source / name).is_file())
+    for name in names:
         if (target / name).exists() and digest(source / name) != digest(target / name):
             raise ValueError(f"Destination differs: {target / name}; choose a fresh directory")
     train, val = read_jsonl(source / "train.jsonl"), read_jsonl(source / "val.jsonl")
@@ -38,11 +61,12 @@ def prepare(source: Path, target: Path) -> dict:
     if train_ids & val_ids or train_accounts & val_accounts:
         raise ValueError("Train/validation call or account overlap")
     target.mkdir(parents=True, exist_ok=True)
-    for name in FILES:
+    for name in names:
         if not (target / name).exists():
             shutil.copyfile(source / name, target / name)
     report = {
-        "sha256": {name: digest(source / name) for name in FILES},
+        "sha256": {name: digest(source / name) for name in names},
+        "organizer_checksums_verified": checked,
         "validation": reports, "split_policy": "organizer train/val preserved; never re-split val",
     }
     manifest = target / "package_manifest.json"

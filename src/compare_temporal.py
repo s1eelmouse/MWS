@@ -22,15 +22,15 @@ def _without_dates(row):
     return row
 
 
-def compare_date_predictions(gold_rows, before_rows, after_rows):
+def compare_date_predictions(gold_rows, before_rows, after_rows, catalog_path=None):
     before, after = index_calls(before_rows), index_calls(after_rows)
     if set(before) != set(after):
         raise ValueError('Call IDs changed')
     for cid in before:
         if _without_dates(before[cid]) != _without_dates(after[cid]):
             raise ValueError(f'{cid}: facts, order or non-date fields changed; use a separate experiment')
-    baseline, _ = evaluate_predictions(gold_rows, before_rows)
-    result, _ = evaluate_predictions(gold_rows, after_rows)
+    baseline, _ = evaluate_predictions(gold_rows, before_rows, catalog_path=catalog_path)
+    result, _ = evaluate_predictions(gold_rows, after_rows, catalog_path=catalog_path)
     counts, details = Counter(), []
     for call in gold_rows:
         cid = call['call_id']
@@ -69,7 +69,8 @@ def main():
     output = Path(args.output_dir)
     if output.exists():
         parser.error('Output exists; choose a new experiment name')
-    report, details = compare_date_predictions(read_jsonl(args.gold), read_jsonl(args.before), read_jsonl(args.after))
+    report, details = compare_date_predictions(read_jsonl(args.gold), read_jsonl(args.before),
+                                               read_jsonl(args.after), catalog_path=args.gold)
     output.mkdir(parents=True, exist_ok=False)
     with (output / 'comparison.json').open('x', encoding='utf-8') as stream:
         json.dump(report, stream, ensure_ascii=False, indent=2)

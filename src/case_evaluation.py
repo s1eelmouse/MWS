@@ -2,6 +2,7 @@
 import hashlib
 from pathlib import Path
 
+import official_case_metrics
 from official_case_metrics import evaluate, load_catalog, match_facts
 from schema import Facts, as_call, source_problems
 from config import ORGANIZER_DIR
@@ -168,5 +169,8 @@ def evaluate_predictions(gold_rows, pred_rows, catalog_path=None):
         },
         "per_attribute": per_attribute,
         "scorer_sha256": hashlib.sha256(scorer_path.read_bytes()).hexdigest(),
+        # 0 means catalog.json was not found next to the gold file: the scorer then skips
+        # catalog snapping and fact metrics differ (baseline P/R 0.3329/0.3783, not 0.3348/0.3805).
+        "scorer_catalog_entries": sum(len(v) for v in (official_case_metrics._CATALOG or {}).values()),
         "known_scorer_issues": KNOWN_ISSUES,
     }, errors

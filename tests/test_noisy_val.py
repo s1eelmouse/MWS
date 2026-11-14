@@ -50,5 +50,27 @@ class NoisyValTest(unittest.TestCase):
             self.assertTrue(corrupt_text("да нет", 1.0, random.Random(seed)))
 
 
+class NoisyCatalogTest(unittest.TestCase):
+    def test_catalog_travels_with_the_noisy_gold(self):
+        # Scorer v2 reads catalog.json next to the gold file it scores.
+        import json
+        import tempfile
+        from unittest.mock import patch
+        import make_noisy_val
+        row = {"call_id": "synthetic:call0000", "started_at": "2026-11-13T12:00:00",
+               "turns": [{"idx": 0, "speaker": "client", "text": "вчера перезагрузил роутер"}], "facts": []}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "val.jsonl").write_text(json.dumps(row, ensure_ascii=False) + "\n", encoding="utf-8")
+            (root / "catalog.json").write_text('{"actions": ["перезагрузка роутера"]}', encoding="utf-8")
+            output = root / "noisy" / "val.jsonl"
+            with patch.object(sys, "argv", ["make_noisy_val.py", "--input", str(root / "val.jsonl"),
+                                            "--output", str(output)]):
+                make_noisy_val.main()
+            self.assertEqual((output.parent / "catalog.json").read_bytes(), (root / "catalog.json").read_bytes())
+            manifest = json.loads(output.with_suffix(".manifest.json").read_text(encoding="utf-8"))
+            self.assertTrue(manifest["catalog_next_to_output"])
+
+
 if __name__ == "__main__":
     unittest.main()

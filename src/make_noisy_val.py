@@ -13,6 +13,7 @@ import hashlib
 import json
 import random
 import re
+import shutil
 from pathlib import Path
 
 from case_io import read_jsonl, validate_gold
@@ -119,12 +120,18 @@ def main():
     with output.open("x", encoding="utf-8") as stream:
         for row in noisy:
             stream.write(json.dumps(row, ensure_ascii=False) + "\n")
+    # Scorer v2 looks for catalog.json next to the gold file; without it fact metrics
+    # of the noisy run would be computed differently from the clean run.
+    catalog = source.with_name("catalog.json")
+    if catalog.is_file() and not output.with_name("catalog.json").exists():
+        shutil.copyfile(catalog, output.with_name("catalog.json"))
     manifest = {
         "input": str(args.input), "input_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         "output_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "calls": len(noisy), "level": args.level, "seed": args.seed, "limit": args.limit,
         "changed_word_share": round(changed_word_share(rows, noisy), 4),
         "note": "Turn texts only; facts unchanged; source span/quote set to null.",
+        "catalog_next_to_output": output.with_name("catalog.json").is_file(),
     }
     with output.with_suffix(".manifest.json").open("x", encoding="utf-8") as stream:
         json.dump(manifest, stream, ensure_ascii=False, indent=2)

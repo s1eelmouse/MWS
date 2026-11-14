@@ -75,9 +75,23 @@ python src/train.py --epochs 1 --init-adapter-dir /path/to/previous-adapter --le
 
 ## Локальная проверка ветки
 
+После объединения `feat/case-v2-dates` доступен дополнительный экспериментальный
+режим `TEMPORAL_NORMALIZATION=case_v2`. По умолчанию остаётся `task`, а путь
+к новому пакету по-прежнему задаёт `ORGANIZER_DIR`. Для отдельного A/B:
+
+```bash
+python src/postprocess_dates.py --input data/organizer/v2_1/val.jsonl --pred /path/to/dates-off-predictions.jsonl --mode case_v2 --date-catalog data/organizer/v2_1/catalog.json --output-dir out/v21-case-v2-001
+```
+
+Используйте ответы до календарных правил; подробности — [DATES_V2_1.md](DATES_V2_1.md).
+Путь `data/organizer_v2_1` в исторических примерах той ветки здесь заменяется на
+`data/organizer/v2_1` либо на явно выбранный `ORGANIZER_DIR`.
+
 Подготовлены все 3926 train- и 383 val-звонка без ошибок схемы и источников.
 Пересчёт baseline через `src/eval.py` совпал со всеми опубликованными числовыми
 показателями 2.1; отчёт — локальный `out/v21-baseline-branch.json`.
 Полный набор: 160 тестов, 159 прошли, один пропущен из-за отсутствия XGrammar.
 `compileall` и `git diff --check` прошли. Новое обучение, GPU-инференс и проверка
 реальных весов на этой машине не выполнялись.
+После объединения веток: 178 тестов, 177 прошли, один пропущен (XGrammar);
+compileall и проверка конфигурации `case_v2` с новым каталогом прошли.
