@@ -183,7 +183,7 @@ P 0.4149 → 0.5017 при T −0.0006, но по умолчанию не вкл
   `4090-continue-002`, кандидат `4090-continue-003`.
 - Seed 42; хеши train/val/schema и стартового адаптера — в
   `out/4090-continue-002/experiment.json` и [MODEL.md](MODEL.md).
-- **150 тестов**; `compileall`; официальный `official_case_metrics.py` не изменён,
+- **151 тест**; `compileall`; официальный `official_case_metrics.py` не изменён,
   SHA256 совпадает с записанным.
 - Benchmark сам применяет пакетный `task` после генерации и пишет
   `temporal-audit.jsonl`; `report.json` содержит `temporal_postprocess`.

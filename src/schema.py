@@ -24,7 +24,8 @@ class StrictModel(BaseModel):
 
 
 class ObjectRef(StrictModel):
-    name: str = Field(min_length=1)
+    # Package 2.1 allows an empty name when the object is not named in the call.
+    name: str = ""
     id: str | None = None
     # 'other' occurs in organizer gold despite not being listed in schema.md.
     type: Literal["service", "device", "ticket", "client", "other"] | None = None
@@ -121,8 +122,11 @@ SYSTEM = (
 SYSTEM_WITH_SCHEMA = SYSTEM + " JSON-схема: " + json.dumps(Facts.model_json_schema(), ensure_ascii=False)
 
 
+LEGACY_CONTRACT_SIGNATURE = '3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274'
+
+
 def contract_signature():
-    payload = {'system': SYSTEM, 'schema': Facts.model_json_schema(), 'target_version': 1}
+    payload = {'system': SYSTEM, 'schema': Facts.model_json_schema(), 'target_version': 2}
     return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
 
 
@@ -133,7 +137,8 @@ def check_model_contract(model_dir, with_schema=False):
     manifest = path / 'case_contract.json'
     if not manifest.is_file():
         raise ValueError('Local model lacks case_contract.json; it may use the legacy schema')
-    if json.loads(manifest.read_text(encoding='utf-8')).get('signature') != contract_signature():
+    signature = json.loads(manifest.read_text(encoding='utf-8')).get('signature')
+    if signature not in {contract_signature(), LEGACY_CONTRACT_SIGNATURE}:
         raise ValueError('Model was trained with a different case contract')
 
 

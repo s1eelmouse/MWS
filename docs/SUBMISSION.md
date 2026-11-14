@@ -7,7 +7,7 @@
 
 | Артефакт | Где | Статус |
 |---|---|---|
-| Код | GitHub `main`, последний коммит | 150 тестов, `compileall` |
+| Код | GitHub `main`, последний коммит | 151 тест, `compileall` |
 | Адаптер 002 (fallback) | `out/4090-continue-002`, `experiment.json` | подтверждён на чистом и шумном val |
 | Адаптер 003 (кандидат) | `out/4090-continue-003`, `experiment.json` | чистый val; шумный ждёт сервер |
 | Merged-модель 002 | `out/merged-4090-continue-002` | скопировать с сервера |
@@ -20,7 +20,7 @@
 
 ## 2. Перед загрузкой
 
-- [ ] `python -m unittest discover -s tests`: **150 тестов, 145 прошли, 5 skipped**.
+- [ ] `python -m unittest discover -s tests`: **151 тест, 146 прошли, 5 skipped**.
 - [ ] `python -m compileall -q src tests`.
 - [ ] `sha256sum src/official_case_metrics.py` совпадает с `official_case_metrics.sha256`.
 - [ ] Подпись контракта `3ee403f3…a274` не изменилась.
