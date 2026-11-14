@@ -38,10 +38,11 @@ if not math.isfinite(RETRY_REPETITION_PENALTY) or RETRY_REPETITION_PENALTY <= 0:
 # проверяет сразу несколько токенов, скопированных из запроса. Ответ тот же, шагов меньше.
 PROMPT_LOOKUP_TOKENS = int(os.getenv("PROMPT_LOOKUP_TOKENS", "0"))
 
-# Opt-in deterministic postprocessing. Preserve the historical model contract.
-TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "off").strip().lower()
-if TEMPORAL_NORMALIZATION not in ("off", "conservative"):
-    raise ValueError("TEMPORAL_NORMALIZATION must be off or conservative")
+# Deterministic date binding. "task" uses explicit text cues and the call timestamp;
+# "conservative" is the earlier, narrower rule set; "off" preserves model dates.
+TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "task").strip().lower()
+if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task"):
+    raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative or task")
 CATALOG_PATH = os.getenv("CATALOG_PATH", "").strip()
 
 # Печать не должна ронять скрипт из-за символа, которого нет в кодировке консоли Windows.

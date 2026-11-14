@@ -13,9 +13,15 @@ from schema import Facts, as_call, contract_signature, source_problems
 from temporal import normalize_fact_dates
 
 
+def _series_key(call):
+    series = call.series or {}
+    return (0, series.get('account_id', call.call_id), series.get('call_index', 0), call.call_id) \
+        if series else (1, call.call_id, 0, call.call_id)
+
+
 def process_predictions(calls, predictions, *, mode='conservative', catalog=None,
                         deduplicate=False, speaker_from_source=False):
-    if mode not in ('off', 'conservative'):
+    if mode not in ('off', 'conservative', 'task'):
         raise ValueError('Unknown temporal mode')
     by_id = {row['call_id']: row for row in predictions}
     if len(by_id) != len(predictions) or len({call.call_id for call in calls}) != len(calls):
@@ -23,10 +29,12 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
     if set(by_id) != {call.call_id for call in calls}:
         raise ValueError('Inputs and predictions must contain the same call IDs')
     output, audit, counts = [], [], Counter()
-    for call in calls:
+    processed = {}
+    carried = {}
+    for call in sorted(calls, key=_series_key):
         row = copy.deepcopy(by_id[call.call_id])
         if row.get('error'):
-            output.append(row)
+            processed[call.call_id] = row
             counts['failed_calls_preserved'] += 1
             continue
         items = row['facts']
@@ -34,8 +42,8 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
             items, decisions = normalize_catalog_facts(items, catalog)
             audit.extend({'call_id': call.call_id, 'component': 'catalog', **d} for d in decisions)
             counts['catalog_fields_normalized'] += len(decisions)
-        if mode == 'conservative':
-            items, decisions = normalize_fact_dates(items, call)
+        if mode in ('conservative', 'task'):
+            items, decisions = normalize_fact_dates(items, call, mode=mode)
             audit.extend({'call_id': call.call_id, 'component': 'temporal', **d} for d in decisions)
             for d in decisions:
                 counts['temporal_decisions:' + d['reason']] += 1
@@ -58,12 +66,31 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
                 continue
             seen.add(key)
             final.append(item)
+        if mode == 'task' and call.series:
+            account = call.series.get('account_id', call.call_id)
+            for index, item in enumerate(final):
+                if item.get('attribute') != 'ticket_status':
+                    continue
+                if item.get('value', '').strip().lower() != 'принята':
+                    continue
+                key = (account, item['object'].get('name', '').strip().lower())
+                previous = carried.get(key)
+                if previous and item.get('valid_from') != previous:
+                    if not item.get('valid_to') or previous <= item['valid_to']:
+                        audit.append({'call_id': call.call_id, 'component': 'series',
+                                      'fact_index': index, 'field': 'valid_from',
+                                      'before': item.get('valid_from'), 'after': previous,
+                                      'reason': 'accepted_status_carried_within_series'})
+                        item['valid_from'] = previous
+                        counts['series_accepted_carried'] += 1
+                carried[key] = item.get('valid_from')
         parsed = Facts.model_validate({'facts': final})
         problems = source_problems(parsed, call)
         if problems:
             raise ValueError(f'{call.call_id}: invalid sources: {problems}')
         row['facts'] = final
-        output.append(row)
+        processed[call.call_id] = row
+    output = [processed[call.call_id] for call in calls]
     return output, audit, dict(counts)
 
 
@@ -72,7 +99,7 @@ def main():
     parser.add_argument('--input', required=True, help='calls; gold fields are stripped at the boundary')
     parser.add_argument('--pred', required=True)
     parser.add_argument('--output-dir', required=True)
-    parser.add_argument('--mode', choices=['off', 'conservative'], default='conservative')
+    parser.add_argument('--mode', choices=['off', 'conservative', 'task'], default='task')
     parser.add_argument('--catalog', help='optional exact catalog normalization; separate from date-only A/B')
     parser.add_argument('--deduplicate', action='store_true')
     parser.add_argument('--speaker-from-source', action='store_true')
