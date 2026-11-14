@@ -8,10 +8,10 @@
 Проверено локально в Python 3.12 с `xgrammar 0.2.9`, `transformers 5.23.0`,
 `torch 2.15.0`:
 
-- `python -m unittest discover -s tests`: **143 теста, 138 успешно, 5 skipped**
-  после добавления режима `task` и переноса дат внутри серий; на сервере с
-  torch/xgrammar проходят все 143. Пропущены только тесты с ML-зависимостями
-  в CPU-окружении.
+- `python -m unittest discover -s tests`: **144 теста, 139 успешно, 5 skipped**
+  после добавления режима `task`, переноса дат внутри серий и пакетного шага в
+  benchmark; на сервере с torch/xgrammar проходят все 144. Пропущены только
+  тесты с ML-зависимостями в CPU-окружении.
 - `tests/test_json_constraints.py` проверяет компиляцию схемы, компактные
   разделители, передачу свежего `LogitsProcessor` в каждый `generate()`, отказ от
   `prompt_lookup`, который обходил бы грамматику, и выбор `torch_native` на Windows
