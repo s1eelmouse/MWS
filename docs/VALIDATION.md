@@ -73,10 +73,13 @@ Triton JIT на сервере не собирается без Python-заго�
    precision / recall 0.3466 / 0.3675, temporal 0.3348, state 0.3339,
    grounding 0.7758. Recall и состояния выросли; `temporal_recall` всё ещё ниже
    отсечения 0.371.
-4. **Шумный preview 20 звонков**, `--level 0.15 --seed 42`: 0 отказов, формат
-   100 %. Относительно чистого preview падают `temporal_recall` 0.2895 → 0.2564,
-   `state_accuracy` 0.3939 → 0.3333, grounding 0.7895 → 0.7436. Это стресс-тест,
-   не замена скрытому adversarial-срезу.
+4. **Полный шумный val (383 звонка)**, `--level 0.15 --seed 42`,
+   `json-constrained-noisy-015-full-001`: 3 отказа `output_token_limit`,
+   `invalid_json = 0`, формат 99,2 %. Относительно чистого constrained+dedup:
+   precision / recall 0.3625 / 0.3908 → 0.3438 / 0.3604,
+   `temporal_recall` 0.3315 → 0.3188, `state_accuracy` 0.3467 → 0.3082,
+   grounding 0.7656 → 0.7549. Прогон 3 205 с; это стресс-тест, не замена скрытому
+   adversarial-срезу.
 
 ## Проверка адаптации замеров 4090 — 14.11.2026
 
