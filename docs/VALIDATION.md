@@ -8,9 +8,9 @@
 Проверено локально в Python 3.12 с `xgrammar 0.2.9`, `transformers 5.23.0`,
 `torch 2.15.0`:
 
-- `python -m unittest discover -s tests`: **148 тестов, 143 успешно, 5 skipped**
+- `python -m unittest discover -s tests`: **149 тестов, 144 успешно, 5 skipped**
   после добавления режима `task`, переноса дат внутри серий и пакетного шага в
-  benchmark; на сервере с torch/xgrammar проходят все 148. Пропущены только
+  benchmark; на сервере с torch/xgrammar проходят все 149. Пропущены только
   тесты с ML-зависимостями в CPU-окружении.
 - `tests/test_json_constraints.py` проверяет компиляцию схемы, компактные
   разделители, передачу свежего `LogitsProcessor` в каждый `generate()`, отказ от
@@ -36,6 +36,9 @@
   защиту от обратного интервала, восстановление невозможной даты и перенос
   только внутри своего `account_id`. Режим `task` включён по умолчанию,
   отключается `TEMPORAL_NORMALIZATION=off`.
+- `tests/test_benchmark_audit.py` читает JSON и JSONL явно в UTF-8; это убирает
+  падение на Windows/CP1251. Полный набор на Linux: 149 тестов, 144 прошли,
+  5 skipped. Windows в этой среде не проверялся.
 - Реальная Qwen3-0.6B tokenizer: схема компилируется; грамматика принимает эталонный
   ответ `to_answer([FACT])` посимвольно и завершается на EOS. Базовая Qwen3-0.6B на
   коротком `data/sample_case.jsonl` с `with_schema=True` вернула валидный
