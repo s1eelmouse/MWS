@@ -81,6 +81,23 @@ class MeasurementTest(unittest.TestCase):
             self.assertLess(report["successful_calls_per_hour"], report["calls_per_hour"])
             self.assertTrue((root / "memory.csv").is_file())
 
+    def test_prediction_normalization_counts_reach_the_report(self):
+        class Backend:
+            device = "cpu"
+
+            def extract(self, calls, batch_size, measurements):
+                for call in calls:
+                    measurements.append({
+                        "call_id": call.call_id, "input_tokens": 1, "output_tokens": 1,
+                        "generation_limit_reached": False,
+                        "normalization": {"speaker_from_turn": 1}})
+                return [json.loads(to_answer([FACT])) for _ in calls]
+
+        with tempfile.TemporaryDirectory() as temp:
+            report = run_benchmark([CALL], Backend(), Path(temp), 1, 1)
+        self.assertEqual(report["normalization_counts"], {"speaker_from_turn": 1})
+        self.assertEqual(report["failed_calls"], 0)
+
     def test_invalid_warmup_answers_are_recorded_without_hiding_bad_models(self):
         with tempfile.TemporaryDirectory() as temp:
             row = {**CALL, "call_id": "synthetic:call2"}

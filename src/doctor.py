@@ -13,7 +13,8 @@ def main():
     parser.add_argument("--json", help="new report file")
     args = parser.parse_args()
     report = {"python": sys.version, "platform": platform.platform(), "packages": {}}
-    for name in ("torch", "transformers", "peft", "accelerate", "bitsandbytes", "pydantic", "fastapi"):
+    for name in ("torch", "transformers", "peft", "accelerate", "bitsandbytes", "xgrammar",
+                 "pydantic", "fastapi"):
         try:
             report["packages"][name] = importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError:

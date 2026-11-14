@@ -1,3 +1,70 @@
+## Проверка constrained decoding — 14.11.2026
+
+Добавлена ветка `feat/json-constrained-decoding`: локальный Transformers-инференс
+компилирует `Facts.model_json_schema()` в грамматику XGrammar и передаёт её в
+`model.generate()` на каждом шаге. Формат грамматики компактный и совпадает с
+`to_answer`: `any_whitespace=False`, `separators=(",", ":")`, порядок полей схемы.
+
+Проверено локально в Python 3.12 с `xgrammar 0.2.9`, `transformers 5.23.0`,
+`torch 2.15.0`:
+
+- `python -m unittest discover -s tests`: **92 теста, 87 успешно, 5 skipped**
+  (пропущены тесты с ML-зависимостями, не относящиеся к грамматике; на сервере
+  с torch/xgrammar проходят все).
+- `tests/test_json_constraints.py` проверяет компиляцию схемы, компактные
+  разделители, передачу свежего `LogitsProcessor` в каждый `generate()`, отказ от
+  `prompt_lookup`, который обходил бы грамматику, и выбор `torch_native` на Windows
+  CUDA (у Triton нет Windows-сборки). `JSON_GRAMMAR_BACKEND` позволяет закрепить
+  `torch_native`, если Triton JIT не собирается на Linux.
+- `tests/test_prediction_normalization.py` проверяет, что speaker берётся из
+  диаризации, невозможная дата и обратный интервал не выбрасывают весь звонок, а
+  отсутствующий `turn_idx` остаётся явной ошибкой источника. Строгая проверка
+  эталона (`validate_gold`) не ослаблена.
+- Реальная Qwen3-0.6B tokenizer: схема компилируется; грамматика принимает эталонный
+  ответ `to_answer([FACT])` посимвольно и завершается на EOS. Базовая Qwen3-0.6B на
+  коротком `data/sample_case.jsonl` с `with_schema=True` вернула валидный
+  `{"facts":[]}`; это проверка цепочки, не качества.
+- `compileall` для `src` и `tests` проходит.
+
+Не проверено: полный val, RTX 4060/4090, скорость, память и качество после
+ограничения. Нужен серверный прогон `4090-baseline-001` с новой версией и отдельный
+A/B с `JSON_CONSTRAINED=0`. Ограничение гарантирует только синтаксис/типы/enum;
+даты и источники по-прежнему проверяет `src/schema.py`.
+
+### Проверка на RTX 4090 — 14.11.2026
+
+Сервер: RTX 4090 24 ГБ, Linux, Python 3.12.3, torch 2.14.1+cu130,
+transformers 5.23.0, xgrammar 0.2.9. Модель — существующая
+`out/merged-4090-baseline-001`; код развёрнут отдельно в
+`/home/ubuntu/mws-json-constraints`, старые `out/` не изменялись.
+Triton JIT на сервере не собирается без Python-заголовков, поэтому прогоны
+используют `JSON_GRAMMAR_BACKEND=torch_native`.
+
+1. **22 звонка, на которых старый код давал `invalid_json`**:
+   `json-constrained-diag-4090-baseline-001-003`. Было 15 `invalid_json` и
+   7 `invalid_schema`, стало **0 отказов**, `format_valid_rate = 1.0`.
+   `fact_recall` 0.3613, `temporal_recall` 0.2791, `state_accuracy` 0.1778,
+   `grounding_turn` 0.6047; раньше эти звонки экспортировались пустыми.
+2. **20 звонков, тот же срез, что в старом preview**:
+   `json-constrained-preview-4090-baseline-001-001`. Сравнение с
+   `eval-4090-baseline-001-preview.json`:
+
+   | Метрика | Старый preview | Constrained |
+   |---|---:|---:|
+   | Валидный формат | 95 % | **100 %** |
+   | precision / recall | 0.3689 / 0.3725 | 0.3455 / 0.3725 |
+   | `temporal_recall` | 0.2895 | 0.2895 |
+   | `state_accuracy` | 0.3939 | 0.3939 |
+   | `grounding_turn` | 0.7895 | 0.7895 |
+
+   Recall, даты, состояния и grounding не изменились. Precision ниже потому,
+   что раньше один звонок целиком отбрасывался, а теперь из него добавлены
+   лишние несопоставленные факты (110 предсказаний против 103).
+   Компиляция грамматики 0.61 с, ответ p50/p95 — 418/666 токенов.
+3. **Полный val (383 звонка)**: прогон
+   `json-constrained-4090-baseline-001-full-001` запущен; результаты будут
+   добавлены сюда и в RESULTS.md после завершения.
+
 ## Проверка адаптации замеров 4090 — 14.11.2026
 
 Основа: additional_metrics_PLAN (6c1d139), включая experiment-measurements (58f4d7b).

@@ -1,8 +1,12 @@
 """Case-aware Transformers inference. Heavy ML imports happen only on model loading."""
 import threading
+import time
 
-from config import MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS
-from schema import as_call, parse_answer_with_diagnostics, source_problems, check_model_contract
+from config import (JSON_CONSTRAINED, JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS,
+                    MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS)
+from json_constraints import GrammarLogitsProcessor, compile_json_grammar
+from prediction import parse_prediction
+from schema import as_call, check_model_contract, source_problems
 from training_data import prompt_for
 
 
@@ -27,7 +31,26 @@ class Extractor:
             model_dir, dtype=dtype, device_map=self.device).eval()
         settings = self.model.generation_config
         settings.do_sample, settings.temperature, settings.top_p, settings.top_k = False, None, None, None
+        self.constrained_json = False
+        self.grammar_compile_seconds = None
+        if JSON_CONSTRAINED:
+            start = time.perf_counter()
+            try:
+                self.compiled_json_grammar = compile_json_grammar(
+                    self.tok, self.model.config, JSON_GRAMMAR_THREADS)
+            except Exception as exc:
+                raise RuntimeError(
+                    "Could not compile the Facts JSON grammar. Install a compatible xgrammar "
+                    "or set JSON_CONSTRAINED=0 to run without constrained decoding."
+                ) from exc
+            self.grammar_compile_seconds = time.perf_counter() - start
+            self.constrained_json = True
         self.lock = threading.Lock()
+
+    def _json_logits_processor(self):
+        if not getattr(self, "constrained_json", False):
+            return None
+        return GrammarLogitsProcessor(self.compiled_json_grammar, JSON_GRAMMAR_BACKEND)
 
     def extract(self, calls: list, batch_size: int = 1, measurements: list | None = None) -> list:
         if batch_size <= 0:
@@ -79,12 +102,17 @@ class Extractor:
         for index in indices:
             # An interrupted generation has an unknown output length, not zero.
             details[index]["output_tokens"] = None
-        speedup = {"prompt_lookup_num_tokens": PROMPT_LOOKUP_TOKENS} if len(prompts) == 1 and PROMPT_LOOKUP_TOKENS else {}
+        # Prompt lookup proposes tokens without grammar masking; constrained decoding wins.
+        speedup = ({"prompt_lookup_num_tokens": PROMPT_LOOKUP_TOKENS}
+                   if len(prompts) == 1 and PROMPT_LOOKUP_TOKENS
+                   and not getattr(self, "constrained_json", False) else {})
+        processor = self._json_logits_processor()
+        grammar = {"logits_processor": [processor]} if processor is not None else {}
         with self.lock, self.torch.inference_mode():
             enc = self.tok(prompts, return_tensors="pt", padding=True, add_special_tokens=False).to(self.device)
             out = self.model.generate(
                 **enc, max_new_tokens=MAX_NEW_TOKENS, do_sample=False,
-                pad_token_id=self.tok.pad_token_id, **speedup)
+                pad_token_id=self.tok.pad_token_id, **speedup, **grammar)
             generated = out[:, enc["input_ids"].shape[1]:]
             answers = self.tok.batch_decode(generated, skip_special_tokens=True)
             eos = self.model.generation_config.eos_token_id
@@ -94,7 +122,9 @@ class Extractor:
                 details[index]["output_tokens"] = end if end is not None else len(tokens)
                 details[index]["generation_limit_reached"] = end is None and len(tokens) >= MAX_NEW_TOKENS
         for index, raw in zip(indices, answers):
-            facts, problem = parse_answer_with_diagnostics(raw)
+            facts, problem, normalization = parse_prediction(raw, calls[index])
+            if normalization:
+                details[index]["normalization"] = normalization
             if details[index]["generation_limit_reached"]:
                 problem = {"error": "output_token_limit", "reason": "max_new_tokens_without_eos",
                            "parse_diagnostic": problem}

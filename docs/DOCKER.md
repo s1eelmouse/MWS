@@ -84,6 +84,8 @@ float16. Это не заменяет измерение памяти и ско�
 | `PORT` | `8000` | порт API на хосте |
 | `MAX_BATCH` | `1` | размер пачки для backend |
 | `WITH_SCHEMA` | `0` | `1` добавляет JSON-схему в prompt; не включать для модели, обученной без неё |
+| `JSON_CONSTRAINED` | `1` | `0` отключает XGrammar-ограничение только для A/B; в vLLM-режиме схема задаётся через `response_format` |
+| `JSON_GRAMMAR_BACKEND` | `auto` | масочное ядро XGrammar; `torch_native` — если Triton JIT не собирается |
 | `TAG` | `cpu`/`cuda`/`vllm-api` | тег локального образа |
 | `TORCH_INDEX_URL` | CPU или `cu126` | индекс PyTorch при сборке |
 | `VLLM_IMAGE` | `vllm/vllm-openai:latest` | образ vLLM |

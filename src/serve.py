@@ -63,7 +63,8 @@ def create_app(backend=None):
     def health():
         if app.state.extractor is None:
             raise HTTPException(503, "Model is not loaded")
-        return {"status": "ok", "model": MODEL_DIR, "schema": "organizer-call-v1"}
+        return {"status": "ok", "model": MODEL_DIR, "schema": "organizer-call-v1",
+                "constrained_json": bool(getattr(app.state.extractor, "constrained_json", False))}
 
     @app.get("/", include_in_schema=False)
     def root():
