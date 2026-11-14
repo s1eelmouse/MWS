@@ -109,7 +109,7 @@ python -u src/benchmark.py --input data/organizer/val.jsonl \
 
 Вторая эпоха `4090-continue-002` на том же стенде: 383 звонка за 2 644 с,
 6,90 с на звонок, 0 отказов и 100 % формата, precision / recall 0.4008 / 0.4119,
-`temporal_recall` 0.3566 (0.4184 после дат `task`), `state_accuracy` 0.3852,
+`temporal_recall` 0.3566 (0.4237 после дат `task`), `state_accuracy` 0.3852,
 grounding 0.7987. Это основная модель.
 
 ## 3. Короткая проверка замеров

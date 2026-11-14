@@ -200,7 +200,7 @@ resume. Исходный адаптер проверяется до GPU: отд�
 Прямой запуск: `src/train.py --init-adapter-dir ... --learning-rate ...`, затем merge и
 benchmark. Второй цикл без constrained decoding давал 347 отказов (344 `invalid_json`)
 и recall 0.039 из-за обёртки `{"fact": ...}`. С constrained decoding и датами `task`
-он, наоборот, стал основной моделью: P/R 0.4008/0.4119, temporal 0.4184,
+он, наоборот, стал основной моделью: P/R 0.4008/0.4119, temporal 0.4237,
 state 0.3852, 0 отказов на полном val.
 
 ## Docker на подготовленном NVIDIA-сервере
