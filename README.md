@@ -12,6 +12,7 @@
 | Документ | Что в нём |
 |---|---|
 | [docs/PLAN.md](docs/PLAN.md) | План работ и статус по пунктам |
+| [docs/DECISION_NEXT_MODEL.md](docs/DECISION_NEXT_MODEL.md) | Решение по 1.7B и следующей эпохе |
 | [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) | Как запускать обучение с журналами и замеры CPU/GPU, методика замеров |
 | [docs/RESULTS.md](docs/RESULTS.md) | Таблицы результатов для отчёта и из каких файлов их заполнять |
 
