@@ -16,6 +16,15 @@ from schema import as_call, contract_signature
 from training_data import file_digest
 
 
+def apply_temporal_postprocess(calls, predictions, mode):
+    """Apply the batch rules (including series carry) after all calls exist."""
+    if mode not in ('conservative', 'task'):
+        return predictions, {}, []
+    from postprocess_dates import process_predictions
+    processed, audit, counts = process_predictions(calls, predictions, mode=mode)
+    return processed, counts, audit
+
+
 def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda: None):
     """Backend receives CallInput only; labels stay exclusively in the evaluator."""
     calls = [as_call(row) for row in rows]
@@ -82,6 +91,15 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     seconds = sum(batch["seconds"] for batch in batches)
     if memory.error:
         raise RuntimeError(f"Memory sampling failed: {memory.error}")
+    temporal_mode = getattr(backend, "temporal_normalization", "off")
+    predictions, temporal_counts, temporal_audit = apply_temporal_postprocess(
+        calls, predictions, temporal_mode)
+    if temporal_counts:
+        with (output / "predictions.jsonl").open("w", encoding="utf-8") as stream:
+            for prediction in predictions:
+                stream.write(json.dumps(prediction, ensure_ascii=False) + "\n")
+        if temporal_audit:
+            write_jsonl(output / "temporal-audit.jsonl", temporal_audit)
     quality, errors = evaluate_predictions(rows, predictions)
     write_json(output / "metrics.json", quality)
     write_jsonl(output / "errors.jsonl", errors)
@@ -96,6 +114,7 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     return {"calls": len(calls), "failed_calls": failed,
             "error_counts": error_counts,
             "normalization_counts": dict(normalization_counts),
+            "temporal_postprocess": dict(temporal_counts),
             "warmup_batches": warmup_batches, "warmup_seconds": warmup_seconds,
             "warmup_errors": warmup_errors,
             "measurement_seconds": seconds,
