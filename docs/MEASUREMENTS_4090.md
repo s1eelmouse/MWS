@@ -99,6 +99,12 @@ python -u src/benchmark.py --input data/organizer/val.jsonl \
 `constrained_json`, `error_counts.invalid_json`, `normalization_counts`,
 `quality.diagnostics.format_valid_rate`.
 
+Результат прогона: 0 отказов, `format_valid_rate = 1.0`, 383 звонка за 2 942 с,
+7,68 с на звонок, ответ p50/p95 432/635 токенов, VRAM reserved 6,2 ГиБ.
+Нормализовано 8 speaker, 10 невозможных дат, 3 обратных интервала. После удаления
+111 точных дублей precision / recall 0.3625 / 0.3908, `temporal_recall` 0.3315,
+`state_accuracy` 0.3467, grounding 0.7656.
+
 ## 3. Короткая проверка замеров
 
 ```bash
