@@ -48,6 +48,29 @@ class PredictionNormalizationTest(unittest.TestCase):
         self.assertIsNone(facts.facts[0].valid_to)
         self.assertEqual(summary, {"reversed_intervals_opened": 1})
 
+    def test_exact_duplicates_are_removed(self):
+        facts, error, summary = self.parse(FACT, FACT)
+        self.assertIsNone(error)
+        self.assertEqual(len(facts.facts), 1)
+        self.assertEqual(summary, {"exact_duplicates_removed": 1})
+
+    def test_duplicates_are_removed_after_speaker_and_date_normalization(self):
+        wrong_speaker = copy.deepcopy(FACT)
+        wrong_speaker["speaker"] = "operator"
+        facts, error, summary = self.parse(FACT, wrong_speaker)
+        self.assertIsNone(error)
+        self.assertEqual(len(facts.facts), 1)
+        self.assertEqual(summary, {"speaker_from_turn": 1,
+                                   "exact_duplicates_removed": 1})
+
+    def test_different_values_are_not_deduplicated(self):
+        other = copy.deepcopy(FACT)
+        other["value"] = "другое действие"
+        facts, error, summary = self.parse(FACT, other)
+        self.assertIsNone(error)
+        self.assertEqual(len(facts.facts), 2)
+        self.assertIsNone(summary)
+
     def test_valid_fact_is_unchanged(self):
         facts, error, summary = self.parse(FACT)
         self.assertIsNone(error)
