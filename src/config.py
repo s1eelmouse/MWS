@@ -45,8 +45,16 @@ TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "task").strip().low
 if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task", "binding"):
     raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative, task or binding")
 CATALOG_PATH = os.getenv("CATALOG_PATH", "").strip()
+SAVE_RAW_RESPONSES = os.getenv("SAVE_RAW_RESPONSES", "0").strip().lower() in ("1", "true", "yes", "on")
 TEMPORAL_SERIES_HISTORY = os.getenv("TEMPORAL_SERIES_HISTORY", "0").strip().lower() not in ("0", "false", "no", "off")
 TEMPORAL_SERIES_MAX_ENTRIES = int(os.getenv("TEMPORAL_SERIES_MAX_ENTRIES", "10000"))
+HISTORY_MAX_ACCOUNTS = int(os.getenv("HISTORY_MAX_ACCOUNTS", "512"))
+HISTORY_MAX_BYTES = int(os.getenv("HISTORY_MAX_BYTES", str(8 * 1024 * 1024)))
+HISTORY_TTL_SECONDS = float(os.getenv("HISTORY_TTL_SECONDS", "3600"))
+if min(HISTORY_MAX_ACCOUNTS, HISTORY_MAX_BYTES) < 1:
+    raise ValueError("History account and byte limits must be positive")
+if not math.isfinite(HISTORY_TTL_SECONDS) or HISTORY_TTL_SECONDS <= 0:
+    raise ValueError("History TTL must be finite and positive")
 if TEMPORAL_SERIES_MAX_ENTRIES < 1:
     raise ValueError("TEMPORAL_SERIES_MAX_ENTRIES must be positive")
 if TEMPORAL_SERIES_HISTORY and TEMPORAL_NORMALIZATION not in ('task', 'binding'):

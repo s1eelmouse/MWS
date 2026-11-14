@@ -5,6 +5,8 @@
 - [Алгоритм, параметры и воспроизведение](TRAINING.md).
 - [Фактически выполненный bash-сценарий](run-continue-002.sh).
 - [Результаты, сравнение и дальнейшие действия](REPORT.md).
+- [Объединённая память дат: контроль качества и ресурсов](evaluations/history-merged-005/README.md).
+- [Полный val с XGrammar и датами, 0 отказов](evaluations/full-val-003/README.md).
 - [Исследовательский разбор восстановления JSON](exploratory-analysis.json).
 - [Исходные метрики полного val](attachments/metrics.json).
 - [Исходный отчёт benchmark: время, память и окружение](attachments/benchmark-report.json).

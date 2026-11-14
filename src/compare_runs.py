@@ -44,6 +44,9 @@ def comparison_rows(reports):
     if len(reports) < 3:
         raise ValueError("PLAN.md requires at least three measured configurations")
     keys = ("protocol", "dataset_sha256", "selected_calls_sha256", "contract_signature", "limits")
+    pipeline_keys = ("constrained_json", "temporal_normalization", "catalog_sha256", "grammar_backend", "grammar_threads",
+                     "retry_on_token_limit", "retry_repetition_penalty", "series_history_enabled",
+                     "series_history_max_entries", "history_settings")
     for report in reports:
         if report.get("diagnostic_subset"):
             raise ValueError("Diagnostic failure subset cannot enter the resource-quality curve")
@@ -51,6 +54,8 @@ def comparison_rows(reports):
             raise ValueError("Incomplete/failed benchmark cannot enter comparison")
         if any(report[k] != reports[0][k] for k in keys):
             raise ValueError("Different data, subset, contract, limits or measurement protocol")
+        if any(report.get(k) != reports[0].get(k) for k in pipeline_keys):
+            raise ValueError("Different decoding, date rules, catalog, retry or history settings")
         if report["quality"]["scorer_sha256"] != reports[0]["quality"]["scorer_sha256"]:
             raise ValueError("Scorer differs")
         if report["warmup_batches"] != reports[0]["warmup_batches"]:

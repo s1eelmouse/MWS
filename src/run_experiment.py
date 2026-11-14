@@ -92,7 +92,10 @@ def main():
                 ("BASE_MODEL", "MAX_INPUT_TOKENS", "MAX_NEW_TOKENS", "MAX_SEQUENCE_TOKENS",
                  "PROMPT_LOOKUP_TOKENS", "JSON_CONSTRAINED", "JSON_GRAMMAR_THREADS",
                  "JSON_GRAMMAR_BACKEND", "RETRY_ON_TOKEN_LIMIT",
-                 "RETRY_REPETITION_PENALTY")}})
+                 "RETRY_REPETITION_PENALTY", "TEMPORAL_NORMALIZATION", "CATALOG_PATH",
+                 "TEMPORAL_SERIES_HISTORY", "TEMPORAL_SERIES_MAX_ENTRIES",
+                 "HISTORY_MAX_ACCOUNTS", "HISTORY_MAX_BYTES", "HISTORY_TTL_SECONDS",
+                 "SAVE_RAW_RESPONSES")}})
         stage(directory, "tests", py + ["-m", "unittest", "discover", "-s", str(ROOT / "tests"), "-v"])
         stage(directory, "compile", py + ["-m", "compileall", "-q", str(ROOT / "src"), str(ROOT / "tests")])
         stage(directory, "check-data", script("train", "--check-data", "--train", args.train, "--val", args.val))

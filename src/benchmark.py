@@ -9,7 +9,8 @@ from pathlib import Path
 from case_io import prediction_row, read_jsonl, validate_gold, write_jsonl
 from case_evaluation import evaluate_predictions
 from config import (MAX_INPUT_TOKENS, MAX_NEW_TOKENS, PROMPT_LOOKUP_TOKENS,
-                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY)
+                    RETRY_ON_TOKEN_LIMIT, RETRY_REPETITION_PENALTY,
+                    JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS, SAVE_RAW_RESPONSES)
 from measurements import (MemorySampler, distribution, environment, write_json, model_artifacts,
                           model_weights_bytes, ERROR_TYPES)
 from schema import as_call, contract_signature
@@ -30,6 +31,7 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     """Backend receives CallInput only; labels stay exclusively in the evaluator."""
     calls = [as_call(row) for row in rows]
     predictions, records, batches = [], [], []
+    cumulative_failed = 0
     warmup_errors = []
     warmup_start = time.perf_counter()
     for warmup_batch in range(warmup_batches):
@@ -50,7 +52,9 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
             (output / "predictions.jsonl").open("x", encoding="utf-8") as pred_file, \
             (output / "calls.jsonl").open("x", encoding="utf-8") as call_file, \
             (output / "batches.jsonl").open("x", encoding="utf-8") as batch_file, \
-            (output / "failures.jsonl").open("x", encoding="utf-8") as failure_file:
+            (output / "failures.jsonl").open("x", encoding="utf-8") as failure_file, \
+            (output / "raw-answers.jsonl").open("x", encoding="utf-8") as raw_file, \
+            (output / "predictions-before-series.jsonl").open("x", encoding="utf-8") as before_file:
         for start in range(0, len(calls), batch_size):
             batch = calls[start:start + batch_size]
             details = []
@@ -82,15 +86,25 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
                           "error": prediction.get("error"),
                           "completion_latency_seconds": elapsed}
                 diagnostic = record.pop("diagnostic", None)
+                before_series = record.pop('prediction_before_series', result)
+                before_file.write(json.dumps(prediction_row(call.model_dump(mode='json'), before_series),
+                                             ensure_ascii=False) + '\n')
+                raw_fields = {key: record.pop(key) for key in
+                              ('raw_response', 'initial_raw_response') if key in record}
+                if raw_fields:
+                    raw_file.write(json.dumps({'call_id': call.call_id, **raw_fields},
+                                              ensure_ascii=False) + '\n')
                 if "error" in prediction:
+                    cumulative_failed += 1
                     failure_file.write(json.dumps({**record, **(diagnostic or {})}, ensure_ascii=False) + "\n")
                 records.append(record)
                 predictions.append(prediction)
                 pred_file.write(json.dumps(prediction, ensure_ascii=False) + "\n")
                 call_file.write(json.dumps(record, ensure_ascii=False) + "\n")
-            for stream in (pred_file, call_file, batch_file, failure_file):
+            for stream in (pred_file, call_file, batch_file, failure_file, raw_file, before_file):
                 stream.flush()
-            print(f"Measured {len(predictions)}/{len(calls)} calls", flush=True)
+            print(f"Completed {len(predictions)}/{len(calls)}; "
+                  f"failed: {cumulative_failed}", flush=True)
     seconds = sum(batch["seconds"] for batch in batches)
     if memory.error:
         raise RuntimeError(f"Memory sampling failed: {memory.error}")
@@ -117,6 +131,10 @@ def run_benchmark(rows, backend, output, batch_size, warmup_batches, sync=lambda
     return {"calls": len(calls), "failed_calls": failed,
             "error_counts": error_counts,
             "normalization_counts": dict(normalization_counts),
+            "history_settings": (backend.series_memory.settings()
+                                 if getattr(backend, 'series_memory', None) is not None else None),
+            "history": (backend.series_memory.stats()
+                        if getattr(backend, 'series_memory', None) is not None else None),
             "temporal_postprocess": {"stage": "backend.extract", "included_in_measurement": True,
                                      "mode": getattr(backend, "temporal_normalization", "off"),
                                      "series_history_enabled": bool(getattr(backend, "series_history_enabled", False))},
@@ -180,6 +198,9 @@ def main():
               "failures_sha256": file_digest(args.failures) if args.failures else None,
               "limits": {"input": MAX_INPUT_TOKENS, "output": MAX_NEW_TOKENS},
               "prompt_lookup_tokens": PROMPT_LOOKUP_TOKENS,
+              "grammar_backend": JSON_GRAMMAR_BACKEND,
+              "grammar_threads": JSON_GRAMMAR_THREADS,
+              "save_raw_responses": SAVE_RAW_RESPONSES,
               "retry_on_token_limit": RETRY_ON_TOKEN_LIMIT,
               "retry_repetition_penalty": RETRY_REPETITION_PENALTY}
     try:

@@ -143,6 +143,10 @@ class SeriesHistoryTest(unittest.TestCase):
         result = backend.extract(calls, batch_size=1, measurements=records)
         self.assertEqual(result[1]['facts'][0]['valid_from'], rows[0]['facts'][0]['valid_from'])
         self.assertEqual(records[1]['normalization']['series_accepted_carried'], 1)
+        self.assertEqual(records[1]['prediction_before_series']['facts'][0]['valid_from'],
+                         rows[1]['facts'][0]['valid_from'])
+        self.assertNotEqual(records[1]['prediction_before_series']['facts'][0]['valid_from'],
+                            result[1]['facts'][0]['valid_from'])
         self.assertEqual(records[1]['series_decisions'][0]['source_call_id'], calls[0].call_id)
         backend.reset_series_history()
         self.assertEqual(len(backend.series_memory._entries), 0)

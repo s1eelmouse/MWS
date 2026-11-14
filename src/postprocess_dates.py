@@ -11,15 +11,18 @@ from case_io import read_jsonl, write_jsonl
 from catalog_normalization import load_catalog, normalize_catalog_facts
 from schema import Facts, as_call, contract_signature, source_problems
 from temporal import normalize_fact_dates
-from series_history import SeriesDateMemory
+from series_history import new_series_memory
 
 
 def process_predictions(calls, predictions, *, mode='conservative', catalog=None,
-                        deduplicate=False, speaker_from_source=False, allow_series_history=False):
+                        deduplicate=False, speaker_from_source=False, allow_series_history=False,
+                        memory=None):
     if mode not in ('off', 'conservative', 'task', 'binding'):
         raise ValueError('Unknown temporal mode')
     if allow_series_history and mode not in ('task', 'binding'):
         raise ValueError('Series history requires task or binding mode')
+    if memory is not None and not allow_series_history:
+        raise ValueError('Explicit memory requires allow_series_history=True')
     by_id = {row['call_id']: row for row in predictions}
     if len(by_id) != len(predictions) or len({call.call_id for call in calls}) != len(calls):
         raise ValueError('Duplicate call IDs')
@@ -70,7 +73,8 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
         processed[call.call_id] = row
     output = [processed[call.call_id] for call in calls]
     if allow_series_history:
-        output, history_events, history_counts = SeriesDateMemory().apply(calls, output)
+        history = memory if memory is not None else new_series_memory()
+        output, history_events, history_counts = history.apply(calls, output)
         audit.extend(history_events)
         counts.update(history_counts)
         for call, row in zip(calls, output):
