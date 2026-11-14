@@ -3,6 +3,7 @@
 Меняйте значения здесь или задавайте переменные окружения с теми же именами.
 Пример для PowerShell:  $env:BASE_MODEL = "Qwen/Qwen3-0.6B"
 """
+import math
 import os
 import sys
 
@@ -25,6 +26,15 @@ if JSON_GRAMMAR_THREADS < 1:
     raise ValueError("JSON_GRAMMAR_THREADS must be at least 1")
 if JSON_GRAMMAR_BACKEND not in ("auto", "cpu", "cuda", "triton", "torch_compile", "torch_native"):
     raise ValueError("JSON_GRAMMAR_BACKEND must be auto, cpu, triton, torch_compile or torch_native")
+
+# Optional anti-loop controls for diagnostic reruns. Defaults keep current greedy
+# decoding unchanged; enable only for an explicit A/B on repetitive calls.
+REPETITION_PENALTY = float(os.getenv("REPETITION_PENALTY", "1.0"))
+NO_REPEAT_NGRAM_SIZE = int(os.getenv("NO_REPEAT_NGRAM_SIZE", "0"))
+if not math.isfinite(REPETITION_PENALTY) or REPETITION_PENALTY <= 0:
+    raise ValueError("REPETITION_PENALTY must be finite and positive")
+if NO_REPEAT_NGRAM_SIZE < 0:
+    raise ValueError("NO_REPEAT_NGRAM_SIZE must be nonnegative")
 
 # Ускорение одиночного запроса. Факты — цитаты из обращения, поэтому модель за один шаг
 # проверяет сразу несколько токенов, скопированных из запроса. Ответ тот же, шагов меньше.

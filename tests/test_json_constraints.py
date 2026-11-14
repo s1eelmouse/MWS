@@ -111,6 +111,47 @@ class JsonConstraintTest(unittest.TestCase):
         self.assertEqual(captured["logits_processor"][0].__class__, Processor)
         self.assertNotIn("prompt_lookup_num_tokens", captured)
 
+    def test_anti_loop_controls_are_opt_in(self):
+        captured = []
+
+        class Tokenizer:
+            pad_token_id = 0
+
+            def __call__(self, prompts, **kwargs):
+                return ({"input_ids": [1, 3]} if isinstance(prompts, str)
+                        else Inputs(input_ids=Tokens([[1, 3]] * len(prompts))))
+
+            def batch_decode(self, tokens, **kwargs):
+                return ['{"facts":[]}'] * len(tokens.rows)
+
+        def generate(**kwargs):
+            captured.append(kwargs)
+            return Tokens([[1, 3, 6, 2]])
+
+        backend = Extractor.__new__(Extractor)
+        backend.torch = SimpleNamespace(inference_mode=contextlib.nullcontext)
+        backend.device, backend.with_schema = "cpu", False
+        backend.tok, backend.lock = Tokenizer(), threading.Lock()
+        backend.constrained_json = False
+        backend.model = SimpleNamespace(
+            config=SimpleNamespace(max_position_embeddings=100),
+            generation_config=SimpleNamespace(eos_token_id=2), generate=generate)
+        with patch("extractor.prompt_for", return_value="prompt"), \
+                patch("extractor.MAX_NEW_TOKENS", 3), \
+                patch("extractor.PROMPT_LOOKUP_TOKENS", 0):
+            with patch("extractor.REPETITION_PENALTY", 1.1), \
+                    patch("extractor.NO_REPEAT_NGRAM_SIZE", 4):
+                backend.extract([CALL], 1, [])
+            enabled = captured[-1]
+            with patch("extractor.REPETITION_PENALTY", 1.0), \
+                    patch("extractor.NO_REPEAT_NGRAM_SIZE", 0):
+                backend.extract([CALL], 1, [])
+            disabled = captured[-1]
+        self.assertEqual(enabled["repetition_penalty"], 1.1)
+        self.assertEqual(enabled["no_repeat_ngram_size"], 4)
+        self.assertNotIn("repetition_penalty", disabled)
+        self.assertNotIn("no_repeat_ngram_size", disabled)
+
     def test_processor_masks_cpu_and_advances_on_the_next_token(self):
         applied, filled = [], []
 

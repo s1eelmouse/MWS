@@ -103,7 +103,9 @@ python -u src/benchmark.py --input data/organizer/val.jsonl \
 7,68 с на звонок, ответ p50/p95 432/635 токенов, VRAM reserved 6,2 ГиБ.
 Нормализовано 8 speaker, 10 невозможных дат, 3 обратных интервала. После удаления
 111 точных дублей precision / recall 0.3625 / 0.3908, `temporal_recall` 0.3315,
-`state_accuracy` 0.3467, grounding 0.7656.
+`state_accuracy` 0.3467, grounding 0.7656. На шумном val 3 звонка ушли в
+`output_token_limit`; для их диагностики есть opt-in `REPETITION_PENALTY=1.1`
+и `NO_REPEAT_NGRAM_SIZE=4` (новый output-dir, только A/B).
 
 ## 3. Короткая проверка замеров
 

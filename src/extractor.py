@@ -3,7 +3,8 @@ import threading
 import time
 
 from config import (JSON_CONSTRAINED, JSON_GRAMMAR_BACKEND, JSON_GRAMMAR_THREADS,
-                    MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, PROMPT_LOOKUP_TOKENS)
+                    MAX_INPUT_TOKENS, MAX_NEW_TOKENS, MERGED_DIR, NO_REPEAT_NGRAM_SIZE,
+                    PROMPT_LOOKUP_TOKENS, REPETITION_PENALTY)
 from json_constraints import GrammarLogitsProcessor, compile_json_grammar
 from prediction import parse_prediction
 from schema import as_call, check_model_contract, source_problems
@@ -108,11 +109,16 @@ class Extractor:
                    and not getattr(self, "constrained_json", False) else {})
         processor = self._json_logits_processor()
         grammar = {"logits_processor": [processor]} if processor is not None else {}
+        anti_loop = {}
+        if REPETITION_PENALTY != 1.0:
+            anti_loop["repetition_penalty"] = REPETITION_PENALTY
+        if NO_REPEAT_NGRAM_SIZE:
+            anti_loop["no_repeat_ngram_size"] = NO_REPEAT_NGRAM_SIZE
         with self.lock, self.torch.inference_mode():
             enc = self.tok(prompts, return_tensors="pt", padding=True, add_special_tokens=False).to(self.device)
             out = self.model.generate(
                 **enc, max_new_tokens=MAX_NEW_TOKENS, do_sample=False,
-                pad_token_id=self.tok.pad_token_id, **speedup, **grammar)
+                pad_token_id=self.tok.pad_token_id, **speedup, **grammar, **anti_loop)
             generated = out[:, enc["input_ids"].shape[1]:]
             answers = self.tok.batch_decode(generated, skip_special_tokens=True)
             eos = self.model.generation_config.eos_token_id

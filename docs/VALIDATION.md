@@ -8,14 +8,16 @@
 Проверено локально в Python 3.12 с `xgrammar 0.2.9`, `transformers 5.23.0`,
 `torch 2.15.0`:
 
-- `python -m unittest discover -s tests`: **97 тестов, 92 успешно, 5 skipped**
+- `python -m unittest discover -s tests`: **98 тестов, 93 успешно, 5 skipped**
   (пропущены тесты с ML-зависимостями, не относящиеся к грамматике; на сервере
   с torch/xgrammar проходят все).
 - `tests/test_json_constraints.py` проверяет компиляцию схемы, компактные
   разделители, передачу свежего `LogitsProcessor` в каждый `generate()`, отказ от
-  `prompt_lookup`, который обходил бы грамматику, и выбор `torch_native` на Windows
-  CUDA (у Triton нет Windows-сборки). `JSON_GRAMMAR_BACKEND` позволяет закрепить
-  `torch_native`, если Triton JIT не собирается на Linux.
+  `prompt_lookup`, который обходил бы грамматику, выбор `torch_native` на Windows
+  CUDA (у Triton нет Windows-сборки) и opt-in `REPETITION_PENALTY` /
+  `NO_REPEAT_NGRAM_SIZE` для диагностики зацикливаний.
+  `JSON_GRAMMAR_BACKEND` позволяет закрепить `torch_native`, если Triton JIT не
+  собирается на Linux.
 - `tests/test_prediction_normalization.py` проверяет, что speaker берётся из
   диаризации, невозможная дата и обратный интервал не выбрасывают весь звонок,
   точные дубликаты удаляются после нормализации, а отсутствующий `turn_idx`

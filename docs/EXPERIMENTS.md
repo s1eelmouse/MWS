@@ -62,6 +62,8 @@ Linux без Python-заголовков Triton JIT тоже не собирае
 enum, но не истинность фактов, не ISO-формат дат и не порядок
 `valid_from`/`valid_to` — их проверяет pydantic-контракт `src/schema.py`.
 На полном val 383/383 звонков прошли без отказов (`format_valid_rate = 1.0`).
+Для диагностики зацикливаний есть opt-in `REPETITION_PENALTY` и
+`NO_REPEAT_NGRAM_SIZE`; по умолчанию 1.0 и 0, на полный val без A/B не включать.
 
 ## Единая методика
 
