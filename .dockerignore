@@ -9,6 +9,7 @@ out
 data
 docs
 case_data
+!case_data/catalog.json
 __pycache__
 **/__pycache__
 *.py[cod]
