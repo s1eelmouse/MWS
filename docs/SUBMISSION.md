@@ -9,10 +9,8 @@
 |---|---|---|
 | Код | GitHub `main`, последний коммит | 157 тестов, `compileall` |
 | Адаптер 002 (старый fallback) | `out/4090-continue-002`, `experiment.json` | подтверждён на старом пакете |
-| Адаптер 003 (кандидат) | `out/4090-continue-003`, `experiment.json` | 003+recovery: T 0.4663, S 0.5152 на сохранённых 2.1; end-to-end — V100 |
-| Адаптер 004-v21 | `out/4090-continue-004-v21` | обучен/merged; val прерван ребутом 4090 |
+| Адаптер 003 (кандидат) | `out/4090-continue-003`, `experiment.json` | 003+recovery: T 0.4663, S 0.5152 на сохранённых 2.1; свежий end-to-end не выполнен |
 | Merged-модель 002/003 | локально `/home/user/hackathon/artifacts-4090/` | скопированы с 4090 |
-| V100 bundle (003) | `/home/user/hackathon/artifacts-4090/v100-bundle-003.tar.gz` | 1019 МБ, SHA256 `bf62eefc…5728` |
 | Конфиг инференса | `README.md`, `MODEL.md` | 12288/16384/4096, XGrammar, `task` |
 | Docker CPU | `compactfactextraction:cpu` | образ собран; `/health` и короткий `/extract` проверены; полный датовый звонок на CPU >240 с |
 | Отчёт | `MODEL.md`, `RESULTS.md`, `DEFENSE.md` | готово |
@@ -30,14 +28,11 @@
       `postprocess_dates` получает `CallInput` без gold. Проверено на отчёте 003.
 - [x] Полный val 2.1 на сохранённых 003: 0 отказов, `format_valid_rate = 1.0`;
       T 0.4492 / S 0.4350; с recovery — T 0.4663 / S 0.5152.
-- [ ] Свежий end-to-end val 2.1 (003+recovery или 004-v21) на V100: 0 отказов,
-      формат 100 %; T/S из `report.json`.
 - [ ] Шумный val 2.1: 0 отказов, формат 100 %; T/S из отчёта. Для 2.1 ещё не
       прогнан; старые шумные числа — пакет 1.
 - [ ] Docker: `/health` 200, `/extract` возвращает `call_id` и валидные `facts`;
       модель смонтирована read-only.
 - [x] Merged-модели 002/003 и их отчёты скачаны локально; SHA256 записаны.
-- [ ] Merged-модель 004-v21 и `experiment.json` забрать после восстановления 4090.
 - [ ] Ссылка на репозиторий и веса доступна всем членам команды и жюри.
 
 ## 3. Что нельзя делать перед сдачей
