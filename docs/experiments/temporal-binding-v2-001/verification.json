@@ -1,0 +1,606 @@
+{
+  "date": "2026-11-14",
+  "model": "Qwen3-0.6B / 4090-baseline-001, frozen constrained predictions",
+  "rule_freeze_commit": "4680bd67bdd3d97b4b0f5f2d868f75b00212e984",
+  "serving_verification_commit": "8fd0e44cb4c02f72b29aef2079c0a5e1ebda2deb",
+  "contract_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+  "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+  "environment": {
+    "python": "3.12.4",
+    "platform": "macOS-26.4-arm64-arm-64bit",
+    "machine": "arm64",
+    "device": "cpu"
+  },
+  "scope": {
+    "new_training": false,
+    "gold_passed_to_rules": false,
+    "second_epoch_new_predictions_available": false,
+    "new_algorithm_second_epoch_quality_verified": false,
+    "real_gpu_or_real_vllm_verified": false,
+    "dataset_or_predictions_added_to_this_commit": false
+  },
+  "counts": {
+    "calls": 383,
+    "gold_facts": 1845,
+    "raw_constrained_predictions": 2100,
+    "control_predictions_after_dedup": 1989,
+    "matched_facts": 721
+  },
+  "input_hashes": {
+    "val.jsonl": "fb0dd73bba4b642ca18538751ce4a64d40a569aa7edd1a2a2b595af3c6b6ca83",
+    "train.jsonl": "62cb4af045ab12dbc854d71532b3b796ef501f4a232359e98549863ae0476fcb",
+    "raw_constrained_predictions.jsonl": "ff1a1ec411a27d823cbbba439b43406072841010d753e90511f187d8ced9eefd",
+    "dedup_control.jsonl": "2c67f5fccd4f4fb0296a81f496a84d3761d830b45885a904768a617bbff65ab9"
+  },
+  "source_hashes": {
+    "temporal.py": "d0ace3934693c4c95c2420700eee81c2e3303e4d68d550be5c94c74b6cc13807",
+    "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+    "series_history.py": "0db900da4df704ea051f02c65e022eed8fe022557888e13d042decf878b5402d",
+    "postprocess_dates.py": "36c59778c10d0ceb76a58c268c61e9b0975074d3542d40c1ad98d2b45879442b"
+  },
+  "experiments": {
+    "binding-stateless": {
+      "manifest": {
+        "settings": {
+          "input": "data/organizer/val.jsonl",
+          "pred": "out/temporal-binding-v2-001/control.jsonl",
+          "output_dir": "out/temporal-binding-v2-001/binding-stateless",
+          "mode": "binding",
+          "catalog": null,
+          "deduplicate": false,
+          "speaker_from_source": false,
+          "allow_series_history": false
+        },
+        "calls": 383,
+        "counts": {
+          "temporal_decisions:action_assertion_time": 115,
+          "dates_changed": 478,
+          "temporal_decisions:task_mode_left_unchanged": 1038,
+          "temporal_decisions:already_consistent": 176,
+          "temporal_decisions:agreement_event_time": 282,
+          "temporal_decisions:no_bound_event_time": 288,
+          "temporal_decisions:action_explicit_time": 48,
+          "temporal_decisions:bound_event_time": 33,
+          "temporal_decisions:interval_conflict": 4,
+          "temporal_decisions:ambiguous_ticket_reference": 1,
+          "temporal_decisions:conflicting_event_times": 2,
+          "temporal_decisions:multiple_objects_same_evidence": 2
+        },
+        "processing_seconds": 0.4328477911185473,
+        "contract_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+        "input_sha256": "fb0dd73bba4b642ca18538751ce4a64d40a569aa7edd1a2a2b595af3c6b6ca83",
+        "prediction_sha256": "2c67f5fccd4f4fb0296a81f496a84d3761d830b45885a904768a617bbff65ab9",
+        "catalog_sha256": null,
+        "source_sha256": {
+          "temporal.py": "d0ace3934693c4c95c2420700eee81c2e3303e4d68d550be5c94c74b6cc13807",
+          "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+          "series_history.py": "196b03b43e129049fbc9379765cc19437c8c9f7570e35e1b10b4ad5917dda09e",
+          "catalog_normalization.py": "7c6cff3e671c8e8acbfe037f6d3a8553b846d9fd0506986ea4bea5674d2dc48c",
+          "postprocess_dates.py": "36c59778c10d0ceb76a58c268c61e9b0975074d3542d40c1ad98d2b45879442b"
+        },
+        "gold_fields_passed_to_rules": false,
+        "history_scope": "single_call"
+      },
+      "predictions_sha256": "1253e9a63e2513bc10b1b352b7d45164511e90cba2832d22a5c06cf99e76c841",
+      "audit_sha256": "f7618bdcfd73ffc18dd447ed80080425a892e010d4b7858a56a9356ec5fde1e7"
+    },
+    "task-history": {
+      "manifest": {
+        "settings": {
+          "input": "data/organizer/val.jsonl",
+          "pred": "out/temporal-binding-v2-001/control.jsonl",
+          "output_dir": "out/temporal-binding-v2-001/task-history",
+          "mode": "task",
+          "catalog": null,
+          "deduplicate": false,
+          "speaker_from_source": false,
+          "allow_series_history": true
+        },
+        "calls": 383,
+        "counts": {
+          "temporal_decisions:action_assertion_time": 115,
+          "dates_changed": 472,
+          "temporal_decisions:task_mode_left_unchanged": 1328,
+          "temporal_decisions:already_consistent": 183,
+          "temporal_decisions:agreement_event_time": 282,
+          "temporal_decisions:action_explicit_time": 48,
+          "temporal_decisions:status_explicit_time": 27,
+          "temporal_decisions:interval_conflict": 4,
+          "temporal_decisions:multiple_objects_same_evidence": 2,
+          "series_accepted_carried": 20
+        },
+        "processing_seconds": 0.3492804579436779,
+        "contract_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+        "input_sha256": "fb0dd73bba4b642ca18538751ce4a64d40a569aa7edd1a2a2b595af3c6b6ca83",
+        "prediction_sha256": "2c67f5fccd4f4fb0296a81f496a84d3761d830b45885a904768a617bbff65ab9",
+        "catalog_sha256": null,
+        "source_sha256": {
+          "temporal.py": "d0ace3934693c4c95c2420700eee81c2e3303e4d68d550be5c94c74b6cc13807",
+          "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+          "series_history.py": "196b03b43e129049fbc9379765cc19437c8c9f7570e35e1b10b4ad5917dda09e",
+          "catalog_normalization.py": "7c6cff3e671c8e8acbfe037f6d3a8553b846d9fd0506986ea4bea5674d2dc48c",
+          "postprocess_dates.py": "36c59778c10d0ceb76a58c268c61e9b0975074d3542d40c1ad98d2b45879442b"
+        },
+        "gold_fields_passed_to_rules": false,
+        "history_scope": "earlier_same_account_ticket"
+      },
+      "predictions_sha256": "9fa63423cea9c4c90b7c3b3a31b16eb62d767aa0589ee5b24389e2935bee8ebd",
+      "audit_sha256": "974aeefe6df340abdcfc103ea4618508bc77a057bbf6b64f6095776798951174"
+    },
+    "binding-history": {
+      "manifest": {
+        "settings": {
+          "input": "data/organizer/val.jsonl",
+          "pred": "out/temporal-binding-v2-001/control.jsonl",
+          "output_dir": "out/temporal-binding-v2-001/binding-history",
+          "mode": "binding",
+          "catalog": null,
+          "deduplicate": false,
+          "speaker_from_source": false,
+          "allow_series_history": true
+        },
+        "calls": 383,
+        "counts": {
+          "temporal_decisions:action_assertion_time": 115,
+          "dates_changed": 478,
+          "temporal_decisions:task_mode_left_unchanged": 1038,
+          "temporal_decisions:already_consistent": 176,
+          "temporal_decisions:agreement_event_time": 282,
+          "temporal_decisions:no_bound_event_time": 288,
+          "temporal_decisions:action_explicit_time": 48,
+          "temporal_decisions:bound_event_time": 33,
+          "temporal_decisions:interval_conflict": 4,
+          "temporal_decisions:ambiguous_ticket_reference": 1,
+          "temporal_decisions:conflicting_event_times": 2,
+          "temporal_decisions:multiple_objects_same_evidence": 2,
+          "series_accepted_carried": 20
+        },
+        "processing_seconds": 0.49309858307242393,
+        "contract_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+        "input_sha256": "fb0dd73bba4b642ca18538751ce4a64d40a569aa7edd1a2a2b595af3c6b6ca83",
+        "prediction_sha256": "2c67f5fccd4f4fb0296a81f496a84d3761d830b45885a904768a617bbff65ab9",
+        "catalog_sha256": null,
+        "source_sha256": {
+          "temporal.py": "d0ace3934693c4c95c2420700eee81c2e3303e4d68d550be5c94c74b6cc13807",
+          "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+          "series_history.py": "196b03b43e129049fbc9379765cc19437c8c9f7570e35e1b10b4ad5917dda09e",
+          "catalog_normalization.py": "7c6cff3e671c8e8acbfe037f6d3a8553b846d9fd0506986ea4bea5674d2dc48c",
+          "postprocess_dates.py": "36c59778c10d0ceb76a58c268c61e9b0975074d3542d40c1ad98d2b45879442b"
+        },
+        "gold_fields_passed_to_rules": false,
+        "history_scope": "earlier_same_account_ticket"
+      },
+      "predictions_sha256": "737d158534d1c7eaf70e722ac320129ba33e9d97a90187f73cc6dcebdca28be0",
+      "audit_sha256": "366033a9e10ee4e8939370e5299c962c401601e7a727c2d5e15704bd32eae25b"
+    },
+    "task-history-release": {
+      "manifest": {
+        "settings": {
+          "input": "data/organizer/val.jsonl",
+          "pred": "out/temporal-binding-v2-001/control.jsonl",
+          "output_dir": "out/temporal-binding-v2-001/task-history-release",
+          "mode": "task",
+          "catalog": null,
+          "deduplicate": false,
+          "speaker_from_source": false,
+          "allow_series_history": true
+        },
+        "calls": 383,
+        "counts": {
+          "temporal_decisions:action_assertion_time": 115,
+          "dates_changed": 472,
+          "temporal_decisions:task_mode_left_unchanged": 1328,
+          "temporal_decisions:already_consistent": 183,
+          "temporal_decisions:agreement_event_time": 282,
+          "temporal_decisions:action_explicit_time": 48,
+          "temporal_decisions:status_explicit_time": 27,
+          "temporal_decisions:interval_conflict": 4,
+          "temporal_decisions:multiple_objects_same_evidence": 2,
+          "series_accepted_carried": 20
+        },
+        "processing_seconds": 0.3249728330411017,
+        "contract_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+        "input_sha256": "fb0dd73bba4b642ca18538751ce4a64d40a569aa7edd1a2a2b595af3c6b6ca83",
+        "prediction_sha256": "2c67f5fccd4f4fb0296a81f496a84d3761d830b45885a904768a617bbff65ab9",
+        "catalog_sha256": null,
+        "source_sha256": {
+          "temporal.py": "d0ace3934693c4c95c2420700eee81c2e3303e4d68d550be5c94c74b6cc13807",
+          "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+          "series_history.py": "0db900da4df704ea051f02c65e022eed8fe022557888e13d042decf878b5402d",
+          "catalog_normalization.py": "7c6cff3e671c8e8acbfe037f6d3a8553b846d9fd0506986ea4bea5674d2dc48c",
+          "postprocess_dates.py": "36c59778c10d0ceb76a58c268c61e9b0975074d3542d40c1ad98d2b45879442b"
+        },
+        "gold_fields_passed_to_rules": false,
+        "history_scope": "earlier_same_account_ticket"
+      },
+      "predictions_sha256": "9fa63423cea9c4c90b7c3b3a31b16eb62d767aa0589ee5b24389e2935bee8ebd",
+      "audit_sha256": "974aeefe6df340abdcfc103ea4618508bc77a057bbf6b64f6095776798951174"
+    },
+    "binding-history-release": {
+      "manifest": {
+        "settings": {
+          "input": "data/organizer/val.jsonl",
+          "pred": "out/temporal-binding-v2-001/control.jsonl",
+          "output_dir": "out/temporal-binding-v2-001/binding-history-release",
+          "mode": "binding",
+          "catalog": null,
+          "deduplicate": false,
+          "speaker_from_source": false,
+          "allow_series_history": true
+        },
+        "calls": 383,
+        "counts": {
+          "temporal_decisions:action_assertion_time": 115,
+          "dates_changed": 478,
+          "temporal_decisions:task_mode_left_unchanged": 1038,
+          "temporal_decisions:already_consistent": 176,
+          "temporal_decisions:agreement_event_time": 282,
+          "temporal_decisions:no_bound_event_time": 288,
+          "temporal_decisions:action_explicit_time": 48,
+          "temporal_decisions:bound_event_time": 33,
+          "temporal_decisions:interval_conflict": 4,
+          "temporal_decisions:ambiguous_ticket_reference": 1,
+          "temporal_decisions:conflicting_event_times": 2,
+          "temporal_decisions:multiple_objects_same_evidence": 2,
+          "series_accepted_carried": 20
+        },
+        "processing_seconds": 0.4309959579259157,
+        "contract_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+        "input_sha256": "fb0dd73bba4b642ca18538751ce4a64d40a569aa7edd1a2a2b595af3c6b6ca83",
+        "prediction_sha256": "2c67f5fccd4f4fb0296a81f496a84d3761d830b45885a904768a617bbff65ab9",
+        "catalog_sha256": null,
+        "source_sha256": {
+          "temporal.py": "d0ace3934693c4c95c2420700eee81c2e3303e4d68d550be5c94c74b6cc13807",
+          "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+          "series_history.py": "0db900da4df704ea051f02c65e022eed8fe022557888e13d042decf878b5402d",
+          "catalog_normalization.py": "7c6cff3e671c8e8acbfe037f6d3a8553b846d9fd0506986ea4bea5674d2dc48c",
+          "postprocess_dates.py": "36c59778c10d0ceb76a58c268c61e9b0975074d3542d40c1ad98d2b45879442b"
+        },
+        "gold_fields_passed_to_rules": false,
+        "history_scope": "earlier_same_account_ticket"
+      },
+      "predictions_sha256": "737d158534d1c7eaf70e722ac320129ba33e9d97a90187f73cc6dcebdca28be0",
+      "audit_sha256": "366033a9e10ee4e8939370e5299c962c401601e7a727c2d5e15704bd32eae25b"
+    }
+  },
+  "comparisons": {
+    "binding-vs-task": {
+      "before": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3856,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "after": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3856,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "transitions": {
+        "still_correct": 276,
+        "changed_matched_facts": 21,
+        "still_wrong": 441,
+        "fixed": 2,
+        "regressed": 2
+      },
+      "net_correct_pairs": 0
+    },
+    "history-vs-task": {
+      "before": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3856,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "after": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3925,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "transitions": {
+        "still_correct": 278,
+        "changed_matched_facts": 19,
+        "still_wrong": 438,
+        "fixed": 5
+      },
+      "net_correct_pairs": 5
+    },
+    "binding-history-vs-task": {
+      "before": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3856,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "after": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3939,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "transitions": {
+        "still_correct": 276,
+        "changed_matched_facts": 38,
+        "still_wrong": 435,
+        "fixed": 8,
+        "regressed": 2
+      },
+      "net_correct_pairs": 6
+    },
+    "binding-history-vs-task-history": {
+      "before": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3925,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "after": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3939,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "transitions": {
+        "still_correct": 281,
+        "changed_matched_facts": 21,
+        "still_wrong": 435,
+        "fixed": 3,
+        "regressed": 2
+      },
+      "net_correct_pairs": 1
+    },
+    "history-vs-legacy": {
+      "before": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3994,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "after": {
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1989,
+        "fact_precision": 0.3625,
+        "fact_recall": 0.3908,
+        "temporal_recall": 0.3925,
+        "n_temporal": 721,
+        "state_accuracy": 0.3467,
+        "n_state": 623,
+        "grounding_turn": 0.7656,
+        "grounding_span": null,
+        "n_grounded": 721
+      },
+      "transitions": {
+        "still_correct": 283,
+        "changed_matched_facts": 13,
+        "still_wrong": 433,
+        "regressed": 5
+      },
+      "net_correct_pairs": -5
+    }
+  },
+  "serving_protocol_verification": {
+    "chronological_stream": {
+      "matches_offline_bulk": true,
+      "different_calls": 0
+    },
+    "file_order_batch_1": {
+      "matches_offline_bulk": true,
+      "different_calls": 0
+    },
+    "file_order_batch_2": {
+      "matches_offline_bulk": true,
+      "different_calls": 0
+    },
+    "bulk_cpu_overhead": {
+      "repetitions": 5,
+      "seconds": [
+        0.024904125137254596,
+        0.025437708012759686,
+        0.02437841589562595,
+        0.023885375121608377,
+        0.024035542039200664
+      ],
+      "median_seconds": 0.02437841589562595,
+      "includes": "copying, sorting, locking and history; excludes calendar/model/evaluator/JSON I/O"
+    }
+  },
+  "train_sanity": {
+    "note": "Gold-as-prediction sanity only, not extraction quality; partition fixed by account SHA256 modulo 5. Some full-train examples were inspected during rule development, so heldout is descriptive, not a blind test.",
+    "counts": {
+      "heldout:task:action:facts": 722,
+      "heldout:task:action:disagreements": 99,
+      "heldout:binding:action:facts": 722,
+      "heldout:binding:action:disagreements": 99,
+      "heldout:task:agreement:facts": 987,
+      "heldout:task:agreement:disagreements": 259,
+      "heldout:binding:agreement:facts": 987,
+      "heldout:binding:agreement:disagreements": 259,
+      "development:task:service_state:facts": 3525,
+      "development:task:service_state:disagreements": 0,
+      "development:binding:service_state:facts": 3525,
+      "development:binding:service_state:disagreements": 0,
+      "development:task:action:facts": 3010,
+      "development:task:action:disagreements": 388,
+      "development:binding:action:facts": 3010,
+      "development:binding:action:disagreements": 388,
+      "development:task:agreement:facts": 4034,
+      "development:task:agreement:disagreements": 998,
+      "development:binding:agreement:facts": 4034,
+      "development:binding:agreement:disagreements": 998,
+      "development:task:tariff:facts": 1473,
+      "development:task:tariff:disagreements": 0,
+      "development:binding:tariff:facts": 1473,
+      "development:binding:tariff:disagreements": 0,
+      "development:task:ticket_status:facts": 2762,
+      "development:task:ticket_status:disagreements": 71,
+      "development:binding:ticket_status:facts": 2762,
+      "development:binding:ticket_status:disagreements": 67,
+      "heldout:task:service_state:facts": 875,
+      "heldout:task:service_state:disagreements": 0,
+      "heldout:binding:service_state:facts": 875,
+      "heldout:binding:service_state:disagreements": 0,
+      "heldout:task:ticket_status:facts": 721,
+      "heldout:task:ticket_status:disagreements": 11,
+      "heldout:binding:ticket_status:facts": 721,
+      "heldout:binding:ticket_status:disagreements": 9,
+      "heldout:task:tariff:facts": 366,
+      "heldout:task:tariff:disagreements": 0,
+      "heldout:binding:tariff:facts": 366,
+      "heldout:binding:tariff:disagreements": 0,
+      "heldout:ticket_status:regressed": 5,
+      "development:ticket_status:fixed": 33,
+      "heldout:ticket_status:fixed": 7,
+      "development:ticket_status:regressed": 29,
+      "development:ticket_status:still_wrong": 1
+    }
+  },
+  "checks": {
+    "unit_tests_run": 177,
+    "passed": 176,
+    "skipped": 1,
+    "skip_reason": "real XGrammar integration unavailable; mocks and tiny CPU model checks run",
+    "compileall": "passed",
+    "diff_check": "passed",
+    "test_log_sha256": "a671777e22eae7c6886d0224ff2ed2dcaf15a21375709cae61fed7419047f973"
+  },
+  "limitations": [
+    "History improves stateless task but scores below the previous less restrictive batch policy.",
+    "Binding has no net gain over stateless task and stays experimental.",
+    "Heldout-labelled training partition is descriptive, not blind: full-train examples were inspected.",
+    "Offline and stream equality was checked on these 383 calls; arbitrary out-of-order requests may abstain.",
+    "Memory is process-local, bounded and not persisted; multiple workers do not share it.",
+    "Reported continue-002 temporal 0.4184 belongs to the previous batch policy."
+  ],
+  "retry_fix_commit": "08d67fa2520aa6a24429f633c42d7253842b1444",
+  "retry_fix_preserves_frozen_outputs": {
+    "task-history": {
+      "predictions.jsonl": true,
+      "audit.jsonl": true
+    },
+    "binding-history": {
+      "predictions.jsonl": true,
+      "audit.jsonl": true
+    }
+  },
+  "rule_freeze_source_hashes": {
+    "temporal.py": "d0ace3934693c4c95c2420700eee81c2e3303e4d68d550be5c94c74b6cc13807",
+    "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+    "series_history.py": "196b03b43e129049fbc9379765cc19437c8c9f7570e35e1b10b4ad5917dda09e",
+    "postprocess_dates.py": "36c59778c10d0ceb76a58c268c61e9b0975074d3542d40c1ad98d2b45879442b"
+  },
+  "serving_protocol_verification_before_retry_fix": {
+    "chronological_stream": {
+      "matches_offline_bulk": true,
+      "different_calls": 0,
+      "history_seconds": 0.04792787483893335,
+      "counts": {
+        "series_accepted_carried": 20
+      }
+    },
+    "file_order_batch_1": {
+      "matches_offline_bulk": true,
+      "different_calls": 0,
+      "history_seconds": 0.03445545886643231,
+      "counts": {
+        "series_accepted_carried": 20
+      }
+    },
+    "file_order_batch_2": {
+      "matches_offline_bulk": true,
+      "different_calls": 0,
+      "history_seconds": 0.031114540994167328,
+      "counts": {
+        "series_accepted_carried": 20
+      }
+    },
+    "bulk_cpu_overhead": {
+      "repetitions": 5,
+      "seconds": [
+        0.02835800009779632,
+        0.02462058304809034,
+        0.02448308398015797,
+        0.023887583054602146,
+        0.023791041923686862
+      ],
+      "median_seconds": 0.02448308398015797,
+      "includes": "copying predictions, sorting, locks, history only; excludes model, calendar, JSON I/O and evaluator"
+    },
+    "contract_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+    "scorer_sha256": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd"
+  }
+}
