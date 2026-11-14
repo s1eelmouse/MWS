@@ -8,9 +8,9 @@
 Проверено локально в Python 3.12 с `xgrammar 0.2.9`, `transformers 5.23.0`,
 `torch 2.15.0`:
 
-- `python -m unittest discover -s tests`: **99 тестов, 94 успешно, 5 skipped**
-  (пропущены тесты с ML-зависимостями, не относящиеся к грамматике; на сервере
-  с torch/xgrammar проходят все).
+- `python -m unittest discover -s tests`: **134 теста, 129 успешно, 5 skipped**
+  после слияния календаря; на сервере с torch/xgrammar проходят все 134.
+  Пропущены только тесты с ML-зависимостями в CPU-окружении.
 - `tests/test_json_constraints.py` проверяет компиляцию схемы, компактные
   разделители, передачу свежего `LogitsProcessor` в каждый `generate()`, отказ от
   `prompt_lookup`, который обходил бы грамматику, и выбор `torch_native` на Windows
@@ -26,6 +26,9 @@
 - `tests/test_retry_on_token_limit.py` проверяет один повтор только для
   `output_token_limit` с `repetition_penalty=1.2`, запись `retry` в детали и
   сохранение явной ошибки, если повтор тоже не завершился.
+- `tests/test_temporal.py` и `tests/test_catalog_normalization.py` проверяют
+  календарь, границы дат, отсутствие gold в правилах и точную нормализацию
+  каталога. Новые правила выключены по умолчанию.
 - Реальная Qwen3-0.6B tokenizer: схема компилируется; грамматика принимает эталонный
   ответ `to_answer([FACT])` посимвольно и завершается на EOS. Базовая Qwen3-0.6B на
   коротком `data/sample_case.jsonl` с `with_schema=True` вернула валидный
