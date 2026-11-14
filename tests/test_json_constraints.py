@@ -250,6 +250,20 @@ class JsonConstraintTest(unittest.TestCase):
         self.assertTrue(matcher.accept_token(vocab["</s>"]))
         self.assertTrue(matcher.is_terminated())
 
+        def accepted_until_rejection(text):
+            candidate = xgr.GrammarMatcher(compiled)
+            for position, char in enumerate(text):
+                if not candidate.accept_token(vocab[char]):
+                    return position
+            return None
+
+        wrapper = '{"facts":[{"fact":{"object":{"name":"x"}}}]}'
+        self.assertIsNotNone(accepted_until_rejection(wrapper),
+                             "grammar must reject the nested fact wrapper seen in raw failures")
+        extra_colon = '{"facts":[{"object":{"name":"x"},"attribute":"action":"x"}]}'
+        self.assertIsNotNone(accepted_until_rejection(extra_colon),
+                             "grammar must reject the extra-colon malformation")
+
 
 if __name__ == "__main__":
     unittest.main()

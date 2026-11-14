@@ -80,6 +80,25 @@ predictions.jsonl. Новые пачки отличаются от старог�
 Ошибки стадии прогрева хранятся отдельно; OOM прогрева останавливает прогон.
 Для близкого сравнения со старым batch=2 можно повторить полный val с новым output-dir.
 
+## 2a. Полный val с constrained decoding
+
+Тот же merged-адаптер, но генерация ограничена схемой `Facts`. Новый каталог
+обязателен: старые предсказания не перезаписываются.
+
+```bash
+export MAX_INPUT_TOKENS=12288 MAX_NEW_TOKENS=4096 MAX_SEQUENCE_TOKENS=16384
+export PROMPT_LOOKUP_TOKENS=0 JSON_CONSTRAINED=1 JSON_GRAMMAR_BACKEND=torch_native
+python -u src/benchmark.py --input data/organizer/val.jsonl \
+  --model out/merged-4090-baseline-001 --device cuda --batch-size 2 \
+  --output-dir out/json-constrained-4090-baseline-001-full-001
+```
+
+`JSON_GRAMMAR_BACKEND=torch_native` нужен на этом сервере: Triton JIT не собирается
+без Python-заголовков. На машине с `python3-dev` можно оставить `auto`, чтобы
+использовать быстрый CUDA-путь XGrammar. Проверять в `report.json`:
+`constrained_json`, `error_counts.invalid_json`, `normalization_counts`,
+`quality.diagnostics.format_valid_rate`.
+
 ## 3. Короткая проверка замеров
 
 ```bash
