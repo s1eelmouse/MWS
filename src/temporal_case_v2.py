@@ -32,7 +32,7 @@ from difflib import SequenceMatcher
 from functools import lru_cache
 from pathlib import Path
 
-from temporal import WEEKDAYS, _canonicalize_cues, _clauses, _value_clauses
+from temporal import CLAUSE_BREAK, WEEKDAYS, _canonicalize_cues, _value_clauses
 
 NUMBER_WORDS = {
     'один': 1, 'одну': 1, 'два': 2, 'две': 2, 'пару': 2, 'три': 3, 'четыре': 4, 'пять': 5,
@@ -55,6 +55,10 @@ NORMAL = 'работает нормально'
 CATALOG_SECTIONS = {'service_state': ('symptoms',), 'tariff': ('tariffs',),
                     'ticket_status': ('statuses',), 'agreement': ('agreements',)}
 HEDGE = re.compile(r'\b(?:если|возможно|может\s+быть|наверное|кажется)\b')
+IDIOM = re.compile(r'\bне\s+вчера\s+родил[а-я]*')
+NEGATED = re.compile(r'\bне\s*$')
+TICKET_NUMBER = re.compile(r'\b(?:заявк[а-я]*|обращени[а-я]*)\s*(?:№\s*|номер\s*)?(\d+)\b')
+NOT_STATUS = re.compile(r'\bне\s+(?:был[аои]?\s+)?$')
 TRANSLIT = {'wifi': 'вай фай', 'wi': 'вай', 'fi': 'фай', 'вайфай': 'вай фай', 'tv': 'тв', 'sms': 'смс'}
 
 
@@ -113,8 +117,9 @@ def _number(text):
     return int(text) if text.isdigit() else NUMBER_WORDS[text]
 
 
-def _iso(day):
-    return day.isoformat() + 'T00:00:00'
+def _iso(day, tzinfo=None):
+    """Midnight of the day; keeps the call's UTC offset so intervals never mix naive and aware."""
+    return datetime.combine(day, datetime.min.time(), tzinfo=tzinfo).isoformat()
 
 
 def _day(value):
@@ -134,11 +139,18 @@ def day_cues(text, anchor, *, future=False, canonical=False):
     caller chooses the direction from the attribute, never from the gold date.
     """
     lower = text if canonical else canonical_text(text)
+    # «не вчера родилась» is an idiom, not a date; other cues of the same run-on stay.
+    lower = IDIOM.sub(lambda m: ' ' * len(m.group()), lower)
     found = []
 
     def add(delta, match, role='at'):
+        if NEGATED.search(lower[max(0, match.start() - 5):match.start()]):
+            return  # «не завтра, а в среду»: the negated day is not the date
         if (delta > 0) == future or delta == 0:
-            found.append((anchor + timedelta(days=delta), role, match.start()))
+            try:
+                found.append((anchor + timedelta(days=delta), role, match.start()))
+            except OverflowError:
+                pass
 
     def role_before(position):
         before = lower[max(0, position - 6):position]
@@ -221,7 +233,27 @@ TRANSITION = re.compile(r'\b(?:сменил[а-я]*|обновил[а-я]*|пе�
 STILL = re.compile(r'\bеще\b')
 
 
-def _bind_status(item, call_day, turn, changes):
+def _clauses_with_separator(text):
+    """Clauses of a turn together with the separator that ends each of them."""
+    start = 0
+    for separator in CLAUSE_BREAK.finditer(text):
+        yield text[start:separator.start()], separator.group()
+        start = separator.end()
+    yield text[start:], ''
+
+
+def _clauses(text):
+    return [clause for clause, _separator in _clauses_with_separator(text)]
+
+
+def _same_ticket(item, text):
+    """A turn that names another ticket number, or several, does not date this ticket."""
+    numbers = set(TICKET_NUMBER.findall(text.lower()))
+    wanted = TICKET_NUMBER.search(item['object'].get('name', '').lower())
+    return len(numbers) <= 1 and (not numbers or not wanted or wanted[1] in numbers)
+
+
+def _bind_status(item, call_day, turn, changes, stamp):
     """Bind a cue to the nearest status mention of its clause.
 
     «четыре дня назад была принята» starts the status; «находилась в работе до пятницы»
@@ -229,15 +261,20 @@ def _bind_status(item, call_day, turn, changes):
     that the status still held, so it sets neither boundary.
     """
     key = _status_key(item['value'])
-    if key not in STATUS_PATTERNS:
+    if key not in STATUS_PATTERNS or not _same_ticket(item, turn.text):
         return
     starts, ends = set(), set()
-    for clause in _clauses(turn.text):
+    for clause, separator in _clauses_with_separator(turn.text):
         lower = canonical_text(clause)
         mentions = [(m.start(), m.end(), status) for status, pattern in STATUS_PATTERNS.items()
                     for m in re.finditer(pattern, lower)]
         own = [m for m in mentions if m[2] == key]
         if not own:
+            continue
+        # A question, a guess or «не была принята» states no status time.
+        if '?' in separator or HEDGE.search(lower):
+            continue
+        if all(NOT_STATUS.search(lower[max(0, m[0] - 15):m[0]]) for m in own):
             continue
         change = TRANSITION.search(lower)
         for day, role, position in day_cues(lower, call_day, canonical=True):
@@ -254,10 +291,10 @@ def _bind_status(item, call_day, turn, changes):
     end = next(iter(ends)) if len(ends) == 1 else None
     if start and end and start == end:
         end = None
-    if start and _ordered(_iso(start), _iso(end) if end else item.get('valid_to')):
-        _change(item, 'valid_from', _iso(start), changes)
-    if end and _ordered(item.get('valid_from'), _iso(end)):
-        _change(item, 'valid_to', _iso(end), changes)
+    if start and _ordered(stamp(start), stamp(end) if end else item.get('valid_to')):
+        _change(item, 'valid_from', stamp(start), changes)
+    if end and _ordered(item.get('valid_from'), stamp(end)):
+        _change(item, 'valid_to', stamp(end), changes)
 
 
 def _open(item, changes):
@@ -272,27 +309,27 @@ def _bind_free(item, call, changes):
     _change(item, 'valid_from', call.started_at, changes)
 
 
-def _bind_state(item, call, call_day, turn, changes):
+def _bind_state(item, call, call_day, turn, changes, stamp):
     if _status_key(item['value']) == NORMAL:
         # «до пятницы работало», «ещё вчера работало»: the normal state ends at the onset.
         day, _named = _nearby_day(call, turn, item['value'], call_day, future=False, reach=0)
-        if day and day < call_day and _ordered(item.get('valid_from'), _iso(day)):
-            _change(item, 'valid_to', _iso(day), changes)
+        if day and day < call_day and _ordered(item.get('valid_from'), stamp(day)):
+            _change(item, 'valid_to', stamp(day), changes)
         return
     _open(item, changes)
     day, _named = _nearby_day(call, turn, item['value'], call_day, future=False)
     if day and day < call_day:
-        _change(item, 'valid_from', _iso(day), changes)
+        _change(item, 'valid_from', stamp(day), changes)
 
 
-def _bind_agreement(item, call, call_day, turn, changes):
+def _bind_agreement(item, call, call_day, turn, changes, stamp):
     _open(item, changes)
     day, _named = _nearby_day(call, turn, item['value'], call_day, future=True)
     if day and day > call_day:
-        _change(item, 'valid_from', _iso(day), changes)
+        _change(item, 'valid_from', stamp(day), changes)
 
 
-def _close_ticket_chains(items, decisions, call_day):
+def _close_ticket_chains(items, decisions, call_day, stamp):
     """A status of a ticket ends on the day the next status of that ticket starts."""
     tickets = {}
     for index, item in enumerate(items):
@@ -313,7 +350,7 @@ def _close_ticket_chains(items, decisions, call_day):
                 continue  # a status in between may be missing from the extraction
             if start and _day(start) <= call_day.isoformat() \
                     and _ordered(items[current].get('valid_from'), start):
-                _change(items[current], 'valid_to', _iso(datetime.fromisoformat(_day(start)).date()),
+                _change(items[current], 'valid_to', stamp(datetime.fromisoformat(_day(start)).date()),
                         decisions[current]['changes'])
 
 
@@ -343,7 +380,12 @@ def repair_case_v2_dates(facts, call, layers, *, close_chains=False):
     """Return copies of the facts and one audit decision per fact; nothing is dropped."""
     if not isinstance(layers, ValueLayers):
         layers = ValueLayers(layers)
-    call_day = datetime.fromisoformat(call.started_at.replace('Z', '+00:00')).date()
+    started = datetime.fromisoformat(call.started_at.replace('Z', '+00:00'))
+    call_day = started.date()
+
+    def stamp(day):
+        return _iso(day, started.tzinfo)
+
     turns = {turn.idx: turn for turn in call.turns}
     items, decisions = [], []
     for fact in facts:
@@ -372,15 +414,15 @@ def repair_case_v2_dates(facts, call, layers, *, close_chains=False):
             if fact['attribute'] in CATALOG_SECTIONS:
                 decision['reason'] = 'resembles_catalog_entry_left_to_model'
         elif fact['attribute'] == 'ticket_status':
-            _bind_status(item, call_day, turn, decision['changes'])
+            _bind_status(item, call_day, turn, decision['changes'], stamp)
         elif fact['attribute'] == 'service_state':
-            _bind_state(item, call, call_day, turn, decision['changes'])
+            _bind_state(item, call, call_day, turn, decision['changes'], stamp)
         elif fact['attribute'] == 'agreement':
-            _bind_agreement(item, call, call_day, turn, decision['changes'])
+            _bind_agreement(item, call, call_day, turn, decision['changes'], stamp)
         items.append(item)
         decisions.append(decision)
     if close_chains:
-        _close_ticket_chains(items, decisions, call_day)
+        _close_ticket_chains(items, decisions, call_day, stamp)
     for fact, item, decision in zip(facts, items, decisions):
         _keep_interval_valid(item, fact, decision)
         if decision['changes']:

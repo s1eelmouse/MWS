@@ -135,6 +135,33 @@ class BindingTest(unittest.TestCase):
         Facts.model_validate({"facts": [result]})
         self.assertEqual(result["valid_to"][:10], "2026-11-13")
 
+    def test_negated_day_and_idiom_are_not_dates(self):
+        # Guards ported from fix/temporal-evidence-scoping.
+        result = repaired(fact("agreement", "выезд специалиста"), "выезд специалиста не завтра, а в среду")
+        self.assertEqual(result["valid_from"], "2026-11-18T00:00:00")
+        item = fact("service_state", "нет гудков", valid_from="2026-11-01T00:00:00")
+        self.assertEqual(repaired(copy.deepcopy(item), "нет гудков, я не вчера родилась"), item)
+
+    def test_status_of_another_ticket_question_and_negation_set_no_date(self):
+        mine = fact("ticket_status", "принята", valid_from="2026-11-06T00:00:00", name="заявка 5001")
+        for text in ("заявка 7002 была принята вчера",
+                     "заявка 5001 и заявка 7002 были приняты вчера",
+                     "заявка вчера была принята?",
+                     "вчера заявка не была принята",
+                     "возможно, вчера заявка была принята"):
+            self.assertEqual(repaired(copy.deepcopy(mine), text), mine, text)
+        self.assertEqual(repaired(copy.deepcopy(mine), "заявка 5001 была принята вчера")["valid_from"],
+                         "2026-11-12T00:00:00")
+
+    def test_call_utc_offset_is_kept(self):
+        from schema import Facts
+        aware = CallInput(call_id="synthetic:call0000", started_at="2026-11-13T12:00:00+03:00",
+                          turns=[{"idx": 0, "speaker": "client", "text": "до вторника заявка была в работе"}])
+        item = fact("ticket_status", "в работе", valid_from="2026-11-05T09:00:00+03:00")
+        result = repair_case_v2_dates([item], aware, LAYERS)[0][0]
+        self.assertEqual(result["valid_to"], "2026-11-10T00:00:00+03:00")
+        Facts.model_validate({"facts": [result]})
+
     def test_nothing_is_dropped_reordered_or_mutated(self):
         facts = [fact("agreement", "выезд специалиста"), fact("tariff", "Смарт"), fact("action", "что-то")]
         before = copy.deepcopy(facts)
