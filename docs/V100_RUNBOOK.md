@@ -11,9 +11,9 @@
 - код из `main` (после последнего коммита);
 - `data/organizer_v2_1/` (train/val/catalog, ~34 МБ);
 - одна merged-модель:
-  - кандидат `out/merged-4090-continue-004-v21`;
-  - fallback `out/merged-4090-continue-003` — на сохранённых предсказаниях
-    с recovery даёт T 0.4663, S 0.5152; если 4090 недоступен, использовать его;
+  - `out/merged-4090-continue-003` — основной вариант в готовом bundle; на
+    сохранённых предсказаниях с recovery даёт T 0.4663, S 0.5152;
+  - `out/merged-4090-continue-004-v21` — если 004 удалось забрать с 4090;
   - `out/merged-4090-continue-002` — старый fallback.
 
 Если есть доступ с V100 к 4090:
@@ -98,22 +98,21 @@ export TEMPORAL_NORMALIZATION=task FACT_RECOVERY=1
 export CATALOG_PATH=data/organizer_v2_1/catalog.json
 .venv/bin/python -u src/benchmark.py \
   --input data/organizer_v2_1/val.jsonl --limit 20 \
-  --model out/merged-4090-continue-004-v21 \
+  --model out/merged-4090-continue-003 \
   --device cuda --batch-size 2 \
   --output-dir out/v100-preview-001
 ```
 
-Проверить: `failed_calls = 0`, `format_valid_rate = 1.0`, `temporal_normalization
-= task`. Если 004 ещё не готов или 4090 недоступен, заменить модель на
-`merged-4090-continue-003` (fallback; с recovery T 0.4663/S 0.5152 на
-сохранённых предсказаниях).
+Проверить: `failed_calls = 0`, `format_valid_rate = 1.0`,
+`temporal_normalization = task`. Модель по умолчанию — 003 из bundle. Если есть
+004, заменить `--model` на `out/merged-4090-continue-004-v21`.
 
 ## 5. Полный val, если preview живой
 
 ```bash
 .venv/bin/python -u src/benchmark.py \
   --input data/organizer_v2_1/val.jsonl \
-  --model out/merged-4090-continue-004-v21 \
+  --model out/merged-4090-continue-003 \
   --device cuda --batch-size 2 \
   --output-dir out/v100-full-001
 ```
@@ -126,7 +125,7 @@ export CATALOG_PATH=data/organizer_v2_1/catalog.json
   --output data/organizer_v2_1/val-noisy-015.jsonl --level 0.15 --seed 42
 .venv/bin/python -u src/benchmark.py \
   --input data/organizer_v2_1/val-noisy-015.jsonl \
-  --model out/merged-4090-continue-004-v21 \
+  --model out/merged-4090-continue-003 \
   --device cuda --batch-size 2 \
   --output-dir out/v100-noisy-001
 ```
