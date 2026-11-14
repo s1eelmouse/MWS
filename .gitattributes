@@ -1,3 +1,7 @@
 # Файл организаторов сверяется по контрольной сумме (tests/test_case_evaluation.py):
 # git не должен менять в нём концы строк, иначе на Windows сумма не сходится.
 src/official_case_metrics.py -text
+
+# Данные организаторов: те же байты, что в выданном пакете, на любой ОС —
+# иначе SHA256 в experiment.json расходятся с пакетом (CRLF из Windows-копии).
+case_data/** -text
