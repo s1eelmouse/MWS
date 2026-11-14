@@ -39,7 +39,8 @@ if not math.isfinite(RETRY_REPETITION_PENALTY) or RETRY_REPETITION_PENALTY <= 0:
 PROMPT_LOOKUP_TOKENS = int(os.getenv("PROMPT_LOOKUP_TOKENS", "0"))
 
 # Deterministic date binding. "task" uses explicit text cues and the call timestamp;
-# "conservative" is the earlier, narrower rule set; "off" preserves model dates.
+# "conservative" is the earlier rule set; "binding" is experimental status-event
+# binding; "off" preserves model dates. Cross-call memory is separately opt-in.
 TEMPORAL_NORMALIZATION = os.getenv("TEMPORAL_NORMALIZATION", "task").strip().lower()
 if TEMPORAL_NORMALIZATION not in ("off", "conservative", "task", "binding"):
     raise ValueError("TEMPORAL_NORMALIZATION must be off, conservative, task or binding")

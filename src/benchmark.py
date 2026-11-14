@@ -174,6 +174,7 @@ def main():
         report["constrained_json"] = bool(getattr(backend, "constrained_json", False))
         report["temporal_normalization"] = getattr(backend, "temporal_normalization", "off")
         report["series_history_enabled"] = bool(getattr(backend, "series_history_enabled", False))
+        report["series_history_max_entries"] = getattr(getattr(backend, "series_memory", None), "max_entries", None)
         report["catalog_sha256"] = getattr(backend, "catalog_sha256", None)
         report["grammar_compile_seconds"] = getattr(backend, "grammar_compile_seconds", None)
         report["model_parameters"] = backend.model.num_parameters()

@@ -64,7 +64,10 @@ def create_app(backend=None):
         if app.state.extractor is None:
             raise HTTPException(503, "Model is not loaded")
         return {"status": "ok", "model": MODEL_DIR, "schema": "organizer-call-v1",
-                "constrained_json": bool(getattr(app.state.extractor, "constrained_json", False))}
+                "constrained_json": bool(getattr(app.state.extractor, "constrained_json", False)),
+                "temporal_normalization": getattr(app.state.extractor, "temporal_normalization", "off"),
+                "series_history_enabled": bool(getattr(app.state.extractor, "series_history_enabled", False)),
+                "series_history_max_entries": getattr(getattr(app.state.extractor, "series_memory", None), "max_entries", None)}
 
     @app.get("/", include_in_schema=False)
     def root():

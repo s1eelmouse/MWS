@@ -57,6 +57,7 @@ def main():
         "constrained_json": bool(getattr(extractor, "constrained_json", False)),
         "temporal_normalization": getattr(extractor, "temporal_normalization", "off"),
         "series_history_enabled": bool(getattr(extractor, "series_history_enabled", False)),
+        "series_history_max_entries": getattr(getattr(extractor, "series_memory", None), "max_entries", None),
         "catalog_sha256": getattr(extractor, "catalog_sha256", None),
         "grammar_compile_seconds": getattr(extractor, "grammar_compile_seconds", None),
     }

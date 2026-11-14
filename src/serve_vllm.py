@@ -2,7 +2,8 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
 
-from config import MAX_NEW_TOKENS, TEMPORAL_SERIES_HISTORY, TEMPORAL_SERIES_MAX_ENTRIES
+from config import (MAX_NEW_TOKENS, TEMPORAL_NORMALIZATION,
+                    TEMPORAL_SERIES_HISTORY, TEMPORAL_SERIES_MAX_ENTRIES)
 from series_history import SeriesDateMemory
 from llm_api import chat
 from prediction import parse_prediction
@@ -17,6 +18,7 @@ class VLLMExtractor:
     constrained_json = True  # response_format asks vLLM for schema-guided decoding
 
     def __init__(self):
+        self.temporal_normalization = TEMPORAL_NORMALIZATION
         self.series_history_enabled = TEMPORAL_SERIES_HISTORY
         self.series_memory = SeriesDateMemory(TEMPORAL_SERIES_MAX_ENTRIES) if TEMPORAL_SERIES_HISTORY else None
 

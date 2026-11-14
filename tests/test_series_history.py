@@ -1,8 +1,10 @@
 """Causal history, account/ticket isolation and offline/online consistency."""
 import copy
+import json
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from postprocess_dates import process_predictions
@@ -129,6 +131,36 @@ class SeriesHistoryTest(unittest.TestCase):
         self.assertEqual(records[1]['series_decisions'][0]['source_call_id'], calls[0].call_id)
         backend.reset_series_history()
         self.assertEqual(len(backend.series_memory._entries), 0)
+
+    def test_http_requests_share_only_this_backend_history(self):
+        from extractor import Extractor
+        from fastapi.testclient import TestClient
+        from serve import create_app
+        backend = Extractor.__new__(Extractor)
+        backend.series_memory = SeriesDateMemory(max_entries=20)
+        backend.series_history_enabled = True
+        backend.temporal_normalization = 'task'
+        calls, rows = zip(self.first, self.second)
+        by_id = {row['call_id']: {'facts': row['facts']} for row in rows}
+        backend._extract_safely = lambda batch: [copy.deepcopy(by_id[c.call_id]) for c in batch]
+        with TestClient(create_app(backend)) as client:
+            for call in calls:
+                response = client.post('/extract', json=call.model_dump(mode='json'))
+                self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json()['facts'][0]['valid_from'], rows[0]['facts'][0]['valid_from'])
+            health = client.get('/health').json()
+            self.assertTrue(health['series_history_enabled'])
+            self.assertEqual(health['series_history_max_entries'], 20)
+
+    def test_vllm_backend_uses_same_history_without_a_gpu(self):
+        from serve_vllm import VLLMExtractor
+        backend = VLLMExtractor()
+        backend.series_memory = SeriesDateMemory()
+        with patch('serve_vllm.chat', side_effect=[json.dumps({'facts': row['facts']})
+                                                  for _, row in [self.first, self.second]]):
+            for call, _ in [self.first, self.second]:
+                result = backend.extract([call])
+        self.assertEqual(result[0]['facts'][0]['valid_from'], self.first[1]['facts'][0]['valid_from'])
 
 
 if __name__ == '__main__':
