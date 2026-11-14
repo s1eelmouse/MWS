@@ -9,6 +9,7 @@ pydantic>=2.7,<3
 fastapi>=0.115,<1
 uvicorn>=0.30,<1
 requests>=2.31,<3
+psutil>=5.9,<8
 
 # Только для демо с агентом (src/mcp_server.py):
 #   uv pip install "mcp>=2"

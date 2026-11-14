@@ -131,6 +131,20 @@ def main():
     }
     save_manifest(output / "experiment.json", manifest)
     save_manifest(output / 'case_contract.json', {'signature': contract_signature()})
+    # Each resumed invocation gets its own journal; previous histories are retained.
+    from measurements import environment, write_json
+    from training_observer import make_observer
+    attempt = output / f"attempt-{time.time_ns()}"
+    attempt.mkdir()
+    write_json(attempt / "environment.json", environment())
+    from config import MAX_INPUT_TOKENS, MAX_NEW_TOKENS
+    write_json(attempt / "settings.json", {
+        **vars(args), "model": BASE_MODEL, "learning_rate": 2e-4,
+        "lora_r": 16, "lora_alpha": 32, "lora_dropout": .05,
+        "max_input_tokens": MAX_INPUT_TOKENS, "max_new_tokens": MAX_NEW_TOKENS,
+        "trainable_parameters": sum(p.numel() for p in model.parameters() if p.requires_grad),
+        "model_revision": getattr(model.config, "_commit_hash", None),
+    })
     accumulate = max(1, 16 // args.batch_size)
     steps = args.max_steps if args.max_steps > 0 else math.ceil(
         len(train_rows) / (args.batch_size * accumulate)) * args.epochs
@@ -151,17 +165,29 @@ def main():
         train_dataset=Rows(encoded_train),
         eval_dataset=Rows(encoded_val) if encoded_val else None,
         data_collator=lambda rows: make_batch(rows, tok.pad_token_id, tail_only),
+        callbacks=[make_observer(attempt, torch)],
     )
     torch.cuda.reset_peak_memory_stats()
     torch.cuda.synchronize()
     start = time.perf_counter()
+    status, failure = "failed", None
     try:
         trainer.train(resume_from_checkpoint=args.resume_from_checkpoint)
-    except RuntimeError as exc:
+        status = "complete"
+    except BaseException as exc:
+        failure = f"{type(exc).__name__}: {exc}"
         if "out of memory" in str(exc).lower():
             raise SystemExit("CUDA memory exhausted. Checkpoints are retained; reduce batch size "
                              "or use a larger GPU. No transcript was silently truncated.") from exc
         raise
+    finally:
+        write_json(attempt / "status.json", {
+            "status": status, "error": failure, "global_step": trainer.state.global_step,
+            "elapsed_seconds": time.perf_counter() - start,
+            "cuda_peak_allocated_bytes": torch.cuda.max_memory_allocated(),
+            "cuda_peak_reserved_bytes": torch.cuda.max_memory_reserved(),
+        })
+        write_json(attempt / "loss-history.json", trainer.state.log_history)
     torch.cuda.synchronize()
     seconds = time.perf_counter() - start
     model.save_pretrained(output)

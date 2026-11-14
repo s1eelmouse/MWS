@@ -13,7 +13,7 @@ def ignored_entries():
 class DockerAssetsTest(unittest.TestCase):
     def test_build_context_excludes_gold_weights_and_secrets(self):
         ignored = ignored_entries()
-        for entry in ("data", "out", ".env", ".venv", ".git"):
+        for entry in ("data", "case_data", "out", ".env", ".venv", ".git"):
             self.assertIn(entry, ignored)
 
     def test_image_serves_the_organizer_http_contract(self):

@@ -9,6 +9,11 @@
 
 План работ и статус по пунктам: [docs/PLAN.md](docs/PLAN.md).
 
+Обучение с журналами и замерами CPU/GPU по пункту 6: [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
+Единый запуск: `python src/run_experiment.py --output-dir out/experiment-001`.
+Для уже обученной модели добавьте `--model /path/to/merged-model`.
+Отдельная Docker-среда обучения: `Dockerfile.train` и `docker-compose.train.yml`.
+
 ## 1. Что требует кейс
 
 Нужна модель на **0,5–1,5 млрд параметров**, которая держит качество базового

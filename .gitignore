@@ -13,3 +13,4 @@ data/*
 .claude/settings.local.json
 .DS_Store
 .pytest_cache/
+case_data/
