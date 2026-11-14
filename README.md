@@ -332,5 +332,4 @@ GPU (нужен NVIDIA Container Toolkit):
   `python -m compileall -q src tests`.
 - Числа в отчёте и на защите называем вместе с железом, на котором они сняты.
 
-История переноса репозитория: [docs/SAFE_CHANGES.md](docs/SAFE_CHANGES.md).
 Правила для ИИ-ассистентов: [AGENTS.md](AGENTS.md).
