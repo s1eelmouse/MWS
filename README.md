@@ -23,6 +23,7 @@
 
 | Документ | Что в нём |
 |---|---|
+| [docs/SELF_TRAINING.md](docs/SELF_TRAINING.md) | Отдельный train-only пилот self-training: подготовка данных, локальная псевдоразметка, фильтры и дообучение |
 | [docs/CASE_V21_MIGRATION.md](docs/CASE_V21_MIGRATION.md) | Код под пакет 2.1: данные, совместимость старых весов, оценщик 2.1, команды полного val |
 | [docs/TEAM_V21_INTEGRATION.md](docs/TEAM_V21_INTEGRATION.md) | Что из веток команды вошло в решение 2.1 и CPU-проверка второй модели |
 | [docs/TEMPORAL_BINDING_V2.md](docs/TEMPORAL_BINDING_V2.md) | История дат заявок между звонками в файле и HTTP |
