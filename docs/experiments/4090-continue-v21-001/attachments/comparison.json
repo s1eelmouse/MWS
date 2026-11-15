@@ -1,0 +1,50 @@
+{
+  "official": {
+    "metrics_version": "2.1",
+    "n_calls": 383,
+    "n_gold_facts": 1845,
+    "n_pred_facts": 1936,
+    "fact_precision": 0.5093,
+    "fact_recall": 0.5344,
+    "temporal_recall": 0.4859,
+    "n_temporal": 603,
+    "state_accuracy": 0.5056,
+    "n_state": 623,
+    "grounding_turn": 0.788,
+    "grounding_span": null,
+    "n_grounded": 986
+  },
+  "baseline": {
+    "metrics_version": "2.1",
+    "n_calls": 383,
+    "n_gold_facts": 1845,
+    "n_pred_facts": 2097,
+    "fact_precision": 0.3348,
+    "fact_recall": 0.3805,
+    "temporal_recall": 0.4706,
+    "n_temporal": 442,
+    "state_accuracy": 0.5345,
+    "n_state": 623,
+    "grounding_turn": 0.7835,
+    "grounding_span": null,
+    "n_grounded": 702
+  },
+  "second_adapter_v100_reference": {
+    "fact_precision": 0.4792,
+    "fact_recall": 0.5117,
+    "temporal_recall": 0.4709,
+    "state_accuracy": 0.4767,
+    "grounding_turn": 0.715
+  },
+  "delta_from_second_adapter": {
+    "fact_precision": 0.0301,
+    "fact_recall": 0.0227,
+    "temporal_recall": 0.015,
+    "state_accuracy": 0.0289,
+    "grounding_turn": 0.073
+  },
+  "thresholds": {
+    "temporal_recall": 0.4506,
+    "state_accuracy": 0.5145
+  }
+}

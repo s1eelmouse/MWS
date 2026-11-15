@@ -1,0 +1,44 @@
+{
+  "started_utc": "2026-11-14T23:45:28.264120+00:00",
+  "run_id": "4090-continue-v21-001",
+  "code": "/home/ubuntu/mws-v21/releases/case-v21-002",
+  "initial_adapter": {
+    "directory": "/home/ubuntu/mws/out/4090-continue-002",
+    "contract_compatibility": {
+      "source_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+      "target_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "policy": "explicit-v1-to-v21-empty-object-name",
+      "with_schema": false,
+      "weights_modified": false
+    },
+    "files": {
+      "adapter_config.json": "34222f0bedb014f2a16c9d305f8543d21dcfa1926f6fbe74e03f9e831451dac5",
+      "case_contract.json": "25200469c953c6a40845ca537c5c543369fdbcca0638044849245dd30d94edc4",
+      "adapter_model.safetensors": "8ffa31fb6dd06ef5020a20126dfa32c101ab5023b1a1e8e2af92055dd7c90c84"
+    }
+  },
+  "epochs": 1,
+  "learning_rate": 0.0001,
+  "seed": 42,
+  "train_batch": 1,
+  "gradient_accumulation": 16,
+  "effective_train_batch": 16,
+  "validation_batch": 2,
+  "checkpoint_every_steps": 50,
+  "rolling_checkpoint_limit": 2,
+  "optimizer": "fresh, no checkpoint resume",
+  "train_sha256": "0878bfd983e14c75b51f32f04d961c5b82b10fa243845a25fe1c811cb4882466",
+  "val_sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+  "free_vram_bytes_before": 24914100224,
+  "total_vram_bytes": 25336807424,
+  "inference_environment": {
+    "SCORER_VERSION": "2.1",
+    "JSON_CONSTRAINED": "1",
+    "JSON_GRAMMAR_BACKEND": "torch_native",
+    "TEMPORAL_NORMALIZATION": "case_v2",
+    "TEMPORAL_SERIES_HISTORY": "1",
+    "FACT_RECOVERY": "1",
+    "CATALOG_PATH": "/home/ubuntu/mws-v21/releases/case-v21-002/data/organizer-v2.1/catalog.json",
+    "TEMPORAL_CATALOG_PATH": "/home/ubuntu/mws-v21/releases/case-v21-002/data/organizer-v2.1/catalog.json"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "model": "Qwen/Qwen3-0.6B",
+  "base_parameters": 596049920,
+  "seed": 42,
+  "train_sha256": "0878bfd983e14c75b51f32f04d961c5b82b10fa243845a25fe1c811cb4882466",
+  "val_sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+  "schema_sha256": "727f926239cf977128e5093da288b86665126fec732e4ee7308f53eebac7091f",
+  "train_limit": null,
+  "max_sequence_tokens": 16384,
+  "batch_size": 1,
+  "four_bit": true,
+  "contract_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+  "run_context": {
+    "contract": {
+      "signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "contract_version": "2.1",
+      "target_version": 2
+    },
+    "json_schema_sha256": "6b7d699659e4f92e3e552263de980e4093d06dd5a0d66fc1ba177df7cc8cddd7",
+    "scoring": {
+      "scorer_version": "2.1",
+      "official_metrics_version": "2.1",
+      "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "official_source_modified": false,
+      "local_patch": null,
+      "patch_adapter_sha256": null,
+      "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb"
+    },
+    "train": {
+      "path": "/home/ubuntu/mws-v21/releases/case-v21-002/data/organizer-v2.1/train.jsonl",
+      "sha256": "0878bfd983e14c75b51f32f04d961c5b82b10fa243845a25fe1c811cb4882466",
+      "bytes": 31048311,
+      "recognized_version": "organizer-2.1-train"
+    },
+    "val": {
+      "path": "/home/ubuntu/mws-v21/releases/case-v21-002/data/organizer-v2.1/val.jsonl",
+      "sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+      "bytes": 3120190,
+      "recognized_version": "organizer-2.1-val"
+    },
+    "catalog": {
+      "path": "/home/ubuntu/mws-v21/releases/case-v21-002/data/organizer-v2.1/catalog.json",
+      "sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+      "bytes": 16809,
+      "recognized_version": "custom-or-different-bytes"
+    },
+    "context_sha256": "73d1921d0fe33135d74a0d72c38b0c2c5d0b6401d1c1e9c528a8ca41a2e4cc19"
+  },
+  "initial_adapter": {
+    "directory": "/home/ubuntu/mws/out/4090-continue-002",
+    "contract_compatibility": {
+      "source_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+      "target_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "policy": "explicit-v1-to-v21-empty-object-name",
+      "with_schema": false,
+      "weights_modified": false
+    },
+    "files": {
+      "adapter_config.json": "34222f0bedb014f2a16c9d305f8543d21dcfa1926f6fbe74e03f9e831451dac5",
+      "case_contract.json": "25200469c953c6a40845ca537c5c543369fdbcca0638044849245dd30d94edc4",
+      "adapter_model.safetensors": "8ffa31fb6dd06ef5020a20126dfa32c101ab5023b1a1e8e2af92055dd7c90c84"
+    }
+  },
+  "learning_rate": 0.0001,
+  "optimizer_policy": "fresh cycle; checkpoint resume restores optimizer"
+}

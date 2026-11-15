@@ -1,0 +1,20 @@
+{
+  "original_run": "/home/ubuntu/mws-v21/out/4090-continue-v21-001",
+  "completed_calls": 372,
+  "remaining_calls": 11,
+  "original_files_sha256": {
+    "validation/predictions.jsonl": "16b6156684667d0e5030f4b8328f5048700e84c1089317e328ee477e78d2e844",
+    "validation/calls.jsonl": "8eead2f5a87192b1e7565d263a1e7463d63797ff8d8699a100a9359dbd403a35",
+    "validation/failures.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/batches.jsonl": "7926a469c67afc1359302bd5b998a23e4d6cfb584fab458e7445438b2319365f",
+    "validation/predictions-before-series.jsonl": "f98e1a3f8765af1f84b87d7a156068cb05ef66a9e9fe65d53bfd9f4473c13639",
+    "validation/memory.csv": "7fdfa5c9216ca958da84ba5b56cd34d8f3565e7afd4243abdb231b5cd74375b5",
+    "validation/environment.json": "2b6371da1f40fe13f4874c200f0a0068c6975dc2eb933c1a5743e9620b9262c0",
+    "validation/raw-answers.jsonl": "a68d6f84d4c93f79be2ab09d31f384cdae630b4e61442f5dc28a74759cc0a8f4"
+  },
+  "val_sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+  "model_sha256": "193691230bba18d7c772d70e94651c425ca494081a42570a8b948cbc6175c044",
+  "history_prefix_replay_exact": true,
+  "history_clock_policy": "Replay completed batch durations; exclude outage/load/warmup; resume active clock",
+  "limitation": "Historical TTL expiry during unmeasured I/O gaps cannot be reconstructed exactly."
+}

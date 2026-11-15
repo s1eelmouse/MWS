@@ -1,0 +1,82 @@
+{
+  "source_train_sha256": "0878bfd983e14c75b51f32f04d961c5b82b10fa243845a25fe1c811cb4882466",
+  "datasets": {
+    "train_noise.jsonl": {
+      "sha256": "3915df082dc21b41adb7cca7bb74f3e085a3aeea61689160916ee251b4964bf0",
+      "checksum_matches_manifest": true,
+      "rows": 7852,
+      "duplicate_ids": 0,
+      "overlapping_val_accounts": 0,
+      "exact_transcript_overlap_val": 0,
+      "facts": 36950,
+      "changed_fact_labels_except_span_quote": 0,
+      "changed_transcript_rows": 3922,
+      "exact_original_or_repeat_rows": 3926,
+      "changed_turn_structure": 0,
+      "changed_turns": 83020,
+      "rows_with_reduced_negation_tokens": 3442,
+      "rows_with_changed_numeric_tokens": 864,
+      "source_facts_with_reduced_negation_tokens": 3026,
+      "source_facts_with_changed_numeric_tokens": 650,
+      "unique_source_calls": 3926,
+      "source_calls_missing": 0,
+      "source_exposure_histogram": {
+        "2": 3926
+      },
+      "optimizer_steps_per_epoch_effective_batch16": 491,
+      "validation_errors": [],
+      "unknown_source_examples": []
+    },
+    "train_resampled.jsonl": {
+      "sha256": "86fe7db6e44ef95787457ae3b93371f6d8f41c06ee71e511548941d8e38a0c52",
+      "checksum_matches_manifest": true,
+      "rows": 7074,
+      "duplicate_ids": 0,
+      "overlapping_val_accounts": 0,
+      "exact_transcript_overlap_val": 0,
+      "facts": 35861,
+      "changed_fact_labels_except_span_quote": 0,
+      "changed_transcript_rows": 0,
+      "exact_original_or_repeat_rows": 7074,
+      "unique_source_calls": 3926,
+      "source_calls_missing": 0,
+      "source_exposure_histogram": {
+        "1": 1676,
+        "3": 898,
+        "2": 1352
+      },
+      "optimizer_steps_per_epoch_effective_batch16": 443,
+      "validation_errors": [],
+      "unknown_source_examples": []
+    },
+    "train_noise_resampled.jsonl": {
+      "sha256": "2dd32adb847ff0b8b1ffe8ba7669060631db6579fa537284edffe514c499fbc1",
+      "checksum_matches_manifest": true,
+      "rows": 11000,
+      "duplicate_ids": 0,
+      "overlapping_val_accounts": 0,
+      "exact_transcript_overlap_val": 0,
+      "facts": 54336,
+      "changed_fact_labels_except_span_quote": 0,
+      "changed_transcript_rows": 7070,
+      "exact_original_or_repeat_rows": 3926,
+      "changed_turn_structure": 0,
+      "changed_turns": 159438,
+      "rows_with_reduced_negation_tokens": 6250,
+      "rows_with_changed_numeric_tokens": 1489,
+      "source_facts_with_reduced_negation_tokens": 6251,
+      "source_facts_with_changed_numeric_tokens": 1047,
+      "unique_source_calls": 3926,
+      "source_calls_missing": 0,
+      "source_exposure_histogram": {
+        "2": 1676,
+        "4": 898,
+        "3": 1352
+      },
+      "optimizer_steps_per_epoch_effective_batch16": 688,
+      "validation_errors": [],
+      "unknown_source_examples": []
+    }
+  },
+  "note": "Anchor changes are risk indicators, not verified semantic label errors. Exact model token budgets not tested."
+}

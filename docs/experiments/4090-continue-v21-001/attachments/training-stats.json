@@ -1,0 +1,13 @@
+{
+  "elapsed_seconds": 1996.8490428649998,
+  "completed_global_steps": 246,
+  "peak_allocated_gib": 3.592123031616211,
+  "peak_reserved_gib": 14.654296875,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "base_parameters": 596049920,
+  "torch": "2.14.1+cu130",
+  "context_sha256": "73d1921d0fe33135d74a0d72c38b0c2c5d0b6401d1c1e9c528a8ca41a2e4cc19",
+  "contract_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+  "scorer_version": "2.1",
+  "training_precision": "torch.bfloat16"
+}

@@ -1,0 +1,652 @@
+test_separate_output_contract_base_and_exact_weight_hash (test_adapter_origin.AdapterOriginTest.test_separate_output_contract_base_and_exact_weight_hash) ... ok
+test_progress_raw_and_pre_history_snapshot_are_saved_without_untimed_rules (test_benchmark_audit.AuditTest.test_progress_raw_and_pre_history_snapshot_are_saved_without_untimed_rules) ... ok
+test_batch_preserves_order_and_ids (test_case_api.ApiTest.test_batch_preserves_order_and_ids) ... ok
+test_gold_labels_cannot_leak_through_http (test_case_api.ApiTest.test_gold_labels_cannot_leak_through_http) ... ok
+test_legacy_text_only_requests_are_rejected (test_case_api.ApiTest.test_legacy_text_only_requests_are_rejected) ... ok
+test_metadata_and_source_survive_http_round_trip (test_case_api.ApiTest.test_metadata_and_source_survive_http_round_trip) ... ok
+test_model_failures_do_not_become_successful_empty_facts (test_case_api.ApiTest.test_model_failures_do_not_become_successful_empty_facts) ... ok
+test_runtime_failure_returns_service_unavailable (test_case_api.ApiTest.test_runtime_failure_returns_service_unavailable) ... ok
+test_wrong_source_from_backend_is_rejected (test_case_api.ApiTest.test_wrong_source_from_backend_is_rejected) ... ok
+test_bad_interval_is_reported_without_changing_official_fact_counts (test_case_evaluation.EvaluationTest.test_bad_interval_is_reported_without_changing_official_fact_counts) ... ok
+test_failed_call_counts_every_gold_fact_as_missed (test_case_evaluation.EvaluationTest.test_failed_call_counts_every_gold_fact_as_missed) ... ok
+test_failure_is_not_counted_as_valid_empty_json (test_case_evaluation.EvaluationTest.test_failure_is_not_counted_as_valid_empty_json) ... ok
+test_invalid_fact_schema_is_reported (test_case_evaluation.EvaluationTest.test_invalid_fact_schema_is_reported) ... ok
+test_known_official_state_bug_is_not_silently_fixed (test_case_evaluation.EvaluationTest.test_known_official_state_bug_is_not_silently_fixed) ... ok
+test_missing_call_is_penalized (test_case_evaluation.EvaluationTest.test_missing_call_is_penalized) ... ok
+test_official_scorer_bytes_are_pinned (test_case_evaluation.EvaluationTest.test_official_scorer_bytes_are_pinned) ... ok
+test_per_attribute_error_types_explain_official_metrics (test_case_evaluation.EvaluationTest.test_per_attribute_error_types_explain_official_metrics) ... ok
+test_perfect_single_object_prediction (test_case_evaluation.EvaluationTest.test_perfect_single_object_prediction) ... ok
+test_predictions_align_by_id_not_row_order (test_case_evaluation.EvaluationTest.test_predictions_align_by_id_not_row_order) ... ok
+test_source_errors_remain_visible (test_case_evaluation.EvaluationTest.test_source_errors_remain_visible) ... ok
+test_unknown_and_duplicate_ids_are_errors (test_case_evaluation.EvaluationTest.test_unknown_and_duplicate_ids_are_errors) ... ok
+test_character_guard_rejects_instead_of_truncating (test_case_schema.CaseContractTest.test_character_guard_rejects_instead_of_truncating) ... ok
+test_duplicate_call_ids_are_not_silently_overwritten (test_case_schema.CaseContractTest.test_duplicate_call_ids_are_not_silently_overwritten) ... ok
+test_duplicate_turn_indices_are_rejected (test_case_schema.CaseContractTest.test_duplicate_turn_indices_are_rejected) ... ok
+test_gold_never_enters_prompt (test_case_schema.CaseContractTest.test_gold_never_enters_prompt) ... ok
+test_http_contract_does_not_accept_gold_labels (test_case_schema.CaseContractTest.test_http_contract_does_not_accept_gold_labels) ... ok
+test_invalid_date_and_reversed_interval_are_rejected (test_case_schema.CaseContractTest.test_invalid_date_and_reversed_interval_are_rejected) ... ok
+test_legacy_format_and_missing_facts_are_rejected (test_case_schema.CaseContractTest.test_legacy_format_and_missing_facts_are_rejected) ... ok
+test_long_transcript_is_preserved (test_case_schema.CaseContractTest.test_long_transcript_is_preserved) ... ok
+test_minimal_prediction_contract (test_case_schema.CaseContractTest.test_minimal_prediction_contract) ... ok
+test_nonliteral_gold_quote_is_not_a_blocking_error (test_case_schema.CaseContractTest.test_nonliteral_gold_quote_is_not_a_blocking_error) ... ok
+test_old_model_cannot_be_silently_used_with_new_schema (test_case_schema.CaseContractTest.test_old_model_cannot_be_silently_used_with_new_schema) ... ok
+test_organizer_gold_is_accepted (test_case_schema.CaseContractTest.test_organizer_gold_is_accepted) ... ok
+test_other_type_from_actual_gold_is_supported (test_case_schema.CaseContractTest.test_other_type_from_actual_gold_is_supported) ... ok
+test_out_of_bounds_span_is_rejected (test_case_schema.CaseContractTest.test_out_of_bounds_span_is_rejected) ... ok
+test_outputs_are_not_overwritten_by_default (test_case_schema.CaseContractTest.test_outputs_are_not_overwritten_by_default) ... ok
+test_polarity_must_be_an_integer_sign (test_case_schema.CaseContractTest.test_polarity_must_be_an_integer_sign) ... ok
+test_prediction_keeps_call_id_and_failure_status (test_case_schema.CaseContractTest.test_prediction_keeps_call_id_and_failure_status) ... ok
+test_reasoning_and_markdown_are_not_treated_as_facts (test_case_schema.CaseContractTest.test_reasoning_and_markdown_are_not_treated_as_facts) ... ok
+test_source_is_idx_not_list_position (test_case_schema.CaseContractTest.test_source_is_idx_not_list_position) ... ok
+test_speaker_mismatch_is_rejected (test_case_schema.CaseContractTest.test_speaker_mismatch_is_rejected) ... ok
+test_targets_preserve_null_end_and_drop_noisy_evidence (test_case_schema.CaseContractTest.test_targets_preserve_null_end_and_drop_noisy_evidence) ... ok
+test_unknown_attribute_is_rejected (test_case_schema.CaseContractTest.test_unknown_attribute_is_rejected) ... ok
+test_catalogues_do_not_leak_between_independent_evaluations (test_case_v21.CaseV21Test.test_catalogues_do_not_leak_between_independent_evaluations) ... ok
+test_empty_object_roundtrips_validation_target_and_json_schema (test_case_v21.CaseV21Test.test_empty_object_roundtrips_validation_target_and_json_schema) ... ok
+test_official_source_bytes_pinned_and_datefix_is_optional_and_labelled (test_case_v21.CaseV21Test.test_official_source_bytes_pinned_and_datefix_is_optional_and_labelled) ... ok
+test_only_known_legacy_contract_can_be_migrated_explicitly_without_editing_it (test_case_v21.CaseV21Test.test_only_known_legacy_contract_can_be_migrated_explicitly_without_editing_it) ... ok
+test_state_objects_negation_and_per_attribute_metadata_use_v21 (test_case_v21.CaseV21Test.test_state_objects_negation_and_per_attribute_metadata_use_v21) ... ok
+test_temporal_diagnostics_separate_action_and_recoverable_states (test_case_v21.CaseV21Test.test_temporal_diagnostics_separate_action_and_recoverable_states) ... ok
+test_training_event_keeps_context_without_calling_it_official_quality (test_case_v21.CaseV21Test.test_training_event_keeps_context_without_calling_it_official_quality) ... ok
+test_alias_must_reference_real_catalog_value (test_catalog_normalization.CatalogTest.test_alias_must_reference_real_catalog_value) ... ok
+test_ambiguous_alias_and_fuzzy_names_are_not_merged (test_catalog_normalization.CatalogTest.test_ambiguous_alias_and_fuzzy_names_are_not_merged) ... ok
+test_exact_spelling_keeps_important_plus_sign (test_catalog_normalization.CatalogTest.test_exact_spelling_keeps_important_plus_sign) ... ok
+test_ticket_named_like_a_device_is_not_canonicalized (test_catalog_normalization.CatalogTest.test_ticket_named_like_a_device_is_not_canonicalized) ... ok
+test_type_and_ids_and_action_result_are_preserved (test_catalog_normalization.CatalogTest.test_type_and_ids_and_action_result_are_preserved) ... ok
+test_build_context_excludes_gold_weights_and_secrets (test_docker_assets.DockerAssetsTest.test_build_context_excludes_gold_weights_and_secrets) ... ok
+test_compose_mounts_the_model_read_only (test_docker_assets.DockerAssetsTest.test_compose_mounts_the_model_read_only) ... ok
+test_image_serves_the_organizer_http_contract (test_docker_assets.DockerAssetsTest.test_image_serves_the_organizer_http_contract) ... ok
+test_serving_requirements_exclude_the_training_stack (test_docker_assets.DockerAssetsTest.test_serving_requirements_exclude_the_training_stack) ... ok
+test_catalog_word_in_device_name_is_not_recovered_as_a_tariff (test_fact_recovery.FactRecoveryTest.test_catalog_word_in_device_name_is_not_recovered_as_a_tariff) ... ok
+test_current_status_is_not_duplicated (test_fact_recovery.FactRecoveryTest.test_current_status_is_not_duplicated) ... ok
+test_existing_current_tariff_is_not_overridden (test_fact_recovery.FactRecoveryTest.test_existing_current_tariff_is_not_overridden) ... ok
+test_historical_tariff_does_not_block_current_recovery (test_fact_recovery.FactRecoveryTest.test_historical_tariff_does_not_block_current_recovery) ... ok
+test_longest_catalog_name_and_plus_are_not_confused_with_shorter_tariffs (test_fact_recovery.FactRecoveryTest.test_longest_catalog_name_and_plus_are_not_confused_with_shorter_tariffs) ... ok
+test_missing_current_status_is_recovered (test_fact_recovery.FactRecoveryTest.test_missing_current_status_is_recovered) ... ok
+test_missing_tariff_is_recovered_from_catalog_and_text (test_fact_recovery.FactRecoveryTest.test_missing_tariff_is_recovered_from_catalog_and_text) ... ok
+test_negation_question_future_and_hypothesis_never_create_a_status (test_fact_recovery.FactRecoveryTest.test_negation_question_future_and_hypothesis_never_create_a_status) ... ok
+test_one_explicit_unnamed_client_is_preserved_without_inventing_a_name (test_fact_recovery.FactRecoveryTest.test_one_explicit_unnamed_client_is_preserved_without_inventing_a_name) ... ok
+test_status_identity_and_existing_current_are_checked_per_ticket (test_fact_recovery.FactRecoveryTest.test_status_identity_and_existing_current_are_checked_per_ticket) ... ok
+test_status_without_current_context_is_not_invented (test_fact_recovery.FactRecoveryTest.test_status_without_current_context_is_not_invented) ... ok
+test_tariff_proposal_or_denial_is_not_a_current_tariff (test_fact_recovery.FactRecoveryTest.test_tariff_proposal_or_denial_is_not_a_current_tariff) ... ok
+test_two_different_clients_are_not_guessed (test_fact_recovery.FactRecoveryTest.test_two_different_clients_are_not_guessed) ... ok
+test_diagnostic_subset_is_not_a_comparison_point (test_failure_diagnostics.DiagnosticTest.test_diagnostic_subset_is_not_a_comparison_point) ... ok
+test_existing_model_contract_does_not_change (test_failure_diagnostics.DiagnosticTest.test_existing_model_contract_does_not_change) ... ok
+test_extractor_records_raw_parse_source_and_length_failures (test_failure_diagnostics.DiagnosticTest.test_extractor_records_raw_parse_source_and_length_failures) ... ok
+test_json_syntax_and_schema_are_distinguished (test_failure_diagnostics.DiagnosticTest.test_json_syntax_and_schema_are_distinguished) ... ok
+test_pipeline_rejects_invalid_learning_rate_before_writing (test_failure_diagnostics.DiagnosticTest.test_pipeline_rejects_invalid_learning_rate_before_writing) ... usage: run_experiment.py [-h] --output-dir OUTPUT_DIR [--train-new]
+                         [--model MODEL] [--train TRAIN] [--val VAL]
+                         [--baseline-pred BASELINE_PRED]
+                         [--allow-legacy-contract] [--epochs EPOCHS]
+                         [--train-limit TRAIN_LIMIT] [--max-steps MAX_STEPS]
+                         [--eval-limit EVAL_LIMIT]
+                         [--init-adapter-dir INIT_ADAPTER_DIR]
+                         [--learning-rate LEARNING_RATE]
+                         [--modes MODES [MODES ...]]
+run_experiment.py: error: --learning-rate must be finite and positive
+ok
+test_pipeline_requires_explicit_choice_before_any_output_is_created (test_failure_diagnostics.DiagnosticTest.test_pipeline_requires_explicit_choice_before_any_output_is_created) ... usage: run_experiment.py [-h] --output-dir OUTPUT_DIR [--train-new]
+                         [--model MODEL] [--train TRAIN] [--val VAL]
+                         [--baseline-pred BASELINE_PRED]
+                         [--allow-legacy-contract] [--epochs EPOCHS]
+                         [--train-limit TRAIN_LIMIT] [--max-steps MAX_STEPS]
+                         [--eval-limit EVAL_LIMIT]
+                         [--init-adapter-dir INIT_ADAPTER_DIR]
+                         [--learning-rate LEARNING_RATE]
+                         [--modes MODES [MODES ...]]
+run_experiment.py: error: Choose --model EXISTING_MERGED_MODEL or --train-new
+ok
+test_raw_failures_are_saved_separately_and_no_gold_reaches_backend (test_failure_diagnostics.DiagnosticTest.test_raw_failures_are_saved_separately_and_no_gold_reaches_backend) ... Completed 1/1; failed: 1
+ok
+test_subset_cli_filters_before_limit_and_records_provenance (test_failure_diagnostics.DiagnosticTest.test_subset_cli_filters_before_limit_and_records_provenance) ... Completed 1/1; failed: 0
+{
+  "protocol": "local-inference-v2",
+  "settings": {
+    "input": "/tmp/tmp9unftz0y/gold.jsonl",
+    "model": "fake",
+    "device": "cpu",
+    "batch_size": 1,
+    "warmup_batches": 1,
+    "limit": 1,
+    "failures": "/tmp/tmp9unftz0y/old-errors.jsonl",
+    "with_schema": false,
+    "output_dir": "/tmp/tmp9unftz0y/new"
+  },
+  "dataset_sha256": "5777a20c1a707b563e30c83bccb0e2e17ab14ce0a6314cee47615779d2ba006d",
+  "selected_calls_sha256": "91f3a258123d318d367dd013e0f4e6849f19fa7e1086e5d76b7d9c6ecaa4672c",
+  "contract_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+  "diagnostic_subset": true,
+  "failures_sha256": "0e873d6fd207fdc62733b2cafb3c605bf412375eeafd2b4a4342d68f82111e4b",
+  "limits": {
+    "input": 12288,
+    "output": 4096
+  },
+  "prompt_lookup_tokens": 0,
+  "grammar_backend": "torch_native",
+  "grammar_threads": 4,
+  "save_raw_responses": true,
+  "retry_on_token_limit": true,
+  "retry_repetition_penalty": 1.2,
+  "run_context": {
+    "contract": {
+      "signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "contract_version": "2.1",
+      "target_version": 2
+    },
+    "json_schema_sha256": "6b7d699659e4f92e3e552263de980e4093d06dd5a0d66fc1ba177df7cc8cddd7",
+    "scoring": {
+      "scorer_version": "2.1",
+      "official_metrics_version": "2.1",
+      "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "official_source_modified": false,
+      "local_patch": null,
+      "patch_adapter_sha256": null,
+      "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb"
+    },
+    "train": null,
+    "val": {
+      "path": "/tmp/tmp9unftz0y/gold.jsonl",
+      "sha256": "5777a20c1a707b563e30c83bccb0e2e17ab14ce0a6314cee47615779d2ba006d",
+      "bytes": 1827,
+      "recognized_version": "custom-or-different-bytes"
+    },
+    "catalog": {
+      "path": "/home/ubuntu/mws-v21/releases/case-v21-002/data/organizer-v2.1/catalog.json",
+      "sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+      "bytes": 16809,
+      "recognized_version": "custom-or-different-bytes"
+    },
+    "context_sha256": "f775d0f9d55f5906ce3772f0ffa7ba04083750d6708e504799322b525fafd7c6"
+  },
+  "hardware": {
+    "cpu": "fake"
+  },
+  "model_artifacts": null,
+  "model_weights_bytes": null,
+  "model_load_seconds": 4.077600010532478e-05,
+  "constrained_json": false,
+  "model_contract": null,
+  "temporal_normalization": "off",
+  "temporal_catalog_sha256": null,
+  "fact_recovery": false,
+  "fact_recovery_policy": null,
+  "series_history_enabled": false,
+  "series_history_max_entries": null,
+  "catalog_sha256": null,
+  "grammar_compile_seconds": null,
+  "model_parameters": 123,
+  "dtype": "float32",
+  "torch_threads": 8,
+  "model_revision": null,
+  "calls": 1,
+  "failed_calls": 0,
+  "error_counts": {
+    "invalid_json": 0,
+    "invalid_source": 0,
+    "invalid_schema": 0,
+    "output_token_limit": 0,
+    "input_too_long": 0,
+    "out_of_memory": 0,
+    "missing_prediction": 0
+  },
+  "normalization_counts": {},
+  "history_settings": null,
+  "history": null,
+  "temporal_postprocess": {
+    "stage": "backend.extract",
+    "included_in_measurement": true,
+    "mode": "off",
+    "series_history_enabled": false
+  },
+  "warmup_batches": 1,
+  "warmup_seconds": 1.6076000065368135e-05,
+  "warmup_errors": [],
+  "measurement_seconds": 1.118099999075639e-05,
+  "calls_per_hour": 321974778.9085242,
+  "successful_calls_per_hour": 321974778.9085242,
+  "gpu_seconds_per_1000_calls": null,
+  "gpu_seconds_definition": "one allocated GPU * measured local processing seconds; not CUDA kernel time",
+  "latency_definition": "local end-to-end batch completion, shared by calls in batch; excludes queue, network and file I/O",
+  "percentile_method": "nearest_rank",
+  "call_completion_seconds": {
+    "count": 1,
+    "unknown": 0,
+    "p50": 1.118099999075639e-05,
+    "p95": 1.118099999075639e-05,
+    "max": 1.118099999075639e-05
+  },
+  "batch_seconds": {
+    "count": 1,
+    "unknown": 0,
+    "p50": 1.118099999075639e-05,
+    "p95": 1.118099999075639e-05,
+    "max": 1.118099999075639e-05
+  },
+  "input_tokens": {
+    "count": 0,
+    "unknown": 1,
+    "p50": null,
+    "p95": null,
+    "max": null
+  },
+  "output_tokens": {
+    "count": 0,
+    "unknown": 1,
+    "p50": null,
+    "p95": null,
+    "max": null
+  },
+  "output_token_definition": "generated token IDs through first EOS inclusive; excludes padding",
+  "memory": {
+    "process_rss_sampled_peak_bytes": 54702080,
+    "rss_sample_interval_seconds": 0.05,
+    "rss_samples": 2,
+    "sampling_error": null,
+    "cuda_peak_allocated_bytes": null,
+    "cuda_peak_reserved_bytes": null
+  },
+  "quality": {
+    "official": {
+      "metrics_version": "2.1",
+      "n_calls": 1,
+      "n_gold_facts": 1,
+      "n_pred_facts": 0,
+      "fact_precision": 0.0,
+      "fact_recall": 0.0,
+      "temporal_recall": null,
+      "n_temporal": 0,
+      "state_accuracy": null,
+      "n_state": 0,
+      "grounding_turn": null,
+      "grounding_span": null,
+      "n_grounded": 0
+    },
+    "diagnostics": {
+      "invalid_or_failed_calls": 0,
+      "missing_calls": 0,
+      "format_valid_rate": 1.0,
+      "calls_with_invalid_sources": 0
+    },
+    "per_attribute": {
+      "service_state": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "tariff": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "ticket_status": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "action": {
+        "attribute_kind": "static",
+        "n_gold_facts": 1,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 1,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "agreement": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      }
+    },
+    "scorer_version": "2.1",
+    "official_metrics_version": "2.1",
+    "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+    "official_source_modified": false,
+    "local_patch": null,
+    "patch_adapter_sha256": null,
+    "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+    "known_scorer_issues": [
+      "Organizer v2.1 gold-vs-gold state_accuracy is not necessarily 1.0.",
+      "Temporal recall is conditional on matched facts and recoverable dates; action is excluded.",
+      "Official v2.1 has two known date-set.update TypeErrors; use explicitly labelled 2.1-datefix for those inputs."
+    ]
+  },
+  "status": "complete"
+}
+ok
+test_cpu_and_legacy_api (test_gpu_precision.PrecisionTest.test_cpu_and_legacy_api) ... ok
+test_modern_gpu_requests_native_support (test_gpu_precision.PrecisionTest.test_modern_gpu_requests_native_support) ... ok
+test_volta_emulated_bf16_is_not_selected (test_gpu_precision.PrecisionTest.test_volta_emulated_bf16_is_not_selected) ... ok
+test_concurrent_accounts_are_isolated_and_bounded (test_history_resources.HistoryResourcesTest.test_concurrent_accounts_are_isolated_and_bounded) ... ok
+test_confirmed_explicit_start_has_priority_but_end_does_not_block_start (test_history_resources.HistoryResourcesTest.test_confirmed_explicit_start_has_priority_but_end_does_not_block_start) ... ok
+test_conflicting_retry_is_not_allowed_to_overwrite_history (test_history_resources.HistoryResourcesTest.test_conflicting_retry_is_not_allowed_to_overwrite_history) ... ok
+test_future_seed_mixed_timezones_and_conflicting_intervals_abstain (test_history_resources.HistoryResourcesTest.test_future_seed_mixed_timezones_and_conflicting_intervals_abstain) ... ok
+test_per_account_cap_and_invalid_limits (test_history_resources.HistoryResourcesTest.test_per_account_cap_and_invalid_limits) ... ok
+test_resource_curve_refuses_different_history_or_decoder_settings (test_history_resources.HistoryResourcesTest.test_resource_curve_refuses_different_history_or_decoder_settings) ... ok
+test_same_bounded_store_used_by_offline_stream (test_history_resources.HistoryResourcesTest.test_same_bounded_store_used_by_offline_stream) ... ok
+test_sessions_and_account_types_do_not_mix (test_history_resources.HistoryResourcesTest.test_sessions_and_account_types_do_not_mix) ... ok
+test_stable_id_survives_renaming_and_misalignment_is_rejected (test_history_resources.HistoryResourcesTest.test_stable_id_survives_renaming_and_misalignment_is_rejected) ... ok
+test_ttl_account_and_byte_caps (test_history_resources.HistoryResourcesTest.test_ttl_account_and_byte_caps) ... ok
+test_unknown_new_episode_invalidates_old_date (test_history_resources.HistoryResourcesTest.test_unknown_new_episode_invalidates_old_date) ... ok
+test_compact_grammar_uses_the_facts_schema (test_json_constraints.JsonConstraintTest.test_compact_grammar_uses_the_facts_schema) ... ok
+test_current_schema_compiles_and_accepts_the_training_target (test_json_constraints.JsonConstraintTest.test_current_schema_compiles_and_accepts_the_training_target) ... [02:45:30] /project/cpp/tokenizer_info.cc:146: Warning: Vocab type detection failed: (hf_tokenizer_obj.count("decoder") && hf_tokenizer_obj.at("decoder").is<picojson::object>()) is false: Decoder field is not found in tokenizer.json. Using RAW VocabType by default.
+ok
+test_grammar_processor_is_passed_to_generate (test_json_constraints.JsonConstraintTest.test_grammar_processor_is_passed_to_generate) ... ok
+test_processor_masks_cpu_and_advances_on_the_next_token (test_json_constraints.JsonConstraintTest.test_processor_masks_cpu_and_advances_on_the_next_token) ... ok
+test_windows_cuda_uses_the_portable_mask_kernel (test_json_constraints.JsonConstraintTest.test_windows_cuda_uses_the_portable_mask_kernel) ... ok
+test_benchmark_does_not_rewrite_predictions_after_measurement (test_measurements.MeasurementTest.test_benchmark_does_not_rewrite_predictions_after_measurement) ... Completed 1/1; failed: 0
+ok
+test_comparison_exports_three_measurements_and_same_subset_baseline (test_measurements.MeasurementTest.test_comparison_exports_three_measurements_and_same_subset_baseline) ... Completed 1/1; failed: 0
+Completed 1/1; failed: 0
+Completed 1/1; failed: 0
+ok
+test_comparison_refuses_incompatible_or_duplicate_results (test_measurements.MeasurementTest.test_comparison_refuses_incompatible_or_duplicate_results) ... ok
+test_comparison_rejects_changed_scoring_version_or_catalog (test_measurements.MeasurementTest.test_comparison_rejects_changed_scoring_version_or_catalog) ... ok
+test_disk_weights_exclude_metadata_and_unknown_is_not_zero (test_measurements.MeasurementTest.test_disk_weights_exclude_metadata_and_unknown_is_not_zero) ... ok
+test_failure_counts_preserve_all_types_and_exclude_warmup (test_measurements.MeasurementTest.test_failure_counts_preserve_all_types_and_exclude_warmup) ... Completed 1/8; failed: 1
+Completed 2/8; failed: 2
+Completed 3/8; failed: 3
+Completed 4/8; failed: 4
+Completed 5/8; failed: 5
+Completed 6/8; failed: 6
+Completed 7/8; failed: 7
+Completed 8/8; failed: 8
+ok
+test_gold_isolation_failed_calls_batch_latency_and_warmup (test_measurements.MeasurementTest.test_gold_isolation_failed_calls_batch_latency_and_warmup) ... Completed 2/3; failed: 0
+Completed 3/3; failed: 1
+ok
+test_history_is_reset_between_warmup_and_measurement (test_measurements.MeasurementTest.test_history_is_reset_between_warmup_and_measurement) ... Completed 1/1; failed: 0
+ok
+test_invalid_warmup_answers_are_recorded_without_hiding_bad_models (test_measurements.MeasurementTest.test_invalid_warmup_answers_are_recorded_without_hiding_bad_models) ... Completed 1/1; failed: 1
+ok
+test_prediction_normalization_counts_reach_the_report (test_measurements.MeasurementTest.test_prediction_normalization_counts_reach_the_report) ... Completed 1/1; failed: 0
+ok
+test_rank_and_missing_lengths_are_explicit (test_measurements.MeasurementTest.test_rank_and_missing_lengths_are_explicit) ... ok
+test_resource_curve_rejects_different_fact_recovery_policies (test_measurements.MeasurementTest.test_resource_curve_rejects_different_fact_recovery_policies) ... ok
+test_saving_does_not_overwrite_and_stage_failure_is_recorded (test_measurements.MeasurementTest.test_saving_does_not_overwrite_and_stage_failure_is_recorded) ... Starting failed-test: /home/ubuntu/mws/.venv/bin/python -c raise SystemExit(7)
+ok
+test_warmup_runtime_failure_remains_explicit (test_measurements.MeasurementTest.test_warmup_runtime_failure_remains_explicit) ... ok
+test_checkpoint_retains_optimizer_and_can_resume (test_model_smoke.ModelSmokeTest.test_checkpoint_retains_optimizer_and_can_resume) ... /home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:3303: FutureWarning: `is_gradient_checkpointing` is deprecated and will be removed in v6. Use `is_activation_checkpointing` instead.
+  warnings.warn(
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing` is deprecated and will be removed in v6. Use `activation_checkpointing` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing_kwargs` is deprecated and will be removed in v6. Use `activation_checkpointing_kwargs` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+[transformers] mtime may not be reliable on this filesystem, falling back to numerical ordering
+{'train_runtime': '0.2002', 'train_samples_per_second': '19.98', 'train_steps_per_second': '9.991', 'train_loss': '3.462', 'epoch': '2'}
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing` is deprecated and will be removed in v6. Use `activation_checkpointing` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing_kwargs` is deprecated and will be removed in v6. Use `activation_checkpointing_kwargs` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+{'train_runtime': '0.0328', 'train_samples_per_second': '61.04', 'train_steps_per_second': '30.52', 'train_loss': '3.46', 'epoch': '3'}
+ok
+test_extraction_lengths_exclude_padding_and_report_exhausted_budget (test_model_smoke.ModelSmokeTest.test_extraction_lengths_exclude_padding_and_report_exhausted_budget) ... ok
+test_tail_loss_matches_full_loss_on_real_model (test_model_smoke.ModelSmokeTest.test_tail_loss_matches_full_loss_on_real_model) ... ok
+test_training_journal_survives_distinct_attempts (test_model_smoke.ModelSmokeTest.test_training_journal_survives_distinct_attempts) ... ok
+test_corrupted_transfer_stops_before_extracting_weights (test_model_transfer.ModelTransferTest.test_corrupted_transfer_stops_before_extracting_weights) ... Preparing: models/continue-002/case_contract.json
+Preparing: models/continue-002/config.json
+Preparing: models/continue-002/model.safetensors
+Preparing: models/continue-002/tokenizer_config.json
+Preparing: data/organizer/val.jsonl
+Preparing: data/organizer/catalog.json
+Preparing: data/organizer/train.jsonl
+Preparing: adapters/continue-002/adapter_config.json
+Preparing: adapters/continue-002/adapter_model.safetensors
+{
+  "archive": "/tmp/tmp7f83rp8q/transfer.tar.gz",
+  "manifest": "/tmp/tmp7f83rp8q/transfer.tar.gz.manifest.json",
+  "bytes": 1473,
+  "files": 9
+}
+ok
+test_minimal_package_installs_identical_model_data_and_adapter (test_model_transfer.ModelTransferTest.test_minimal_package_installs_identical_model_data_and_adapter) ... Preparing: models/continue-002/case_contract.json
+Preparing: models/continue-002/config.json
+Preparing: models/continue-002/model.safetensors
+Preparing: models/continue-002/tokenizer_config.json
+Preparing: data/organizer/val.jsonl
+Preparing: data/organizer/catalog.json
+Preparing: data/organizer/train.jsonl
+Preparing: adapters/continue-002/adapter_config.json
+Preparing: adapters/continue-002/adapter_model.safetensors
+{
+  "archive": "/tmp/tmplq5x5xcl/transfer.tar.gz",
+  "manifest": "/tmp/tmplq5x5xcl/transfer.tar.gz.manifest.json",
+  "bytes": 1469,
+  "files": 9
+}
+MODEL AND DATA INSTALLED AND VERIFIED: /tmp/tmplq5x5xcl/team_shpana
+ok
+test_catalog_is_preserved_and_conflicting_destination_is_rejected (test_noisy_val.NoisyCatalogTest.test_catalog_is_preserved_and_conflicting_destination_is_rejected) ... {
+  "input": "/tmp/tmpqv0a3b04/val.jsonl",
+  "input_sha256": "ed89a2193d44fad163db6b276224b6273d8f267a221bf1fd77ea26398095b3cb",
+  "output_sha256": "8eb703d735cad0fd072ba3426ae88b05075142637d5b7247345c0d7a0b1f98a8",
+  "calls": 1,
+  "level": 0.15,
+  "seed": 42,
+  "limit": null,
+  "changed_word_share": 0.0,
+  "note": "Turn texts only; facts unchanged; source span/quote set to null.",
+  "catalog_next_to_output": true,
+  "catalog_sha256": "b7b08691a432d9b7966b8813d4c1ecfab83c9c1178e45e5fdaa4e79b80527f94"
+}
+usage: make_noisy_val.py [-h] [--input INPUT] --output OUTPUT [--level LEVEL]
+                         [--seed SEED] [--limit LIMIT]
+make_noisy_val.py: error: Output directory contains a different catalog; choose a fresh directory
+ok
+test_labels_and_turn_structure_survive (test_noisy_val.NoisyValTest.test_labels_and_turn_structure_survive) ... ok
+test_same_seed_gives_same_copy_and_original_is_untouched (test_noisy_val.NoisyValTest.test_same_seed_gives_same_copy_and_original_is_untouched) ... ok
+test_text_never_becomes_empty (test_noisy_val.NoisyValTest.test_text_never_becomes_empty) ... ok
+test_zero_level_keeps_text (test_noisy_val.NoisyValTest.test_zero_level_keeps_text) ... ok
+test_different_values_are_not_deduplicated (test_prediction_normalization.PredictionNormalizationTest.test_different_values_are_not_deduplicated) ... ok
+test_duplicates_are_removed_after_speaker_and_date_normalization (test_prediction_normalization.PredictionNormalizationTest.test_duplicates_are_removed_after_speaker_and_date_normalization) ... ok
+test_exact_duplicates_are_removed (test_prediction_normalization.PredictionNormalizationTest.test_exact_duplicates_are_removed) ... ok
+test_invalid_calendar_date_is_dropped_not_the_call (test_prediction_normalization.PredictionNormalizationTest.test_invalid_calendar_date_is_dropped_not_the_call) ... ok
+test_json_syntax_error_is_still_explicit (test_prediction_normalization.PredictionNormalizationTest.test_json_syntax_error_is_still_explicit) ... ok
+test_missing_required_field_is_still_invalid_schema (test_prediction_normalization.PredictionNormalizationTest.test_missing_required_field_is_still_invalid_schema) ... ok
+test_missing_speaker_is_filled_from_diarization (test_prediction_normalization.PredictionNormalizationTest.test_missing_speaker_is_filled_from_diarization) ... ok
+test_partial_invalid_sources_drop_only_the_bad_fact (test_prediction_normalization.PredictionNormalizationTest.test_partial_invalid_sources_drop_only_the_bad_fact) ... ok
+test_reversed_interval_is_opened (test_prediction_normalization.PredictionNormalizationTest.test_reversed_interval_is_opened) ... ok
+test_sanitize_interval_handles_timezone_mismatch (test_prediction_normalization.PredictionNormalizationTest.test_sanitize_interval_handles_timezone_mismatch) ... ok
+test_speaker_comes_from_the_source_turn (test_prediction_normalization.PredictionNormalizationTest.test_speaker_comes_from_the_source_turn) ... ok
+test_unknown_turn_stays_an_explicit_source_problem (test_prediction_normalization.PredictionNormalizationTest.test_unknown_turn_stays_an_explicit_source_problem) ... ok
+test_valid_fact_is_unchanged (test_prediction_normalization.PredictionNormalizationTest.test_valid_fact_is_unchanged) ... ok
+test_listed_files_are_verified_and_the_list_itself_is_skipped (test_prepare_case.ChecksumTest.test_listed_files_are_verified_and_the_list_itself_is_skipped) ... ok
+test_failed_retry_keeps_the_explicit_limit_error (test_retry_on_token_limit.RetryOnTokenLimitTest.test_failed_retry_keeps_the_explicit_limit_error) ... ok
+test_retry_recovers_a_truncated_answer (test_retry_on_token_limit.RetryOnTokenLimitTest.test_retry_recovers_a_truncated_answer) ... ok
+test_accounts_and_ticket_numbers_are_independent (test_series_history.SeriesHistoryTest.test_accounts_and_ticket_numbers_are_independent) ... ok
+test_cache_is_bounded_and_can_be_reset_after_warmup (test_series_history.SeriesHistoryTest.test_cache_is_bounded_and_can_be_reset_after_warmup) ... ok
+test_default_offline_mode_is_stateless (test_series_history.SeriesHistoryTest.test_default_offline_mode_is_stateless) ... ok
+test_equal_date_does_not_erase_original_provenance (test_series_history.SeriesHistoryTest.test_equal_date_does_not_erase_original_provenance) ... ok
+test_explicit_date_and_new_episode_override_memory (test_series_history.SeriesHistoryTest.test_explicit_date_and_new_episode_override_memory) ... ok
+test_extractor_applies_memory_and_records_decisions (test_series_history.SeriesHistoryTest.test_extractor_applies_memory_and_records_decisions) ... ok
+test_generic_ticket_name_is_insufficient_identity (test_series_history.SeriesHistoryTest.test_generic_ticket_name_is_insufficient_identity) ... ok
+test_history_matches_streaming_requests_and_keeps_input_order (test_series_history.SeriesHistoryTest.test_history_matches_streaming_requests_and_keeps_input_order) ... ok
+test_http_requests_share_only_this_backend_history (test_series_history.SeriesHistoryTest.test_http_requests_share_only_this_backend_history) ... ok
+test_latest_request_retry_keeps_date_from_strictly_earlier_origin (test_series_history.SeriesHistoryTest.test_latest_request_retry_keeps_date_from_strictly_earlier_origin) ... ok
+test_negative_facts_are_not_carried (test_series_history.SeriesHistoryTest.test_negative_facts_are_not_carried) ... ok
+test_never_reads_future_even_when_call_index_disagrees (test_series_history.SeriesHistoryTest.test_never_reads_future_even_when_call_index_disagrees) ... ok
+test_provenance_keeps_origin_across_three_calls (test_series_history.SeriesHistoryTest.test_provenance_keeps_origin_across_three_calls) ... ok
+test_vllm_backend_uses_same_history_without_a_gpu (test_series_history.SeriesHistoryTest.test_vllm_backend_uses_same_history_without_a_gpu) ... ok
+test_absolute_named_and_numeric_dates (test_temporal.CalendarTest.test_absolute_named_and_numeric_dates) ... ok
+test_calendar_month_shift_does_not_invent_february_31 (test_temporal.CalendarTest.test_calendar_month_shift_does_not_invent_february_31) ... ok
+test_clock_composes_only_with_explicit_day (test_temporal.CalendarTest.test_clock_composes_only_with_explicit_day) ... ok
+test_datetime_limits_produce_explicit_unresolved_results (test_temporal.CalendarTest.test_datetime_limits_produce_explicit_unresolved_results) ... ok
+test_explicit_invalid_date_is_not_clamped (test_temporal.CalendarTest.test_explicit_invalid_date_is_not_clamped) ... ok
+test_hour_arithmetic_preserves_anchor_clock (test_temporal.CalendarTest.test_hour_arithmetic_preserves_anchor_clock) ... ok
+test_leap_and_non_leap_year (test_temporal.CalendarTest.test_leap_and_non_leap_year) ... ok
+test_missing_year_requires_direction (test_temporal.CalendarTest.test_missing_year_requires_direction) ... ok
+test_offsets_refer_to_original_text (test_temporal.CalendarTest.test_offsets_refer_to_original_text) ... ok
+test_russian_compound_numbers_and_weeks (test_temporal.CalendarTest.test_russian_compound_numbers_and_weeks) ... ok
+test_spoken_clock_requires_explicit_meridiem_or_policy (test_temporal.CalendarTest.test_spoken_clock_requires_explicit_meridiem_or_policy) ... ok
+test_week_and_month_are_ranges (test_temporal.CalendarTest.test_week_and_month_are_ranges) ... ok
+test_weekday_same_day_is_ambiguous (test_temporal.CalendarTest.test_weekday_same_day_is_ambiguous) ... ok
+test_year_boundary_and_timezone (test_temporal.CalendarTest.test_year_boundary_and_timezone) ... ok
+test_agreement_and_action_policies_remain_unchanged (test_temporal.FactTimeTest.test_agreement_and_action_policies_remain_unchanged) ... ok
+test_cli_refuses_to_overwrite_existing_experiment (test_temporal.FactTimeTest.test_cli_refuses_to_overwrite_existing_experiment) ... ok
+test_compare_counts_regressions_and_rejects_removed_facts (test_temporal.FactTimeTest.test_compare_counts_regressions_and_rejects_removed_facts) ... ok
+test_counterfactual_question_and_negative_fact_are_not_repaired (test_temporal.FactTimeTest.test_counterfactual_question_and_negative_fact_are_not_repaired) ... ok
+test_end_time_does_not_overwrite_unknown_start (test_temporal.FactTimeTest.test_end_time_does_not_overwrite_unknown_start) ... ok
+test_existing_model_contract_is_unchanged (test_temporal.FactTimeTest.test_existing_model_contract_is_unchanged) ... ok
+test_interval_conflict_is_not_fixed_by_swapping (test_temporal.FactTimeTest.test_interval_conflict_is_not_fixed_by_swapping) ... ok
+test_invalid_model_date_is_recovered_before_strict_validation (test_temporal.FactTimeTest.test_invalid_model_date_is_recovered_before_strict_validation) ... ok
+test_numeric_date_is_not_split_into_sentences (test_temporal.FactTimeTest.test_numeric_date_is_not_split_into_sentences) ... ok
+test_offline_boundary_strips_gold_and_preserves_other_fields (test_temporal.FactTimeTest.test_offline_boundary_strips_gold_and_preserves_other_fields) ... ok
+test_service_observation_does_not_establish_start (test_temporal.FactTimeTest.test_service_observation_does_not_establish_start) ... ok
+test_service_onset_is_explicit (test_temporal.FactTimeTest.test_service_onset_is_explicit) ... ok
+test_source_idx_is_not_list_position_and_inputs_are_not_mutated (test_temporal.FactTimeTest.test_source_idx_is_not_list_position_and_inputs_are_not_mutated) ... ok
+test_two_dates_in_one_clause_are_not_resolved_by_proximity (test_temporal.FactTimeTest.test_two_dates_in_one_clause_are_not_resolved_by_proximity) ... ok
+test_two_objects_with_same_evidence_are_not_merged (test_temporal.FactTimeTest.test_two_objects_with_same_evidence_are_not_merged) ... ok
+test_two_statuses_bind_their_own_clauses (test_temporal.FactTimeTest.test_two_statuses_bind_their_own_clauses) ... ok
+test_both_boundaries_and_successor_from_are_bound_to_own_events (test_temporal_binding.TemporalBindingTest.test_both_boundaries_and_successor_from_are_bound_to_own_events) ... ok
+test_closing_ticket_does_not_end_completed_status (test_temporal_binding.TemporalBindingTest.test_closing_ticket_does_not_end_completed_status) ... ok
+test_comma_separated_time_adjunct_is_not_lost (test_temporal_binding.TemporalBindingTest.test_comma_separated_time_adjunct_is_not_lost) ... ok
+test_conflicting_repeated_status_is_abstention (test_temporal_binding.TemporalBindingTest.test_conflicting_repeated_status_is_abstention) ... ok
+test_explicit_end_wins_over_inferred_transition (test_temporal_binding.TemporalBindingTest.test_explicit_end_wins_over_inferred_transition) ... ok
+test_future_notification_does_not_date_status (test_temporal_binding.TemporalBindingTest.test_future_notification_does_not_date_status) ... ok
+test_historical_start_is_not_guessed_from_end (test_temporal_binding.TemporalBindingTest.test_historical_start_is_not_guessed_from_end) ... ok
+test_inputs_and_non_date_fields_are_preserved (test_temporal_binding.TemporalBindingTest.test_inputs_and_non_date_fields_are_preserved) ... ok
+test_observation_is_not_status_onset (test_temporal_binding.TemporalBindingTest.test_observation_is_not_status_onset) ... ok
+test_partial_period_is_not_replaced_by_other_status_date (test_temporal_binding.TemporalBindingTest.test_partial_period_is_not_replaced_by_other_status_date) ... ok
+test_questions_hypotheses_and_negated_cues_do_not_supply_dates (test_temporal_binding.TemporalBindingTest.test_questions_hypotheses_and_negated_cues_do_not_supply_dates) ... ok
+test_rejection_does_not_confirm_previous_date (test_temporal_binding.TemporalBindingTest.test_rejection_does_not_confirm_previous_date) ... ok
+test_repeated_endpoint_does_not_become_start (test_temporal_binding.TemporalBindingTest.test_repeated_endpoint_does_not_become_start) ... ok
+test_short_confirmation_uses_only_previous_turns (test_temporal_binding.TemporalBindingTest.test_short_confirmation_uses_only_previous_turns) ... ok
+test_temporal_answer_inherits_question_event (test_temporal_binding.TemporalBindingTest.test_temporal_answer_inherits_question_event) ... ok
+test_ticket_reference_mismatch_and_multiple_tickets_are_ambiguous (test_temporal_binding.TemporalBindingTest.test_ticket_reference_mismatch_and_multiple_tickets_are_ambiguous) ... ok
+test_timezone_is_preserved_and_reapplication_is_idempotent (test_temporal_binding.TemporalBindingTest.test_timezone_is_preserved_and_reapplication_is_idempotent) ... ok
+test_two_dates_of_same_status_have_different_roles (test_temporal_binding.TemporalBindingTest.test_two_dates_of_same_status_have_different_roles) ... ok
+test_unrelated_action_time_does_not_date_ticket (test_temporal_binding.TemporalBindingTest.test_unrelated_action_time_does_not_date_ticket) ... ok
+test_call_utc_offset_is_kept (test_temporal_case_v2.BindingTest.test_call_utc_offset_is_kept) ... ok
+test_catalog_agreement_takes_the_scheduled_day (test_temporal_case_v2.BindingTest.test_catalog_agreement_takes_the_scheduled_day) ... ok
+test_chain_closure_is_opt_in_and_never_uses_a_future_start (test_temporal_case_v2.BindingTest.test_chain_closure_is_opt_in_and_never_uses_a_future_start) ... ok
+test_cue_belongs_to_the_nearest_status (test_temporal_case_v2.BindingTest.test_cue_belongs_to_the_nearest_status) ... ok
+test_free_formulation_is_dated_by_the_call_and_open (test_temporal_case_v2.BindingTest.test_free_formulation_is_dated_by_the_call_and_open) ... ok
+test_mode_requires_the_catalog (test_temporal_case_v2.BindingTest.test_mode_requires_the_catalog) ... ok
+test_multiple_objects_do_not_share_one_date_without_object_binding (test_temporal_case_v2.BindingTest.test_multiple_objects_do_not_share_one_date_without_object_binding) ... ok
+test_negated_day_and_idiom_are_not_dates (test_temporal_case_v2.BindingTest.test_negated_day_and_idiom_are_not_dates) ... ok
+test_nothing_is_dropped_reordered_or_mutated (test_temporal_case_v2.BindingTest.test_nothing_is_dropped_reordered_or_mutated) ... ok
+test_paraphrase_and_negative_and_action_are_left_to_the_model (test_temporal_case_v2.BindingTest.test_paraphrase_and_negative_and_action_are_left_to_the_model) ... ok
+test_question_and_hypothesis_do_not_rewrite_catalog_agreement (test_temporal_case_v2.BindingTest.test_question_and_hypothesis_do_not_rewrite_catalog_agreement) ... ok
+test_result_always_satisfies_the_interval_contract (test_temporal_case_v2.BindingTest.test_result_always_satisfies_the_interval_contract) ... ok
+test_status_of_another_ticket_question_and_negation_set_no_date (test_temporal_case_v2.BindingTest.test_status_of_another_ticket_question_and_negation_set_no_date) ... ok
+test_status_start_end_and_still (test_temporal_case_v2.BindingTest.test_status_start_end_and_still) ... ok
+test_symptom_onset_and_end_of_normal_state (test_temporal_case_v2.BindingTest.test_symptom_onset_and_end_of_normal_state) ... ok
+test_direction_comes_from_the_caller (test_temporal_case_v2.CueTest.test_direction_comes_from_the_caller) ... ok
+test_periods_are_not_reduced_to_a_day (test_temporal_case_v2.CueTest.test_periods_are_not_reduced_to_a_day) ... ok
+test_scorer_bank_single_days (test_temporal_case_v2.CueTest.test_scorer_bank_single_days) ... ok
+test_typical_asr_variants (test_temporal_case_v2.CueTest.test_typical_asr_variants) ... ok
+test_exact_catalog_free_and_paraphrase (test_temporal_case_v2.ValueLayerTest.test_exact_catalog_free_and_paraphrase) ... ok
+test_action_uses_cue_then_call_time (test_temporal_task.TaskModeTest.test_action_uses_cue_then_call_time) ... ok
+test_action_uses_exact_cues_only (test_temporal_task.TaskModeTest.test_action_uses_exact_cues_only) ... ok
+test_agreement_uses_future_cue (test_temporal_task.TaskModeTest.test_agreement_uses_future_cue) ... ok
+test_asr_variants_of_cues_are_recovered (test_temporal_task.TaskModeTest.test_asr_variants_of_cues_are_recovered) ... ok
+test_benchmark_postprocess_applies_series_carry (test_temporal_task.TaskModeTest.test_benchmark_postprocess_applies_series_carry) ... ok
+test_common_words_that_resemble_cues_are_not_rewritten (test_temporal_task.TaskModeTest.test_common_words_that_resemble_cues_are_not_rewritten) ... ok
+test_interval_guard_keeps_closed_action (test_temporal_task.TaskModeTest.test_interval_guard_keeps_closed_action) ... ok
+test_invalid_model_date_is_left_to_the_sanitizer (test_temporal_task.TaskModeTest.test_invalid_model_date_is_left_to_the_sanitizer) ... ok
+test_mode_off_preserves_model_dates (test_temporal_task.TaskModeTest.test_mode_off_preserves_model_dates) ... ok
+test_negative_fact_is_not_redated (test_temporal_task.TaskModeTest.test_negative_fact_is_not_redated) ... ok
+test_series_carries_accepted_status_only_within_account (test_temporal_task.TaskModeTest.test_series_carries_accepted_status_only_within_account) ... ok
+test_status_endpoint_marks_valid_to_not_start (test_temporal_task.TaskModeTest.test_status_endpoint_marks_valid_to_not_start) ... ok
+test_status_uses_explicit_past_cue (test_temporal_task.TaskModeTest.test_status_uses_explicit_past_cue) ... ok
+test_account_leakage_is_rejected (test_training_data.EncodingTest.test_account_leakage_is_rejected) ... ok
+test_existing_results_need_explicit_resume (test_training_data.EncodingTest.test_existing_results_need_explicit_resume) ... ok
+test_input_budget_is_also_checked (test_training_data.EncodingTest.test_input_budget_is_also_checked) ... ok
+test_manifest_mismatch_cannot_overwrite_previous_settings (test_training_data.EncodingTest.test_manifest_mismatch_cannot_overwrite_previous_settings) ... ok
+test_only_target_tokens_have_loss (test_training_data.EncodingTest.test_only_target_tokens_have_loss) ... ok
+test_overflow_fails_instead_of_dropping_labels (test_training_data.EncodingTest.test_overflow_fails_instead_of_dropping_labels) ... ok
+test_resume_must_be_a_real_checkpoint_of_this_experiment (test_training_data.EncodingTest.test_resume_must_be_a_real_checkpoint_of_this_experiment) ... ok
+test_target_cannot_exceed_generation_budget (test_training_data.EncodingTest.test_target_cannot_exceed_generation_budget) ... ok
+test_corrupted_or_unknown_packages_are_rejected_before_output (test_v21_package.PackageTest.test_corrupted_or_unknown_packages_are_rejected_before_output) ... ok
+test_direct_and_nested_verified_packages_and_existing_data (test_v21_package.PackageTest.test_direct_and_nested_verified_packages_and_existing_data) ... ok
+test_corruption_and_path_traversal_are_rejected (test_v21_release.ReleaseTest.test_corruption_and_path_traversal_are_rejected) ... ok
+test_verified_release_preserves_old_model_and_rejects_replacement (test_v21_release.ReleaseTest.test_verified_release_preserves_old_model_and_rejects_replacement) ... RELEASE INSTALLED AND VERIFIED: /tmp/tmpvi0zjph6/team_shpana/releases/case-v21-002
+Existing .venv-v100, models/continue-002, data and prior results preserved.
+ALREADY INSTALLED AND VERIFIED: /tmp/tmpvi0zjph6/team_shpana/releases/case-v21-002
+ok
+
+----------------------------------------------------------------------
+Ran 248 tests in 6.316s
+
+OK

@@ -1,0 +1,10 @@
+# Inference only: serve a merged case model without the training stack.
+# PyTorch is installed separately by the Dockerfile, with an index matching CPU or CUDA.
+transformers>=4.56,<6
+# Constrained JSON decoding against the Facts schema.
+xgrammar>=0.2.8,<1
+accelerate>=1.0,<2
+pydantic>=2.7,<3
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+requests>=2.31,<3

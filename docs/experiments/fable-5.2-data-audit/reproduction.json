@@ -1,0 +1,23 @@
+{
+  "generator_branch": "fix/state-interval-dates-v21",
+  "generator_revision": "6f511afa0ef6c7e20b9589cf515d0c22e3e42455",
+  "seed": 42,
+  "files": {
+    "train_noise.jsonl": {
+      "byte_exact_reproduction": true,
+      "sha256": "3915df082dc21b41adb7cca7bb74f3e085a3aeea61689160916ee251b4964bf0",
+      "rows": 7852
+    },
+    "train_resampled.jsonl": {
+      "byte_exact_reproduction": true,
+      "sha256": "86fe7db6e44ef95787457ae3b93371f6d8f41c06ee71e511548941d8e38a0c52",
+      "rows": 7074
+    },
+    "train_noise_resampled.jsonl": {
+      "byte_exact_reproduction": true,
+      "sha256": "2dd32adb847ff0b8b1ffe8ba7669060631db6579fa537284edffe514c499fbc1",
+      "rows": 11000
+    }
+  },
+  "seconds": 9.327344399993308
+}

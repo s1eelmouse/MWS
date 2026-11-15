@@ -1,0 +1,32 @@
+{
+  "release_id": "case-v21-status-001",
+  "archive_sha256": "ba21843b3b6da75557903bbb898cdbc107fbde16ad96b6e883145f56d8d76bcf",
+  "files": 127,
+  "replay_source_hashes_equal_current_runtime_and_package": true,
+  "full_original_server_predictions_reproduced": true,
+  "local_installer_test": "passed",
+  "runner_check_only_includes_weight_and_val_hashes": "passed",
+  "package_tests": {
+    "ran": 292,
+    "passed": 287,
+    "skipped": 5
+  },
+  "powerShell_parse": "passed",
+  "server_execution_by_agent": false,
+  "training_performed": false,
+  "quality": {
+    "metrics_version": "2.1",
+    "n_calls": 383,
+    "n_gold_facts": 1845,
+    "n_pred_facts": 1947,
+    "fact_precision": 0.5126,
+    "fact_recall": 0.5409,
+    "temporal_recall": 0.5049,
+    "n_temporal": 614,
+    "state_accuracy": 0.5297,
+    "n_state": 623,
+    "grounding_turn": 0.7856,
+    "grounding_span": null,
+    "n_grounded": 998
+  }
+}
