@@ -68,6 +68,10 @@ def main():
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--no-4bit", action="store_true")
     parser.add_argument("--max-steps", type=int, default=-1)
+    parser.add_argument("--train-variant", default="plain",
+                        choices=["plain", "noise", "resampled", "noise_resampled"],
+                        help="build ASR-noise copies and/or attribute resampling from --train in memory "
+                             "(src/make_train_variants.py); nothing is written to disk or to Git")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--save-steps", type=int, default=50)
     parser.add_argument("--max-sequence-tokens", type=int, default=MAX_SEQUENCE_TOKENS)
@@ -95,8 +99,21 @@ def main():
     for row in train_rows + val_rows:
         validate_gold(row)
     provenance = run_context(train=args.train, val=args.val, catalog=catalog_for(args.val, args.catalog))
+    source_calls = len(train_rows)
+    if args.train_variant != "plain":
+        from make_train_variants import build_variants
+        catalog_path = catalog_for(args.val, args.catalog)
+        if not catalog_path:
+            parser.error("--train-variant needs catalog.json: pass --catalog or keep it next to --val")
+        catalog = json.loads(Path(catalog_path).read_text(encoding="utf-8"))
+        variants, _reasons = build_variants(train_rows, catalog.get("tariffs", []), args.seed)
+        train_rows = variants[f"train_{args.train_variant}.jsonl"]
+        ensure_training_splits(train_rows, val_rows)
+        for row in train_rows:
+            validate_gold(row)
     if args.check_data:
         print(json.dumps({"train_calls": len(train_rows), "val_calls": len(val_rows),
+                          "train_variant": args.train_variant, "train_source_calls": source_calls,
                           "model": BASE_MODEL, "gpu_run": False, 'run_context': provenance}, ensure_ascii=False, indent=2))
         return
     output = check_output_directory(args.output_dir, args.resume_from_checkpoint)
@@ -149,6 +166,9 @@ def main():
         "batch_size": args.batch_size, "four_bit": not args.no_4bit,
         "contract_signature": contract_signature(), "run_context": provenance,
     }
+    if args.train_variant != "plain":
+        # Recorded only for variants, so manifests of earlier plain runs still compare equal.
+        manifest.update(train_variant=args.train_variant, train_calls_after_variant=len(train_rows))
     if origin or args.learning_rate != 2e-4:
         manifest.update(initial_adapter=origin, learning_rate=args.learning_rate,
                         optimizer_policy='fresh cycle; checkpoint resume restores optimizer')
