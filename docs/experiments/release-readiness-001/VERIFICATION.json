@@ -35,10 +35,26 @@
   },
   "remote_branches_deleted": [],
   "remaining": [
-    "noisy 005 GPU result",
+    "A/B of service/state recovery on saved raw noisy 005 answers",
     "three GPU resource points and CPU measurement",
     "comparison GPU timing against mentor-approved approximately 1.5B model",
     "actual Docker/HTTP test on installed 005",
     "update binary presentation"
-  ]
+  ],
+  "integrated_main_commit": "743c444",
+  "noisy_005": {
+    "metrics_version": "2.1",
+    "n_calls": 383,
+    "n_gold_facts": 1845,
+    "n_pred_facts": 1965,
+    "fact_precision": 0.4941,
+    "fact_recall": 0.5263,
+    "temporal_recall": 0.4751,
+    "n_temporal": 522,
+    "state_accuracy": 0.4639,
+    "n_state": 623,
+    "grounding_turn": 0.7734,
+    "grounding_span": null,
+    "n_grounded": 971
+  }
 }
