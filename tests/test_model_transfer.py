@@ -45,8 +45,8 @@ class ModelTransferTest(unittest.TestCase):
             self.assertTrue((target / 'adapters/continue-002/adapter_model.safetensors').is_file())
             self.assertFalse((target / 'adapters/continue-002/checkpoints').exists())
             self.assertIn('JSON_GRAMMAR_BACKEND=torch_native', (target / 'runtime.env').read_text())
-            self.assertEqual(json.loads((target / 'out/v100-assets.json').read_text())['model'],
-                             str(target / 'models/continue-002'))
+            installed = Path(json.loads((target / 'out/v100-assets.json').read_text())['model'])
+            self.assertEqual(installed.resolve(), (target / 'models/continue-002').resolve())
             with self.assertRaises(FileExistsError):
                 transfer.install(archive, target)
 

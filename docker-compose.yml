@@ -13,12 +13,24 @@ services:
       - "${PORT:-8000}:8000"
     environment:
       MODEL_DIR: /models/merged
-      MAX_BATCH: ${MAX_BATCH:-1}
+      MAX_BATCH: ${MAX_BATCH:-2}
       WITH_SCHEMA: ${WITH_SCHEMA:-0}
       ALLOW_LEGACY_CONTRACT: ${ALLOW_LEGACY_CONTRACT:-0}
       TEMPORAL_SERIES_HISTORY: ${TEMPORAL_SERIES_HISTORY:-1}
-      TEMPORAL_NORMALIZATION: ${TEMPORAL_NORMALIZATION:-task}
-      FACT_RECOVERY: ${FACT_RECOVERY:-0}
+      TEMPORAL_NORMALIZATION: ${TEMPORAL_NORMALIZATION:-case_v2}
+      FACT_RECOVERY: ${FACT_RECOVERY:-1}
+      SCORER_VERSION: "2.1"
+      JSON_CONSTRAINED: "1"
+      JSON_GRAMMAR_BACKEND: ${JSON_GRAMMAR_BACKEND:-torch_native}
+      JSON_GRAMMAR_THREADS: "8"
+      MAX_INPUT_TOKENS: "12288"
+      MAX_NEW_TOKENS: "4096"
+      MAX_TEXT_CHARS: "0"
+      PROMPT_LOOKUP_TOKENS: "0"
+      RETRY_ON_TOKEN_LIMIT: "1"
+      RETRY_REPETITION_PENALTY: "1.2"
+      OMP_NUM_THREADS: "8"
+      MKL_NUM_THREADS: "8"
       CATALOG_PATH: /app/catalog.json
       TEMPORAL_CATALOG_PATH: /app/catalog.json
     volumes:
@@ -29,7 +41,7 @@ services:
         bind:
           create_host_path: false
       - type: bind
-        source: ${MODEL_PATH:-./out/merged-4090-continue-002}
+        source: ${MODEL_PATH:-./out/merged-4090-continue-005-noise-001}
         target: /models/merged
         read_only: true
         bind:

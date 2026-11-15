@@ -29,7 +29,8 @@ class DockerAssetsTest(unittest.TestCase):
             compose = (ROOT / name).read_text(encoding="utf-8")
             self.assertIn("read_only: true", compose)
             self.assertIn("create_host_path: false", compose)
-            self.assertIn("${MODEL_PATH:-./out/merged-4090-continue-002}", compose)
+            expected = 'merged-4090-continue-005-noise-001' if name == 'docker-compose.yml' else 'merged-4090-continue-002'
+            self.assertIn('${MODEL_PATH:-./out/' + expected + '}', compose)
 
     def test_serving_requirements_exclude_the_training_stack(self):
         requirements = (ROOT / "requirements-serve.txt").read_text(encoding="utf-8")

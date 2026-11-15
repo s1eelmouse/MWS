@@ -45,6 +45,15 @@ def write_csv(path, rows):
 def comparison_rows(reports):
     if len(reports) < 3:
         raise ValueError("PLAN.md requires at least three measured configurations")
+    # A shared policy label is insufficient: branches can implement different rules.
+    rule_files = ('schema.py', 'prediction.py', 'fact_recovery.py', 'temporal.py',
+                  'temporal_binding.py', 'temporal_case_v2.py', 'series_history.py',
+                  'catalog_normalization.py', 'state_intervals.py', 'ticket_intervals.py',
+                  'tariff_recovery.py', 'service_recovery.py')
+    signatures = [{k: v for k, v in r.get('hardware', {}).get('source_sha256', {}).items()
+                   if Path(k).name in rule_files} for r in reports]
+    if any(signatures) and any(s != signatures[0] for s in signatures):
+        raise ValueError('Postprocessing source hashes differ despite matching policy labels')
     keys = ("protocol", "dataset_sha256", "selected_calls_sha256", "contract_signature", "limits")
     pipeline_keys = ("constrained_json", "temporal_normalization", "catalog_sha256", "grammar_backend", "grammar_threads",
                      "retry_on_token_limit", "retry_repetition_penalty", "series_history_enabled",
