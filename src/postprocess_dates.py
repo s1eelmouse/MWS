@@ -138,7 +138,8 @@ def main():
         'recovery_catalog_sha256': hashlib.sha256(Path(args.recovery_catalog or args.catalog).read_bytes()).hexdigest()
                                    if args.recovery_catalog or args.catalog else None,
         'source_sha256': {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                          for name in ['temporal.py', 'temporal_binding.py', 'temporal_case_v2.py', 'fact_recovery.py', 'series_history.py',
+                          for name in ['temporal.py', 'temporal_binding.py', 'temporal_case_v2.py',
+                                       'state_intervals.py', 'ticket_intervals.py', 'fact_recovery.py', 'series_history.py',
                                        'catalog_normalization.py', 'postprocess_dates.py']},
         'gold_fields_passed_to_rules': False,
         'history_scope': 'earlier_same_account_ticket' if args.allow_series_history else 'single_call',

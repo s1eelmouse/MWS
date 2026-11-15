@@ -42,6 +42,16 @@ class StateIntervalsTest(unittest.TestCase):
         self.assertEqual(item['valid_from'], before['valid_from'])
         self.assertEqual(item['valid_to'][:10], '2026-11-12')
 
+    def test_explicit_transfer_dates_both_tariffs(self):
+        old, _ = repair(fact('tariff', 'Пульс'), 'Вчера перешла с Пульса на Смарт.')
+        new, _ = repair(fact('tariff', 'Смарт'), 'Вчера перешла с Пульса на Смарт.')
+        self.assertEqual(old['valid_to'][:10], '2026-11-12')
+        self.assertEqual(new['valid_from'][:10], '2026-11-12')
+
+    def test_plus_tariff_is_not_the_same_value(self):
+        before = fact('tariff', 'Смарт')
+        self.assertEqual(repair(before, 'Вчера подключили Смарт+.')[0], before)
+
     def test_tariff_observation_proposal_and_question_are_not_activation(self):
         before = fact('tariff', 'Смарт')
         for text in ('Вчера смотрела тариф Смарт.', 'Хочу завтра подключить тариф Смарт.',
@@ -73,6 +83,71 @@ class StateIntervalsTest(unittest.TestCase):
         item, _ = repair(before, 'Со вторника нет гудков.')
         self.assertEqual(item['valid_from'][:10], '2026-11-10')
         self.assertIsNone(item['valid_to'])
+
+
+class TicketEvidenceTest(unittest.TestCase):
+    def run_case(self, texts, items):
+        call = CallInput(call_id='synthetic:tickets', started_at=START,
+                         turns=[{'idx': i, 'speaker': 'operator', 'text': t}
+                                for i, t in enumerate(texts)])
+        result, audit = repair_case_v2_dates(items, call, ValueLayers(CATALOG))
+        Facts.model_validate({'facts': result})
+        return result, audit
+
+    def ticket(self, value, number='42', **extra):
+        return fact('ticket_status', value,
+                    object={'name': 'заявка ' + number, 'type': 'ticket', 'id': None}, **extra)
+
+    def test_explicit_transition_gives_endpoint_and_next_start(self):
+        items = [self.ticket('принята'), self.ticket('в работе')]
+        output, audit = self.run_case([
+            'Заявка 42 создана.', 'До вчера она еще была принята, а сейчас в работе.'], items)
+        self.assertEqual(output[0]['valid_to'][:10], '2026-11-12')
+        self.assertEqual(output[1]['valid_from'][:10], '2026-11-12')
+        self.assertTrue(any(e['source_turn_idx'] == 1 for e in audit[1]['evidence']))
+
+    def test_explicit_other_turn_repairs_date_of_the_same_ticket(self):
+        output, _ = self.run_case(['Заявка 42 в работе.', 'Заявка 42 со вторника в работе.'],
+                                   [self.ticket('в работе')])
+        self.assertEqual(output[0]['valid_from'][:10], '2026-11-10')
+
+    def test_unnumbered_evidence_cannot_cross_multiple_tickets(self):
+        items = [self.ticket('в работе')]
+        output, _ = self.run_case(['Заявка 42 зарегистрирована, заявка 99 закрыта.',
+                                   'Со вторника в работе.'], items)
+        self.assertEqual(output, items)
+
+    def test_other_number_cannot_date_mine(self):
+        items = [self.ticket('в работе')]
+        output, _ = self.run_case(['Заявка 42 зарегистрирована.',
+                                   'Заявка 99 со вторника в работе.'], items)
+        self.assertEqual(output, items)
+
+    def test_conflicting_explicit_dates_are_not_resolved_by_first_or_last(self):
+        items = [self.ticket('в работе')]
+        output, _ = self.run_case(['Заявка 42 зарегистрирована.',
+                                   'Заявка 42 со вторника в работе.',
+                                   'Заявка 42 со среды в работе.'], items)
+        self.assertEqual(output, items)
+
+    def test_model_dates_do_not_complete_a_chain(self):
+        items = [self.ticket('принята'), self.ticket('в работе', valid_from='2026-11-10T00:00:00+03:00')]
+        output, _ = self.run_case(['Заявка 42.'], items)
+        self.assertEqual(output, items)
+
+    def test_questions_and_negation_do_not_supply_evidence(self):
+        items = [self.ticket('в работе')]
+        for text in ('Заявка 42 вчера была в работе?', 'Заявка 42 вчера не была в работе.',
+                     'Возможно, заявка 42 со вторника в работе.'):
+            output, _ = self.run_case(['Заявка 42.', text], items)
+            self.assertEqual(output, items)
+
+    def test_visit_date_and_phone_call_date_do_not_date_a_status(self):
+        items = [self.ticket('в работе')]
+        for text in ('Выезд специалиста в воскресенье, заявка 42 остается в работе.',
+                     'В четверг был контрольный звонок, заявка 42 в работе.'):
+            output, _ = self.run_case(['Заявка 42 в работе.', text], items)
+            self.assertEqual(output, items)
 
     def test_still_normal_does_not_prove_end_of_normal_state(self):
         before = fact('service_state', 'работает нормально')

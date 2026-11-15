@@ -15,9 +15,11 @@ therefore adds what the `task` mode does not read:
   of 4 133 gold facts in train and 393 of 393 in val (package v2.1); schema.md states
   the same rule ("дата не названа — дата звонка"). Values that merely resemble a
   catalog entry are left to the model, because the scorer matches them to catalog gold;
-* structure: agreements and symptoms are open intervals. Closing a ticket status at
-  the start of the next one is available (close_chains) but off: it depends on the
-  other predicted statuses being right and lowered the baseline predictions' score.
+* explicit tariff activation/termination and service onset/end, retaining an
+  unmentioned historical boundary; only an explicitly ongoing symptom is reopened;
+* explicit status boundaries elsewhere in the same identified ticket's call.
+  Unnumbered evidence is used only for a single-ticket transcript. Completing a
+  chain from predicted status dates (close_chains) remains off by default.
 
 Week/month periods («на прошлой неделе», «месяц назад», «в прошлом месяце») are
 deliberately not converted: in the supplied gold they map to a random day of the
@@ -289,7 +291,7 @@ def _bind_status(item, call_day, turn, changes, stamp):
             nearest = min(mentions, key=lambda m: min(abs(position - m[0]), abs(position - m[1])))
             if nearest[2] != key:
                 continue
-            if STILL.search(lower[max(0, position - 6):position + 22]):
+            if role != 'until' and STILL.search(lower[max(0, position - 6):position + 22]):
                 continue
             if role == 'until' or (change and nearest[1] <= change.start() and position > nearest[1]):
                 ends.add(day)
@@ -455,6 +457,8 @@ def repair_case_v2_dates(facts, call, layers, *, close_chains=False):
                 _bind_agreement(item, call, call_day, turn, decision['changes'], stamp)
         items.append(item)
         decisions.append(decision)
+    from ticket_intervals import bind_ticket_evidence
+    bind_ticket_evidence(items, call, decisions, stamp, _bind_status)
     if close_chains:
         _close_ticket_chains(items, decisions, call_day, stamp)
     for fact, item, decision in zip(facts, items, decisions):

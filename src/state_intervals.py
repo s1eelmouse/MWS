@@ -18,11 +18,12 @@ def _mentions(text, value):
     if value.lower() == NORMAL:
         return [(m.start(), m.end()) for m in NORMAL_PATTERN.finditer(text)]
     wanted = _words(value)
-    tokens = list(re.finditer(r'[а-яa-z0-9]+', text))
+    tokens = list(re.finditer(r'[а-яa-z0-9+]+', text))
     result = []
     for i in range(len(tokens) - len(wanted) + 1):
         group = tokens[i:i + len(wanted)]
-        if wanted and all(w == t.group() or len(w) >= 5 and _close(w, t.group())
+        if wanted and all(w == t.group() or len(w) >= 5 and ('+' in w) == ('+' in t.group())
+                          and _close(w, t.group())
                           for w, t in zip(wanted, group)):
             result.append((group[0].start(), group[-1].end()))
     return result
@@ -67,10 +68,14 @@ def explicit_boundaries(item, turn, call_day, entries):
                                        for _d, r, p in cues):
                 continue  # «до вторника работало, со вторника нет гудков»
             # Ambiguity is an abstention, including equally close values.
-            if any(_distance(position, other) <= _distance(position, nearest)
+            prefix = chunk[max(0, nearest[0] - 20):nearest[0]]
+            transfer = (item['attribute'] == 'tariff' and TRANSITION.search(chunk)
+                        and len({d for d, _r, _p in cues}) == 1
+                        and re.search(r'\bс(?:о)?\s+.+?\bна\s+', chunk)
+                        and re.search(r'\b(?:со?|на)\s+[«"\s]*$', prefix))
+            if not transfer and any(_distance(position, other) <= _distance(position, nearest)
                    for other in competitors if not (other[0] >= nearest[0] and other[1] <= nearest[1])):
                 continue
-            prefix = chunk[max(0, nearest[0] - 20):nearest[0]]
             if re.search(r'\bне\s+(?:был[аои]?\s+)?$', prefix):
                 continue
             if role == 'until':
