@@ -43,6 +43,7 @@
 | [docs/TRAINING_REPORT.md](docs/TRAINING_REPORT.md) | Сводный отчёт по всем тренировкам: конфигурация, ресурсы, качество, ограничения |
 | [docs/ORGANIZER_DATA_UPDATE_V2_1.md](docs/ORGANIZER_DATA_UPDATE_V2_1.md) | Изменения пакета организаторов 2.1: данные, оценщик, baseline и совместимость |
 | [docs/DETERMINISTIC.md](docs/DETERMINISTIC.md) | Готовый календарь, точный каталог, обработка без GPU и измеренный результат |
+| [docs/REVIEW_QUEUE.md](docs/REVIEW_QUEUE.md) | Очередь спорных фактов для выборочной проверки крупной моделью/человеком |
 
 Единый воспроизводимый запуск — обучение, merge, три режима замера и сравнение с базой:
 `python src/run_experiment.py --train-new --epochs 1 --output-dir out/experiment-001`. Для уже обученной
@@ -170,9 +171,11 @@ S **0.5201**, P/R 0.4965 / 0.5328, G 0.7121, 0 отказов и 100 % форм�
   скрипт называет `call_id` и останавливается.
 - Сборщик экспериментов: журнал обучения, замеры инференса на GPU и CPU по единой
   методике, сравнение с базой, CSV и график (`run_experiment.py`, `benchmark.py`,
-  `compare_runs.py`). На реальном прогоне ещё не проверен.
-- На CPU-окружении 92 проверки прошли, 5 с ML-зависимостями пропущены; на сервере
-  проходят все 97. См. [docs/VALIDATION.md](docs/VALIDATION.md).
+  `compare_runs.py`).
+- Review queue для выборочной проверки спорных фактов без gold:
+  `src/review_queue.py`, детали — [docs/REVIEW_QUEUE.md](docs/REVIEW_QUEUE.md).
+- Полный набор: **271 тест, 266 прошли, 5 skipped**; `compileall` проходит.
+  См. [docs/VALIDATION.md](docs/VALIDATION.md).
 
 Замеры 14.11.2026 на Windows 10, RTX 4060 8 ГБ, torch 2.14.1+cu130:
 

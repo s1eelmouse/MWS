@@ -8,7 +8,7 @@
 Проверено локально в Python 3.12 с `xgrammar 0.2.9`, `transformers 5.23.0`,
 `torch 2.15.0`:
 
-- `python -m unittest discover -s tests`: **260 тестов, 255 успешно, 5 skipped**
+- `python -m unittest discover -s tests`: **271 тест, 266 успешно, 5 skipped**
   после добавления режима `task`, переноса дат внутри серий, recovery v2 и
   пакетного шага в benchmark. Пропущены только тесты с ML-зависимостями в
   CPU-окружении.
@@ -44,7 +44,7 @@
   T 0.5092 / S 0.5201; свежий end-to-end val 2.1 — T 0.4807 / S 0.5201;
   шумный val 2.1 — T 0.4582 / S 0.4141 (S ниже цели).
 - `tests/test_benchmark_audit.py` читает JSON и JSONL явно в UTF-8; это убирает
-  падение на Windows/CP1251. Полный набор на Linux: **260 тестов, 255 прошли,
+  падение на Windows/CP1251. Полный набор на Linux: **271 тест, 266 прошли,
   5 skipped**. Windows в этой среде не проверялся.
 - Реальная Qwen3-0.6B tokenizer: схема компилируется; грамматика принимает эталонный
   ответ `to_answer([FACT])` посимвольно и завершается на EOS. Базовая Qwen3-0.6B на
