@@ -1,0 +1,49 @@
+services:
+  experiment:
+    build:
+      context: .
+      dockerfile: Dockerfile.train
+      args:
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu126}
+        CODE_REVISION: ${CODE_REVISION:-unknown}
+    image: compactfactextraction-train:${TRAIN_TAG:-local}
+    init: true
+    shm_size: "2gb"
+    environment:
+      BASE_MODEL: ${BASE_MODEL:-Qwen/Qwen3-0.6B}
+      MAX_INPUT_TOKENS: ${MAX_INPUT_TOKENS:-12288}
+      MAX_NEW_TOKENS: ${MAX_NEW_TOKENS:-4096}
+      MAX_SEQUENCE_TOKENS: ${MAX_SEQUENCE_TOKENS:-16384}
+      MWS_IMAGE_REFERENCE: ${MWS_IMAGE_REFERENCE:-compactfactextraction-train:local}
+      CASE_DATA_DIR: data/organizer-v2.1
+      SCORER_VERSION: ${SCORER_VERSION:-2.1}
+      CATALOG_PATH: /app/data/organizer-v2.1/catalog.json
+      ALLOW_LEGACY_CONTRACT: ${ALLOW_LEGACY_CONTRACT:-0}
+      JSON_GRAMMAR_BACKEND: ${JSON_GRAMMAR_BACKEND:-torch_native}
+      TEMPORAL_SERIES_HISTORY: ${TEMPORAL_SERIES_HISTORY:-1}
+      TEMPORAL_NORMALIZATION: ${TEMPORAL_NORMALIZATION:-task}
+      FACT_RECOVERY: ${FACT_RECOVERY:-0}
+      TEMPORAL_CATALOG_PATH: /app/data/organizer-v2.1/catalog.json
+    volumes:
+      - type: bind
+        source: ./data/organizer-v2.1
+        target: /app/data/organizer-v2.1
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./out
+        target: /app/out
+        bind:
+          create_host_path: false
+      - hf-training-cache:/cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    command: ["--output-dir", "/app/out/${RUN_NAME:-experiment-001}", "--model", "/app/out/${MODEL_NAME:-merged-4090-baseline-001}"]
+volumes:
+  hf-training-cache:

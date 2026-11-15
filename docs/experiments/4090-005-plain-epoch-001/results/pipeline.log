@@ -1,0 +1,2668 @@
+Starting tests: /home/ubuntu/mws/.venv/bin/python -m unittest discover -s /home/ubuntu/mws-v21/releases/case-v21-unified-001/tests -v
+test_separate_output_contract_base_and_exact_weight_hash (test_adapter_origin.AdapterOriginTest.test_separate_output_contract_base_and_exact_weight_hash) ... ok
+test_progress_raw_and_pre_history_snapshot_are_saved_without_untimed_rules (test_benchmark_audit.AuditTest.test_progress_raw_and_pre_history_snapshot_are_saved_without_untimed_rules) ... ok
+test_mix_is_scored_and_bounds_are_reported (test_cascade_simulation.CascadeTest.test_mix_is_scored_and_bounds_are_reported) ... ok
+test_signals_use_transcript_and_model_output_only (test_cascade_simulation.CascadeTest.test_signals_use_transcript_and_model_output_only) ... ok
+test_batch_preserves_order_and_ids (test_case_api.ApiTest.test_batch_preserves_order_and_ids) ... ok
+test_gold_labels_cannot_leak_through_http (test_case_api.ApiTest.test_gold_labels_cannot_leak_through_http) ... ok
+test_legacy_text_only_requests_are_rejected (test_case_api.ApiTest.test_legacy_text_only_requests_are_rejected) ... ok
+test_metadata_and_source_survive_http_round_trip (test_case_api.ApiTest.test_metadata_and_source_survive_http_round_trip) ... ok
+test_model_failures_do_not_become_successful_empty_facts (test_case_api.ApiTest.test_model_failures_do_not_become_successful_empty_facts) ... ok
+test_runtime_failure_returns_service_unavailable (test_case_api.ApiTest.test_runtime_failure_returns_service_unavailable) ... ok
+test_wrong_source_from_backend_is_rejected (test_case_api.ApiTest.test_wrong_source_from_backend_is_rejected) ... ok
+test_bad_interval_is_reported_without_changing_official_fact_counts (test_case_evaluation.EvaluationTest.test_bad_interval_is_reported_without_changing_official_fact_counts) ... ok
+test_failed_call_counts_every_gold_fact_as_missed (test_case_evaluation.EvaluationTest.test_failed_call_counts_every_gold_fact_as_missed) ... ok
+test_failure_is_not_counted_as_valid_empty_json (test_case_evaluation.EvaluationTest.test_failure_is_not_counted_as_valid_empty_json) ... ok
+test_invalid_fact_schema_is_reported (test_case_evaluation.EvaluationTest.test_invalid_fact_schema_is_reported) ... ok
+test_known_official_state_bug_is_not_silently_fixed (test_case_evaluation.EvaluationTest.test_known_official_state_bug_is_not_silently_fixed) ... ok
+test_missing_call_is_penalized (test_case_evaluation.EvaluationTest.test_missing_call_is_penalized) ... ok
+test_official_scorer_bytes_are_pinned (test_case_evaluation.EvaluationTest.test_official_scorer_bytes_are_pinned) ... ok
+test_per_attribute_error_types_explain_official_metrics (test_case_evaluation.EvaluationTest.test_per_attribute_error_types_explain_official_metrics) ... ok
+test_perfect_single_object_prediction (test_case_evaluation.EvaluationTest.test_perfect_single_object_prediction) ... ok
+test_predictions_align_by_id_not_row_order (test_case_evaluation.EvaluationTest.test_predictions_align_by_id_not_row_order) ... ok
+test_source_errors_remain_visible (test_case_evaluation.EvaluationTest.test_source_errors_remain_visible) ... ok
+test_unknown_and_duplicate_ids_are_errors (test_case_evaluation.EvaluationTest.test_unknown_and_duplicate_ids_are_errors) ... ok
+test_character_guard_rejects_instead_of_truncating (test_case_schema.CaseContractTest.test_character_guard_rejects_instead_of_truncating) ... ok
+test_duplicate_call_ids_are_not_silently_overwritten (test_case_schema.CaseContractTest.test_duplicate_call_ids_are_not_silently_overwritten) ... ok
+test_duplicate_turn_indices_are_rejected (test_case_schema.CaseContractTest.test_duplicate_turn_indices_are_rejected) ... ok
+test_gold_never_enters_prompt (test_case_schema.CaseContractTest.test_gold_never_enters_prompt) ... ok
+test_http_contract_does_not_accept_gold_labels (test_case_schema.CaseContractTest.test_http_contract_does_not_accept_gold_labels) ... ok
+test_invalid_date_and_reversed_interval_are_rejected (test_case_schema.CaseContractTest.test_invalid_date_and_reversed_interval_are_rejected) ... ok
+test_legacy_format_and_missing_facts_are_rejected (test_case_schema.CaseContractTest.test_legacy_format_and_missing_facts_are_rejected) ... ok
+test_long_transcript_is_preserved (test_case_schema.CaseContractTest.test_long_transcript_is_preserved) ... ok
+test_minimal_prediction_contract (test_case_schema.CaseContractTest.test_minimal_prediction_contract) ... ok
+test_nonliteral_gold_quote_is_not_a_blocking_error (test_case_schema.CaseContractTest.test_nonliteral_gold_quote_is_not_a_blocking_error) ... ok
+test_old_model_cannot_be_silently_used_with_new_schema (test_case_schema.CaseContractTest.test_old_model_cannot_be_silently_used_with_new_schema) ... ok
+test_organizer_gold_is_accepted (test_case_schema.CaseContractTest.test_organizer_gold_is_accepted) ... ok
+test_other_type_from_actual_gold_is_supported (test_case_schema.CaseContractTest.test_other_type_from_actual_gold_is_supported) ... ok
+test_out_of_bounds_span_is_rejected (test_case_schema.CaseContractTest.test_out_of_bounds_span_is_rejected) ... ok
+test_outputs_are_not_overwritten_by_default (test_case_schema.CaseContractTest.test_outputs_are_not_overwritten_by_default) ... ok
+test_polarity_must_be_an_integer_sign (test_case_schema.CaseContractTest.test_polarity_must_be_an_integer_sign) ... ok
+test_prediction_keeps_call_id_and_failure_status (test_case_schema.CaseContractTest.test_prediction_keeps_call_id_and_failure_status) ... ok
+test_reasoning_and_markdown_are_not_treated_as_facts (test_case_schema.CaseContractTest.test_reasoning_and_markdown_are_not_treated_as_facts) ... ok
+test_source_is_idx_not_list_position (test_case_schema.CaseContractTest.test_source_is_idx_not_list_position) ... ok
+test_speaker_mismatch_is_rejected (test_case_schema.CaseContractTest.test_speaker_mismatch_is_rejected) ... ok
+test_targets_preserve_null_end_and_drop_noisy_evidence (test_case_schema.CaseContractTest.test_targets_preserve_null_end_and_drop_noisy_evidence) ... ok
+test_unknown_attribute_is_rejected (test_case_schema.CaseContractTest.test_unknown_attribute_is_rejected) ... ok
+test_catalogues_do_not_leak_between_independent_evaluations (test_case_v21.CaseV21Test.test_catalogues_do_not_leak_between_independent_evaluations) ... ok
+test_empty_object_roundtrips_validation_target_and_json_schema (test_case_v21.CaseV21Test.test_empty_object_roundtrips_validation_target_and_json_schema) ... ok
+test_official_source_bytes_pinned_and_datefix_is_optional_and_labelled (test_case_v21.CaseV21Test.test_official_source_bytes_pinned_and_datefix_is_optional_and_labelled) ... ok
+test_only_known_legacy_contract_can_be_migrated_explicitly_without_editing_it (test_case_v21.CaseV21Test.test_only_known_legacy_contract_can_be_migrated_explicitly_without_editing_it) ... ok
+test_state_objects_negation_and_per_attribute_metadata_use_v21 (test_case_v21.CaseV21Test.test_state_objects_negation_and_per_attribute_metadata_use_v21) ... ok
+test_temporal_diagnostics_separate_action_and_recoverable_states (test_case_v21.CaseV21Test.test_temporal_diagnostics_separate_action_and_recoverable_states) ... ok
+test_training_event_keeps_context_without_calling_it_official_quality (test_case_v21.CaseV21Test.test_training_event_keeps_context_without_calling_it_official_quality) ... ok
+test_alias_must_reference_real_catalog_value (test_catalog_normalization.CatalogTest.test_alias_must_reference_real_catalog_value) ... ok
+test_ambiguous_alias_and_fuzzy_names_are_not_merged (test_catalog_normalization.CatalogTest.test_ambiguous_alias_and_fuzzy_names_are_not_merged) ... ok
+test_exact_spelling_keeps_important_plus_sign (test_catalog_normalization.CatalogTest.test_exact_spelling_keeps_important_plus_sign) ... ok
+test_ticket_named_like_a_device_is_not_canonicalized (test_catalog_normalization.CatalogTest.test_ticket_named_like_a_device_is_not_canonicalized) ... ok
+test_type_and_ids_and_action_result_are_preserved (test_catalog_normalization.CatalogTest.test_type_and_ids_and_action_result_are_preserved) ... ok
+test_buckets (test_checkpoint_agreement.AgreementTest.test_buckets) ... ok
+test_gold_changes_only_the_measurement (test_checkpoint_agreement.AgreementTest.test_gold_changes_only_the_measurement) ... ok
+test_measurement_and_pseudo_labels (test_checkpoint_agreement.AgreementTest.test_measurement_and_pseudo_labels) ... ok
+test_build_context_excludes_gold_weights_and_secrets (test_docker_assets.DockerAssetsTest.test_build_context_excludes_gold_weights_and_secrets) ... ok
+test_compose_mounts_the_model_read_only (test_docker_assets.DockerAssetsTest.test_compose_mounts_the_model_read_only) ... ok
+test_image_serves_the_organizer_http_contract (test_docker_assets.DockerAssetsTest.test_image_serves_the_organizer_http_contract) ... ok
+test_serving_requirements_exclude_the_training_stack (test_docker_assets.DockerAssetsTest.test_serving_requirements_exclude_the_training_stack) ... ok
+test_catalog_word_in_device_name_is_not_recovered_as_a_tariff (test_fact_recovery.FactRecoveryTest.test_catalog_word_in_device_name_is_not_recovered_as_a_tariff) ... ok
+test_confirmation_after_operator_question_recovers_tariff (test_fact_recovery.FactRecoveryTest.test_confirmation_after_operator_question_recovers_tariff) ... ok
+test_current_status_is_not_duplicated (test_fact_recovery.FactRecoveryTest.test_current_status_is_not_duplicated) ... ok
+test_existing_current_tariff_is_not_overridden (test_fact_recovery.FactRecoveryTest.test_existing_current_tariff_is_not_overridden) ... ok
+test_explicit_switch_closes_history_at_stated_day (test_fact_recovery.FactRecoveryTest.test_explicit_switch_closes_history_at_stated_day) ... ok
+test_first_person_tag_question_tariff_is_recovered (test_fact_recovery.FactRecoveryTest.test_first_person_tag_question_tariff_is_recovered) ... ok
+test_historical_tariff_does_not_block_current_recovery (test_fact_recovery.FactRecoveryTest.test_historical_tariff_does_not_block_current_recovery) ... ok
+test_longest_catalog_name_and_plus_are_not_confused_with_shorter_tariffs (test_fact_recovery.FactRecoveryTest.test_longest_catalog_name_and_plus_are_not_confused_with_shorter_tariffs) ... ok
+test_missing_current_status_is_recovered (test_fact_recovery.FactRecoveryTest.test_missing_current_status_is_recovered) ... ok
+test_missing_tariff_is_recovered_from_catalog_and_text (test_fact_recovery.FactRecoveryTest.test_missing_tariff_is_recovered_from_catalog_and_text) ... ok
+test_negation_question_future_and_hypothesis_never_create_a_status (test_fact_recovery.FactRecoveryTest.test_negation_question_future_and_hypothesis_never_create_a_status) ... ok
+test_one_explicit_unnamed_client_is_preserved_without_inventing_a_name (test_fact_recovery.FactRecoveryTest.test_one_explicit_unnamed_client_is_preserved_without_inventing_a_name) ... ok
+test_operator_current_status_removes_unsupported_prediction (test_fact_recovery.FactRecoveryTest.test_operator_current_status_removes_unsupported_prediction) ... ok
+test_operator_offer_is_not_a_current_tariff (test_fact_recovery.FactRecoveryTest.test_operator_offer_is_not_a_current_tariff) ... ok
+test_operator_system_question_recovers_tariff (test_fact_recovery.FactRecoveryTest.test_operator_system_question_recovers_tariff) ... ok
+test_second_person_operator_question_without_system_assertion_is_not_recovered (test_fact_recovery.FactRecoveryTest.test_second_person_operator_question_without_system_assertion_is_not_recovered) ... ok
+test_status_identity_and_existing_current_are_checked_per_ticket (test_fact_recovery.FactRecoveryTest.test_status_identity_and_existing_current_are_checked_per_ticket) ... ok
+test_status_without_current_context_is_not_invented (test_fact_recovery.FactRecoveryTest.test_status_without_current_context_is_not_invented) ... ok
+test_tariff_proposal_or_denial_is_not_a_current_tariff (test_fact_recovery.FactRecoveryTest.test_tariff_proposal_or_denial_is_not_a_current_tariff) ... ok
+test_two_different_clients_are_not_guessed (test_fact_recovery.FactRecoveryTest.test_two_different_clients_are_not_guessed) ... ok
+test_diagnostic_subset_is_not_a_comparison_point (test_failure_diagnostics.DiagnosticTest.test_diagnostic_subset_is_not_a_comparison_point) ... ok
+test_existing_model_contract_does_not_change (test_failure_diagnostics.DiagnosticTest.test_existing_model_contract_does_not_change) ... ok
+test_extractor_records_raw_parse_source_and_length_failures (test_failure_diagnostics.DiagnosticTest.test_extractor_records_raw_parse_source_and_length_failures) ... ok
+test_json_syntax_and_schema_are_distinguished (test_failure_diagnostics.DiagnosticTest.test_json_syntax_and_schema_are_distinguished) ... ok
+test_pipeline_rejects_invalid_learning_rate_before_writing (test_failure_diagnostics.DiagnosticTest.test_pipeline_rejects_invalid_learning_rate_before_writing) ... usage: run_experiment.py [-h] --output-dir OUTPUT_DIR [--train-new]
+                         [--model MODEL] [--train TRAIN] [--val VAL]
+                         [--baseline-pred BASELINE_PRED]
+                         [--allow-legacy-contract] [--epochs EPOCHS]
+                         [--train-limit TRAIN_LIMIT] [--max-steps MAX_STEPS]
+                         [--eval-limit EVAL_LIMIT]
+                         [--init-adapter-dir INIT_ADAPTER_DIR]
+                         [--learning-rate LEARNING_RATE]
+                         [--modes MODES [MODES ...]]
+run_experiment.py: error: --learning-rate must be finite and positive
+ok
+test_pipeline_requires_explicit_choice_before_any_output_is_created (test_failure_diagnostics.DiagnosticTest.test_pipeline_requires_explicit_choice_before_any_output_is_created) ... usage: run_experiment.py [-h] --output-dir OUTPUT_DIR [--train-new]
+                         [--model MODEL] [--train TRAIN] [--val VAL]
+                         [--baseline-pred BASELINE_PRED]
+                         [--allow-legacy-contract] [--epochs EPOCHS]
+                         [--train-limit TRAIN_LIMIT] [--max-steps MAX_STEPS]
+                         [--eval-limit EVAL_LIMIT]
+                         [--init-adapter-dir INIT_ADAPTER_DIR]
+                         [--learning-rate LEARNING_RATE]
+                         [--modes MODES [MODES ...]]
+run_experiment.py: error: Choose --model EXISTING_MERGED_MODEL or --train-new
+ok
+test_raw_failures_are_saved_separately_and_no_gold_reaches_backend (test_failure_diagnostics.DiagnosticTest.test_raw_failures_are_saved_separately_and_no_gold_reaches_backend) ... Completed 1/1; failed: 1
+ok
+test_subset_cli_filters_before_limit_and_records_provenance (test_failure_diagnostics.DiagnosticTest.test_subset_cli_filters_before_limit_and_records_provenance) ... Completed 1/1; failed: 0
+{
+  "protocol": "local-inference-v2",
+  "settings": {
+    "input": "/tmp/tmpc18e123b/gold.jsonl",
+    "model": "fake",
+    "device": "cpu",
+    "batch_size": 1,
+    "warmup_batches": 1,
+    "limit": 1,
+    "failures": "/tmp/tmpc18e123b/old-errors.jsonl",
+    "with_schema": false,
+    "output_dir": "/tmp/tmpc18e123b/new"
+  },
+  "dataset_sha256": "5777a20c1a707b563e30c83bccb0e2e17ab14ce0a6314cee47615779d2ba006d",
+  "selected_calls_sha256": "91f3a258123d318d367dd013e0f4e6849f19fa7e1086e5d76b7d9c6ecaa4672c",
+  "contract_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+  "diagnostic_subset": true,
+  "failures_sha256": "0e873d6fd207fdc62733b2cafb3c605bf412375eeafd2b4a4342d68f82111e4b",
+  "limits": {
+    "input": 12288,
+    "output": 4096
+  },
+  "prompt_lookup_tokens": 0,
+  "grammar_backend": "torch_native",
+  "grammar_threads": 4,
+  "save_raw_responses": true,
+  "retry_on_token_limit": true,
+  "retry_repetition_penalty": 1.2,
+  "run_context": {
+    "contract": {
+      "signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "contract_version": "2.1",
+      "target_version": 2
+    },
+    "json_schema_sha256": "6b7d699659e4f92e3e552263de980e4093d06dd5a0d66fc1ba177df7cc8cddd7",
+    "scoring": {
+      "scorer_version": "2.1",
+      "official_metrics_version": "2.1",
+      "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "official_source_modified": false,
+      "local_patch": null,
+      "patch_adapter_sha256": null,
+      "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb"
+    },
+    "train": null,
+    "val": {
+      "path": "/tmp/tmpc18e123b/gold.jsonl",
+      "sha256": "5777a20c1a707b563e30c83bccb0e2e17ab14ce0a6314cee47615779d2ba006d",
+      "bytes": 1827,
+      "recognized_version": "custom-or-different-bytes"
+    },
+    "catalog": {
+      "path": "/home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/catalog.json",
+      "sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+      "bytes": 16809,
+      "recognized_version": "custom-or-different-bytes"
+    },
+    "context_sha256": "e9e631bbc9b0321f1e520c94696a4c7465817ce161e8e9ca317bbac19868b762"
+  },
+  "hardware": {
+    "cpu": "fake"
+  },
+  "model_artifacts": null,
+  "model_weights_bytes": null,
+  "model_load_seconds": 4.6226999984355643e-05,
+  "constrained_json": false,
+  "model_contract": null,
+  "temporal_normalization": "off",
+  "temporal_catalog_sha256": null,
+  "fact_recovery": false,
+  "fact_recovery_policy": null,
+  "series_history_enabled": false,
+  "series_history_max_entries": null,
+  "catalog_sha256": null,
+  "grammar_compile_seconds": null,
+  "model_parameters": 123,
+  "dtype": "float32",
+  "torch_threads": 8,
+  "model_revision": null,
+  "calls": 1,
+  "failed_calls": 0,
+  "error_counts": {
+    "invalid_json": 0,
+    "invalid_source": 0,
+    "invalid_schema": 0,
+    "output_token_limit": 0,
+    "input_too_long": 0,
+    "out_of_memory": 0,
+    "missing_prediction": 0
+  },
+  "normalization_counts": {},
+  "history_settings": null,
+  "history": null,
+  "temporal_postprocess": {
+    "stage": "backend.extract",
+    "included_in_measurement": true,
+    "mode": "off",
+    "series_history_enabled": false
+  },
+  "warmup_batches": 1,
+  "warmup_seconds": 1.787899964256212e-05,
+  "warmup_errors": [],
+  "measurement_seconds": 1.4605000615119934e-05,
+  "calls_per_hour": 246490917.38298687,
+  "successful_calls_per_hour": 246490917.38298687,
+  "gpu_seconds_per_1000_calls": null,
+  "gpu_seconds_definition": "one allocated GPU * measured local processing seconds; not CUDA kernel time",
+  "latency_definition": "local end-to-end batch completion, shared by calls in batch; excludes queue, network and file I/O",
+  "percentile_method": "nearest_rank",
+  "call_completion_seconds": {
+    "count": 1,
+    "unknown": 0,
+    "p50": 1.4605000615119934e-05,
+    "p95": 1.4605000615119934e-05,
+    "max": 1.4605000615119934e-05
+  },
+  "batch_seconds": {
+    "count": 1,
+    "unknown": 0,
+    "p50": 1.4605000615119934e-05,
+    "p95": 1.4605000615119934e-05,
+    "max": 1.4605000615119934e-05
+  },
+  "input_tokens": {
+    "count": 0,
+    "unknown": 1,
+    "p50": null,
+    "p95": null,
+    "max": null
+  },
+  "output_tokens": {
+    "count": 0,
+    "unknown": 1,
+    "p50": null,
+    "p95": null,
+    "max": null
+  },
+  "output_token_definition": "generated token IDs through first EOS inclusive; excludes padding",
+  "memory": {
+    "process_rss_sampled_peak_bytes": 56008704,
+    "rss_sample_interval_seconds": 0.05,
+    "rss_samples": 2,
+    "sampling_error": null,
+    "cuda_peak_allocated_bytes": null,
+    "cuda_peak_reserved_bytes": null
+  },
+  "quality": {
+    "official": {
+      "metrics_version": "2.1",
+      "n_calls": 1,
+      "n_gold_facts": 1,
+      "n_pred_facts": 0,
+      "fact_precision": 0.0,
+      "fact_recall": 0.0,
+      "temporal_recall": null,
+      "n_temporal": 0,
+      "state_accuracy": null,
+      "n_state": 0,
+      "grounding_turn": null,
+      "grounding_span": null,
+      "n_grounded": 0
+    },
+    "diagnostics": {
+      "invalid_or_failed_calls": 0,
+      "missing_calls": 0,
+      "format_valid_rate": 1.0,
+      "calls_with_invalid_sources": 0
+    },
+    "per_attribute": {
+      "service_state": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "tariff": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "ticket_status": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "action": {
+        "attribute_kind": "static",
+        "n_gold_facts": 1,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 1,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "agreement": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      }
+    },
+    "scorer_version": "2.1",
+    "official_metrics_version": "2.1",
+    "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+    "official_source_modified": false,
+    "local_patch": null,
+    "patch_adapter_sha256": null,
+    "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+    "known_scorer_issues": [
+      "Organizer v2.1 gold-vs-gold state_accuracy is not necessarily 1.0.",
+      "Temporal recall is conditional on matched facts and recoverable dates; action is excluded.",
+      "Official v2.1 has two known date-set.update TypeErrors; use explicitly labelled 2.1-datefix for those inputs."
+    ]
+  },
+  "status": "complete"
+}
+ok
+test_cpu_and_legacy_api (test_gpu_precision.PrecisionTest.test_cpu_and_legacy_api) ... ok
+test_modern_gpu_requests_native_support (test_gpu_precision.PrecisionTest.test_modern_gpu_requests_native_support) ... ok
+test_volta_emulated_bf16_is_not_selected (test_gpu_precision.PrecisionTest.test_volta_emulated_bf16_is_not_selected) ... ok
+test_concurrent_accounts_are_isolated_and_bounded (test_history_resources.HistoryResourcesTest.test_concurrent_accounts_are_isolated_and_bounded) ... ok
+test_confirmed_explicit_start_has_priority_but_end_does_not_block_start (test_history_resources.HistoryResourcesTest.test_confirmed_explicit_start_has_priority_but_end_does_not_block_start) ... ok
+test_conflicting_retry_is_not_allowed_to_overwrite_history (test_history_resources.HistoryResourcesTest.test_conflicting_retry_is_not_allowed_to_overwrite_history) ... ok
+test_future_seed_mixed_timezones_and_conflicting_intervals_abstain (test_history_resources.HistoryResourcesTest.test_future_seed_mixed_timezones_and_conflicting_intervals_abstain) ... ok
+test_per_account_cap_and_invalid_limits (test_history_resources.HistoryResourcesTest.test_per_account_cap_and_invalid_limits) ... ok
+test_resource_curve_refuses_different_history_or_decoder_settings (test_history_resources.HistoryResourcesTest.test_resource_curve_refuses_different_history_or_decoder_settings) ... ok
+test_same_bounded_store_used_by_offline_stream (test_history_resources.HistoryResourcesTest.test_same_bounded_store_used_by_offline_stream) ... ok
+test_sessions_and_account_types_do_not_mix (test_history_resources.HistoryResourcesTest.test_sessions_and_account_types_do_not_mix) ... ok
+test_stable_id_survives_renaming_and_misalignment_is_rejected (test_history_resources.HistoryResourcesTest.test_stable_id_survives_renaming_and_misalignment_is_rejected) ... ok
+test_ttl_account_and_byte_caps (test_history_resources.HistoryResourcesTest.test_ttl_account_and_byte_caps) ... ok
+test_unknown_new_episode_invalidates_old_date (test_history_resources.HistoryResourcesTest.test_unknown_new_episode_invalidates_old_date) ... ok
+test_compact_grammar_uses_the_facts_schema (test_json_constraints.JsonConstraintTest.test_compact_grammar_uses_the_facts_schema) ... ok
+test_current_schema_compiles_and_accepts_the_training_target (test_json_constraints.JsonConstraintTest.test_current_schema_compiles_and_accepts_the_training_target) ... [23:07:49] /project/cpp/tokenizer_info.cc:146: Warning: Vocab type detection failed: (hf_tokenizer_obj.count("decoder") && hf_tokenizer_obj.at("decoder").is<picojson::object>()) is false: Decoder field is not found in tokenizer.json. Using RAW VocabType by default.
+ok
+test_grammar_processor_is_passed_to_generate (test_json_constraints.JsonConstraintTest.test_grammar_processor_is_passed_to_generate) ... ok
+test_processor_masks_cpu_and_advances_on_the_next_token (test_json_constraints.JsonConstraintTest.test_processor_masks_cpu_and_advances_on_the_next_token) ... ok
+test_windows_cuda_uses_the_portable_mask_kernel (test_json_constraints.JsonConstraintTest.test_windows_cuda_uses_the_portable_mask_kernel) ... ok
+test_benchmark_does_not_rewrite_predictions_after_measurement (test_measurements.MeasurementTest.test_benchmark_does_not_rewrite_predictions_after_measurement) ... Completed 1/1; failed: 0
+ok
+test_comparison_exports_three_measurements_and_same_subset_baseline (test_measurements.MeasurementTest.test_comparison_exports_three_measurements_and_same_subset_baseline) ... Completed 1/1; failed: 0
+Completed 1/1; failed: 0
+Completed 1/1; failed: 0
+ok
+test_comparison_refuses_incompatible_or_duplicate_results (test_measurements.MeasurementTest.test_comparison_refuses_incompatible_or_duplicate_results) ... ok
+test_comparison_rejects_changed_scoring_version_or_catalog (test_measurements.MeasurementTest.test_comparison_rejects_changed_scoring_version_or_catalog) ... ok
+test_disk_weights_exclude_metadata_and_unknown_is_not_zero (test_measurements.MeasurementTest.test_disk_weights_exclude_metadata_and_unknown_is_not_zero) ... ok
+test_failure_counts_preserve_all_types_and_exclude_warmup (test_measurements.MeasurementTest.test_failure_counts_preserve_all_types_and_exclude_warmup) ... Completed 1/8; failed: 1
+Completed 2/8; failed: 2
+Completed 3/8; failed: 3
+Completed 4/8; failed: 4
+Completed 5/8; failed: 5
+Completed 6/8; failed: 6
+Completed 7/8; failed: 7
+Completed 8/8; failed: 8
+ok
+test_gold_isolation_failed_calls_batch_latency_and_warmup (test_measurements.MeasurementTest.test_gold_isolation_failed_calls_batch_latency_and_warmup) ... Completed 2/3; failed: 0
+Completed 3/3; failed: 1
+ok
+test_history_is_reset_between_warmup_and_measurement (test_measurements.MeasurementTest.test_history_is_reset_between_warmup_and_measurement) ... Completed 1/1; failed: 0
+ok
+test_invalid_warmup_answers_are_recorded_without_hiding_bad_models (test_measurements.MeasurementTest.test_invalid_warmup_answers_are_recorded_without_hiding_bad_models) ... Completed 1/1; failed: 1
+ok
+test_prediction_normalization_counts_reach_the_report (test_measurements.MeasurementTest.test_prediction_normalization_counts_reach_the_report) ... Completed 1/1; failed: 0
+ok
+test_rank_and_missing_lengths_are_explicit (test_measurements.MeasurementTest.test_rank_and_missing_lengths_are_explicit) ... ok
+test_resource_curve_rejects_different_fact_recovery_policies (test_measurements.MeasurementTest.test_resource_curve_rejects_different_fact_recovery_policies) ... ok
+test_saving_does_not_overwrite_and_stage_failure_is_recorded (test_measurements.MeasurementTest.test_saving_does_not_overwrite_and_stage_failure_is_recorded) ... Starting failed-test: /home/ubuntu/mws/.venv/bin/python -c raise SystemExit(7)
+ok
+test_warmup_runtime_failure_remains_explicit (test_measurements.MeasurementTest.test_warmup_runtime_failure_remains_explicit) ... ok
+test_checkpoint_retains_optimizer_and_can_resume (test_model_smoke.ModelSmokeTest.test_checkpoint_retains_optimizer_and_can_resume) ... /home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:3303: FutureWarning: `is_gradient_checkpointing` is deprecated and will be removed in v6. Use `is_activation_checkpointing` instead.
+  warnings.warn(
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing` is deprecated and will be removed in v6. Use `activation_checkpointing` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing_kwargs` is deprecated and will be removed in v6. Use `activation_checkpointing_kwargs` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+[transformers] mtime may not be reliable on this filesystem, falling back to numerical ordering
+{'train_runtime': '0.4924', 'train_samples_per_second': '8.123', 'train_steps_per_second': '4.062', 'train_loss': '3.462', 'epoch': '2'}
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing` is deprecated and will be removed in v6. Use `activation_checkpointing` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing_kwargs` is deprecated and will be removed in v6. Use `activation_checkpointing_kwargs` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+{'train_runtime': '0.067', 'train_samples_per_second': '29.84', 'train_steps_per_second': '14.92', 'train_loss': '3.46', 'epoch': '3'}
+ok
+test_extraction_lengths_exclude_padding_and_report_exhausted_budget (test_model_smoke.ModelSmokeTest.test_extraction_lengths_exclude_padding_and_report_exhausted_budget) ... ok
+test_tail_loss_matches_full_loss_on_real_model (test_model_smoke.ModelSmokeTest.test_tail_loss_matches_full_loss_on_real_model) ... ok
+test_training_journal_survives_distinct_attempts (test_model_smoke.ModelSmokeTest.test_training_journal_survives_distinct_attempts) ... ok
+test_corrupted_transfer_stops_before_extracting_weights (test_model_transfer.ModelTransferTest.test_corrupted_transfer_stops_before_extracting_weights) ... Preparing: models/continue-002/case_contract.json
+Preparing: models/continue-002/config.json
+Preparing: models/continue-002/model.safetensors
+Preparing: models/continue-002/tokenizer_config.json
+Preparing: data/organizer/val.jsonl
+Preparing: data/organizer/catalog.json
+Preparing: data/organizer/train.jsonl
+Preparing: adapters/continue-002/adapter_config.json
+Preparing: adapters/continue-002/adapter_model.safetensors
+{
+  "archive": "/tmp/tmp_u_n4oo1/transfer.tar.gz",
+  "manifest": "/tmp/tmp_u_n4oo1/transfer.tar.gz.manifest.json",
+  "bytes": 1470,
+  "files": 9
+}
+ok
+test_minimal_package_installs_identical_model_data_and_adapter (test_model_transfer.ModelTransferTest.test_minimal_package_installs_identical_model_data_and_adapter) ... Preparing: models/continue-002/case_contract.json
+Preparing: models/continue-002/config.json
+Preparing: models/continue-002/model.safetensors
+Preparing: models/continue-002/tokenizer_config.json
+Preparing: data/organizer/val.jsonl
+Preparing: data/organizer/catalog.json
+Preparing: data/organizer/train.jsonl
+Preparing: adapters/continue-002/adapter_config.json
+Preparing: adapters/continue-002/adapter_model.safetensors
+{
+  "archive": "/tmp/tmpqpaukd3n/transfer.tar.gz",
+  "manifest": "/tmp/tmpqpaukd3n/transfer.tar.gz.manifest.json",
+  "bytes": 1489,
+  "files": 9
+}
+MODEL AND DATA INSTALLED AND VERIFIED: /tmp/tmpqpaukd3n/team_shpana
+ok
+test_catalog_is_preserved_and_conflicting_destination_is_rejected (test_noisy_val.NoisyCatalogTest.test_catalog_is_preserved_and_conflicting_destination_is_rejected) ... {
+  "input": "/tmp/tmpf5vvg5bl/val.jsonl",
+  "input_sha256": "ed89a2193d44fad163db6b276224b6273d8f267a221bf1fd77ea26398095b3cb",
+  "output_sha256": "8eb703d735cad0fd072ba3426ae88b05075142637d5b7247345c0d7a0b1f98a8",
+  "calls": 1,
+  "level": 0.15,
+  "seed": 42,
+  "limit": null,
+  "changed_word_share": 0.0,
+  "note": "Turn texts only; facts unchanged; source span/quote set to null.",
+  "catalog_next_to_output": true,
+  "catalog_sha256": "b7b08691a432d9b7966b8813d4c1ecfab83c9c1178e45e5fdaa4e79b80527f94"
+}
+usage: make_noisy_val.py [-h] [--input INPUT] --output OUTPUT [--level LEVEL]
+                         [--seed SEED] [--limit LIMIT]
+make_noisy_val.py: error: Output directory contains a different catalog; choose a fresh directory
+ok
+test_labels_and_turn_structure_survive (test_noisy_val.NoisyValTest.test_labels_and_turn_structure_survive) ... ok
+test_same_seed_gives_same_copy_and_original_is_untouched (test_noisy_val.NoisyValTest.test_same_seed_gives_same_copy_and_original_is_untouched) ... ok
+test_text_never_becomes_empty (test_noisy_val.NoisyValTest.test_text_never_becomes_empty) ... ok
+test_zero_level_keeps_text (test_noisy_val.NoisyValTest.test_zero_level_keeps_text) ... ok
+test_different_values_are_not_deduplicated (test_prediction_normalization.PredictionNormalizationTest.test_different_values_are_not_deduplicated) ... ok
+test_duplicates_are_removed_after_speaker_and_date_normalization (test_prediction_normalization.PredictionNormalizationTest.test_duplicates_are_removed_after_speaker_and_date_normalization) ... ok
+test_exact_duplicates_are_removed (test_prediction_normalization.PredictionNormalizationTest.test_exact_duplicates_are_removed) ... ok
+test_invalid_calendar_date_is_dropped_not_the_call (test_prediction_normalization.PredictionNormalizationTest.test_invalid_calendar_date_is_dropped_not_the_call) ... ok
+test_json_syntax_error_is_still_explicit (test_prediction_normalization.PredictionNormalizationTest.test_json_syntax_error_is_still_explicit) ... ok
+test_missing_required_field_is_still_invalid_schema (test_prediction_normalization.PredictionNormalizationTest.test_missing_required_field_is_still_invalid_schema) ... ok
+test_missing_speaker_is_filled_from_diarization (test_prediction_normalization.PredictionNormalizationTest.test_missing_speaker_is_filled_from_diarization) ... ok
+test_partial_invalid_sources_drop_only_the_bad_fact (test_prediction_normalization.PredictionNormalizationTest.test_partial_invalid_sources_drop_only_the_bad_fact) ... ok
+test_reversed_interval_is_opened (test_prediction_normalization.PredictionNormalizationTest.test_reversed_interval_is_opened) ... ok
+test_sanitize_interval_handles_timezone_mismatch (test_prediction_normalization.PredictionNormalizationTest.test_sanitize_interval_handles_timezone_mismatch) ... ok
+test_speaker_comes_from_the_source_turn (test_prediction_normalization.PredictionNormalizationTest.test_speaker_comes_from_the_source_turn) ... ok
+test_unknown_turn_stays_an_explicit_source_problem (test_prediction_normalization.PredictionNormalizationTest.test_unknown_turn_stays_an_explicit_source_problem) ... ok
+test_valid_fact_is_unchanged (test_prediction_normalization.PredictionNormalizationTest.test_valid_fact_is_unchanged) ... ok
+test_listed_files_are_verified_and_the_list_itself_is_skipped (test_prepare_case.ChecksumTest.test_listed_files_are_verified_and_the_list_itself_is_skipped) ... ok
+test_failed_retry_keeps_the_explicit_limit_error (test_retry_on_token_limit.RetryOnTokenLimitTest.test_failed_retry_keeps_the_explicit_limit_error) ... ok
+test_retry_recovers_a_truncated_answer (test_retry_on_token_limit.RetryOnTokenLimitTest.test_retry_recovers_a_truncated_answer) ... ok
+test_candidate_turns_rank_support_and_mark_current (test_review_queue.ReviewQueueTest.test_candidate_turns_rank_support_and_mark_current) ... ok
+test_competing_current_values_are_queued_together (test_review_queue.ReviewQueueTest.test_competing_current_values_are_queued_together) ... ok
+test_date_without_source_cue_is_queued (test_review_queue.ReviewQueueTest.test_date_without_source_cue_is_queued) ... ok
+test_failed_prediction_is_counted_not_queued (test_review_queue.ReviewQueueTest.test_failed_prediction_is_counted_not_queued) ... ok
+test_gold_facts_are_not_used (test_review_queue.ReviewQueueTest.test_gold_facts_are_not_used) ... ok
+test_long_agreement_is_queued (test_review_queue.ReviewQueueTest.test_long_agreement_is_queued) ... ok
+test_low_support_is_queued (test_review_queue.ReviewQueueTest.test_low_support_is_queued) ... ok
+test_max_items_keeps_summary_and_selects_top (test_review_queue.ReviewQueueTest.test_max_items_keeps_summary_and_selects_top) ... ok
+test_missing_source_is_high_priority (test_review_queue.ReviewQueueTest.test_missing_source_is_high_priority) ... ok
+test_offer_context_is_queued (test_review_queue.ReviewQueueTest.test_offer_context_is_queued) ... ok
+test_speaker_mismatch_is_high_priority (test_review_queue.ReviewQueueTest.test_speaker_mismatch_is_high_priority) ... ok
+test_supported_current_fact_is_not_queued (test_review_queue.ReviewQueueTest.test_supported_current_fact_is_not_queued) ... ok
+test_accounts_and_ticket_numbers_are_independent (test_series_history.SeriesHistoryTest.test_accounts_and_ticket_numbers_are_independent) ... ok
+test_cache_is_bounded_and_can_be_reset_after_warmup (test_series_history.SeriesHistoryTest.test_cache_is_bounded_and_can_be_reset_after_warmup) ... ok
+test_default_offline_mode_is_stateless (test_series_history.SeriesHistoryTest.test_default_offline_mode_is_stateless) ... ok
+test_equal_date_does_not_erase_original_provenance (test_series_history.SeriesHistoryTest.test_equal_date_does_not_erase_original_provenance) ... ok
+test_explicit_date_and_new_episode_override_memory (test_series_history.SeriesHistoryTest.test_explicit_date_and_new_episode_override_memory) ... ok
+test_extractor_applies_memory_and_records_decisions (test_series_history.SeriesHistoryTest.test_extractor_applies_memory_and_records_decisions) ... ok
+test_generic_ticket_name_is_insufficient_identity (test_series_history.SeriesHistoryTest.test_generic_ticket_name_is_insufficient_identity) ... ok
+test_history_matches_streaming_requests_and_keeps_input_order (test_series_history.SeriesHistoryTest.test_history_matches_streaming_requests_and_keeps_input_order) ... ok
+test_http_requests_share_only_this_backend_history (test_series_history.SeriesHistoryTest.test_http_requests_share_only_this_backend_history) ... ok
+test_latest_request_retry_keeps_date_from_strictly_earlier_origin (test_series_history.SeriesHistoryTest.test_latest_request_retry_keeps_date_from_strictly_earlier_origin) ... ok
+test_negative_facts_are_not_carried (test_series_history.SeriesHistoryTest.test_negative_facts_are_not_carried) ... ok
+test_never_reads_future_even_when_call_index_disagrees (test_series_history.SeriesHistoryTest.test_never_reads_future_even_when_call_index_disagrees) ... ok
+test_provenance_keeps_origin_across_three_calls (test_series_history.SeriesHistoryTest.test_provenance_keeps_origin_across_three_calls) ... ok
+test_vllm_backend_uses_same_history_without_a_gpu (test_series_history.SeriesHistoryTest.test_vllm_backend_uses_same_history_without_a_gpu) ... ok
+test_closed_symptom_is_not_reopened_by_an_unrelated_date (test_state_intervals.StateIntervalsTest.test_closed_symptom_is_not_reopened_by_an_unrelated_date) ... ok
+test_explicit_symptom_end_keeps_start (test_state_intervals.StateIntervalsTest.test_explicit_symptom_end_keeps_start) ... ok
+test_explicit_transfer_dates_both_tariffs (test_state_intervals.StateIntervalsTest.test_explicit_transfer_dates_both_tariffs) ... ok
+test_month_period_does_not_become_an_arbitrary_day (test_state_intervals.StateIntervalsTest.test_month_period_does_not_become_an_arbitrary_day) ... ok
+test_ongoing_symptom_reopens_from_since_date (test_state_intervals.StateIntervalsTest.test_ongoing_symptom_reopens_from_since_date) ... ok
+test_plus_tariff_is_not_the_same_value (test_state_intervals.StateIntervalsTest.test_plus_tariff_is_not_the_same_value) ... ok
+test_tariff_activation_and_since (test_state_intervals.StateIntervalsTest.test_tariff_activation_and_since) ... ok
+test_tariff_observation_proposal_and_question_are_not_activation (test_state_intervals.StateIntervalsTest.test_tariff_observation_proposal_and_question_are_not_activation) ... ok
+test_tariff_until_changes_end_only (test_state_intervals.StateIntervalsTest.test_tariff_until_changes_end_only) ... ok
+test_unrelated_date_does_not_date_a_tariff (test_state_intervals.StateIntervalsTest.test_unrelated_date_does_not_date_a_tariff) ... ok
+test_beginning_and_end_are_applied_together (test_state_intervals.TicketEvidenceTest.test_beginning_and_end_are_applied_together) ... ok
+test_conflicting_explicit_dates_are_not_resolved_by_first_or_last (test_state_intervals.TicketEvidenceTest.test_conflicting_explicit_dates_are_not_resolved_by_first_or_last) ... ok
+test_explicit_other_turn_repairs_date_of_the_same_ticket (test_state_intervals.TicketEvidenceTest.test_explicit_other_turn_repairs_date_of_the_same_ticket) ... ok
+test_explicit_transition_gives_endpoint_and_next_start (test_state_intervals.TicketEvidenceTest.test_explicit_transition_gives_endpoint_and_next_start) ... ok
+test_model_dates_do_not_complete_a_chain (test_state_intervals.TicketEvidenceTest.test_model_dates_do_not_complete_a_chain) ... ok
+test_negative_fact_is_preserved (test_state_intervals.TicketEvidenceTest.test_negative_fact_is_preserved) ... ok
+test_other_number_cannot_date_mine (test_state_intervals.TicketEvidenceTest.test_other_number_cannot_date_mine) ... ok
+test_previous_named_onset_can_explain_a_confirmation (test_state_intervals.TicketEvidenceTest.test_previous_named_onset_can_explain_a_confirmation) ... ok
+test_question_elsewhere_does_not_erase_an_asserted_onset (test_state_intervals.TicketEvidenceTest.test_question_elsewhere_does_not_erase_an_asserted_onset) ... ok
+test_questions_and_negation_do_not_supply_evidence (test_state_intervals.TicketEvidenceTest.test_questions_and_negation_do_not_supply_evidence) ... ok
+test_source_question_does_not_establish_a_new_symptom (test_state_intervals.TicketEvidenceTest.test_source_question_does_not_establish_a_new_symptom) ... ok
+test_still_normal_does_not_prove_end_of_normal_state (test_state_intervals.TicketEvidenceTest.test_still_normal_does_not_prove_end_of_normal_state) ... ok
+test_timezone_immutability_and_idempotence (test_state_intervals.TicketEvidenceTest.test_timezone_immutability_and_idempotence) ... ok
+test_unnumbered_evidence_cannot_cross_multiple_tickets (test_state_intervals.TicketEvidenceTest.test_unnumbered_evidence_cannot_cross_multiple_tickets) ... ok
+test_until_for_normal_is_not_until_for_the_following_symptom (test_state_intervals.TicketEvidenceTest.test_until_for_normal_is_not_until_for_the_following_symptom) ... ok
+test_visit_date_and_phone_call_date_do_not_date_a_status (test_state_intervals.TicketEvidenceTest.test_visit_date_and_phone_call_date_do_not_date_a_status) ... ok
+test_absolute_named_and_numeric_dates (test_temporal.CalendarTest.test_absolute_named_and_numeric_dates) ... ok
+test_calendar_month_shift_does_not_invent_february_31 (test_temporal.CalendarTest.test_calendar_month_shift_does_not_invent_february_31) ... ok
+test_clock_composes_only_with_explicit_day (test_temporal.CalendarTest.test_clock_composes_only_with_explicit_day) ... ok
+test_datetime_limits_produce_explicit_unresolved_results (test_temporal.CalendarTest.test_datetime_limits_produce_explicit_unresolved_results) ... ok
+test_explicit_invalid_date_is_not_clamped (test_temporal.CalendarTest.test_explicit_invalid_date_is_not_clamped) ... ok
+test_hour_arithmetic_preserves_anchor_clock (test_temporal.CalendarTest.test_hour_arithmetic_preserves_anchor_clock) ... ok
+test_leap_and_non_leap_year (test_temporal.CalendarTest.test_leap_and_non_leap_year) ... ok
+test_missing_year_requires_direction (test_temporal.CalendarTest.test_missing_year_requires_direction) ... ok
+test_offsets_refer_to_original_text (test_temporal.CalendarTest.test_offsets_refer_to_original_text) ... ok
+test_russian_compound_numbers_and_weeks (test_temporal.CalendarTest.test_russian_compound_numbers_and_weeks) ... ok
+test_spoken_clock_requires_explicit_meridiem_or_policy (test_temporal.CalendarTest.test_spoken_clock_requires_explicit_meridiem_or_policy) ... ok
+test_week_and_month_are_ranges (test_temporal.CalendarTest.test_week_and_month_are_ranges) ... ok
+test_weekday_same_day_is_ambiguous (test_temporal.CalendarTest.test_weekday_same_day_is_ambiguous) ... ok
+test_year_boundary_and_timezone (test_temporal.CalendarTest.test_year_boundary_and_timezone) ... ok
+test_agreement_and_action_policies_remain_unchanged (test_temporal.FactTimeTest.test_agreement_and_action_policies_remain_unchanged) ... ok
+test_cli_refuses_to_overwrite_existing_experiment (test_temporal.FactTimeTest.test_cli_refuses_to_overwrite_existing_experiment) ... ok
+test_compare_counts_regressions_and_rejects_removed_facts (test_temporal.FactTimeTest.test_compare_counts_regressions_and_rejects_removed_facts) ... ok
+test_counterfactual_question_and_negative_fact_are_not_repaired (test_temporal.FactTimeTest.test_counterfactual_question_and_negative_fact_are_not_repaired) ... ok
+test_end_time_does_not_overwrite_unknown_start (test_temporal.FactTimeTest.test_end_time_does_not_overwrite_unknown_start) ... ok
+test_existing_model_contract_is_unchanged (test_temporal.FactTimeTest.test_existing_model_contract_is_unchanged) ... ok
+test_interval_conflict_is_not_fixed_by_swapping (test_temporal.FactTimeTest.test_interval_conflict_is_not_fixed_by_swapping) ... ok
+test_invalid_model_date_is_recovered_before_strict_validation (test_temporal.FactTimeTest.test_invalid_model_date_is_recovered_before_strict_validation) ... ok
+test_numeric_date_is_not_split_into_sentences (test_temporal.FactTimeTest.test_numeric_date_is_not_split_into_sentences) ... ok
+test_offline_boundary_strips_gold_and_preserves_other_fields (test_temporal.FactTimeTest.test_offline_boundary_strips_gold_and_preserves_other_fields) ... ok
+test_service_observation_does_not_establish_start (test_temporal.FactTimeTest.test_service_observation_does_not_establish_start) ... ok
+test_service_onset_is_explicit (test_temporal.FactTimeTest.test_service_onset_is_explicit) ... ok
+test_source_idx_is_not_list_position_and_inputs_are_not_mutated (test_temporal.FactTimeTest.test_source_idx_is_not_list_position_and_inputs_are_not_mutated) ... ok
+test_two_dates_in_one_clause_are_not_resolved_by_proximity (test_temporal.FactTimeTest.test_two_dates_in_one_clause_are_not_resolved_by_proximity) ... ok
+test_two_objects_with_same_evidence_are_not_merged (test_temporal.FactTimeTest.test_two_objects_with_same_evidence_are_not_merged) ... ok
+test_two_statuses_bind_their_own_clauses (test_temporal.FactTimeTest.test_two_statuses_bind_their_own_clauses) ... ok
+test_both_boundaries_and_successor_from_are_bound_to_own_events (test_temporal_binding.TemporalBindingTest.test_both_boundaries_and_successor_from_are_bound_to_own_events) ... ok
+test_closing_ticket_does_not_end_completed_status (test_temporal_binding.TemporalBindingTest.test_closing_ticket_does_not_end_completed_status) ... ok
+test_comma_separated_time_adjunct_is_not_lost (test_temporal_binding.TemporalBindingTest.test_comma_separated_time_adjunct_is_not_lost) ... ok
+test_conflicting_repeated_status_is_abstention (test_temporal_binding.TemporalBindingTest.test_conflicting_repeated_status_is_abstention) ... ok
+test_explicit_end_wins_over_inferred_transition (test_temporal_binding.TemporalBindingTest.test_explicit_end_wins_over_inferred_transition) ... ok
+test_future_notification_does_not_date_status (test_temporal_binding.TemporalBindingTest.test_future_notification_does_not_date_status) ... ok
+test_historical_start_is_not_guessed_from_end (test_temporal_binding.TemporalBindingTest.test_historical_start_is_not_guessed_from_end) ... ok
+test_inputs_and_non_date_fields_are_preserved (test_temporal_binding.TemporalBindingTest.test_inputs_and_non_date_fields_are_preserved) ... ok
+test_observation_is_not_status_onset (test_temporal_binding.TemporalBindingTest.test_observation_is_not_status_onset) ... ok
+test_partial_period_is_not_replaced_by_other_status_date (test_temporal_binding.TemporalBindingTest.test_partial_period_is_not_replaced_by_other_status_date) ... ok
+test_questions_hypotheses_and_negated_cues_do_not_supply_dates (test_temporal_binding.TemporalBindingTest.test_questions_hypotheses_and_negated_cues_do_not_supply_dates) ... ok
+test_rejection_does_not_confirm_previous_date (test_temporal_binding.TemporalBindingTest.test_rejection_does_not_confirm_previous_date) ... ok
+test_repeated_endpoint_does_not_become_start (test_temporal_binding.TemporalBindingTest.test_repeated_endpoint_does_not_become_start) ... ok
+test_short_confirmation_uses_only_previous_turns (test_temporal_binding.TemporalBindingTest.test_short_confirmation_uses_only_previous_turns) ... ok
+test_temporal_answer_inherits_question_event (test_temporal_binding.TemporalBindingTest.test_temporal_answer_inherits_question_event) ... ok
+test_ticket_reference_mismatch_and_multiple_tickets_are_ambiguous (test_temporal_binding.TemporalBindingTest.test_ticket_reference_mismatch_and_multiple_tickets_are_ambiguous) ... ok
+test_timezone_is_preserved_and_reapplication_is_idempotent (test_temporal_binding.TemporalBindingTest.test_timezone_is_preserved_and_reapplication_is_idempotent) ... ok
+test_two_dates_of_same_status_have_different_roles (test_temporal_binding.TemporalBindingTest.test_two_dates_of_same_status_have_different_roles) ... ok
+test_unrelated_action_time_does_not_date_ticket (test_temporal_binding.TemporalBindingTest.test_unrelated_action_time_does_not_date_ticket) ... ok
+test_call_utc_offset_is_kept (test_temporal_case_v2.BindingTest.test_call_utc_offset_is_kept) ... ok
+test_catalog_agreement_takes_the_scheduled_day (test_temporal_case_v2.BindingTest.test_catalog_agreement_takes_the_scheduled_day) ... ok
+test_chain_closure_is_opt_in_and_never_uses_a_future_start (test_temporal_case_v2.BindingTest.test_chain_closure_is_opt_in_and_never_uses_a_future_start) ... ok
+test_cue_belongs_to_the_nearest_status (test_temporal_case_v2.BindingTest.test_cue_belongs_to_the_nearest_status) ... ok
+test_free_formulation_is_dated_by_the_call_and_open (test_temporal_case_v2.BindingTest.test_free_formulation_is_dated_by_the_call_and_open) ... ok
+test_mode_requires_the_catalog (test_temporal_case_v2.BindingTest.test_mode_requires_the_catalog) ... ok
+test_multiple_objects_do_not_share_one_date_without_object_binding (test_temporal_case_v2.BindingTest.test_multiple_objects_do_not_share_one_date_without_object_binding) ... ok
+test_negated_day_and_idiom_are_not_dates (test_temporal_case_v2.BindingTest.test_negated_day_and_idiom_are_not_dates) ... ok
+test_nothing_is_dropped_reordered_or_mutated (test_temporal_case_v2.BindingTest.test_nothing_is_dropped_reordered_or_mutated) ... ok
+test_paraphrase_and_negative_and_action_are_left_to_the_model (test_temporal_case_v2.BindingTest.test_paraphrase_and_negative_and_action_are_left_to_the_model) ... ok
+test_question_and_hypothesis_do_not_rewrite_catalog_agreement (test_temporal_case_v2.BindingTest.test_question_and_hypothesis_do_not_rewrite_catalog_agreement) ... ok
+test_result_always_satisfies_the_interval_contract (test_temporal_case_v2.BindingTest.test_result_always_satisfies_the_interval_contract) ... ok
+test_status_of_another_ticket_question_and_negation_set_no_date (test_temporal_case_v2.BindingTest.test_status_of_another_ticket_question_and_negation_set_no_date) ... ok
+test_status_start_end_and_still (test_temporal_case_v2.BindingTest.test_status_start_end_and_still) ... ok
+test_symptom_onset_and_end_of_normal_state (test_temporal_case_v2.BindingTest.test_symptom_onset_and_end_of_normal_state) ... ok
+test_direction_comes_from_the_caller (test_temporal_case_v2.CueTest.test_direction_comes_from_the_caller) ... ok
+test_periods_are_not_reduced_to_a_day (test_temporal_case_v2.CueTest.test_periods_are_not_reduced_to_a_day) ... ok
+test_scorer_bank_single_days (test_temporal_case_v2.CueTest.test_scorer_bank_single_days) ... ok
+test_typical_asr_variants (test_temporal_case_v2.CueTest.test_typical_asr_variants) ... ok
+test_exact_catalog_free_and_paraphrase (test_temporal_case_v2.ValueLayerTest.test_exact_catalog_free_and_paraphrase) ... ok
+test_action_uses_cue_then_call_time (test_temporal_task.TaskModeTest.test_action_uses_cue_then_call_time) ... ok
+test_action_uses_exact_cues_only (test_temporal_task.TaskModeTest.test_action_uses_exact_cues_only) ... ok
+test_agreement_uses_future_cue (test_temporal_task.TaskModeTest.test_agreement_uses_future_cue) ... ok
+test_asr_variants_of_cues_are_recovered (test_temporal_task.TaskModeTest.test_asr_variants_of_cues_are_recovered) ... ok
+test_benchmark_postprocess_applies_series_carry (test_temporal_task.TaskModeTest.test_benchmark_postprocess_applies_series_carry) ... ok
+test_common_words_that_resemble_cues_are_not_rewritten (test_temporal_task.TaskModeTest.test_common_words_that_resemble_cues_are_not_rewritten) ... ok
+test_interval_guard_keeps_closed_action (test_temporal_task.TaskModeTest.test_interval_guard_keeps_closed_action) ... ok
+test_invalid_model_date_is_left_to_the_sanitizer (test_temporal_task.TaskModeTest.test_invalid_model_date_is_left_to_the_sanitizer) ... ok
+test_mode_off_preserves_model_dates (test_temporal_task.TaskModeTest.test_mode_off_preserves_model_dates) ... ok
+test_negative_fact_is_not_redated (test_temporal_task.TaskModeTest.test_negative_fact_is_not_redated) ... ok
+test_series_carries_accepted_status_only_within_account (test_temporal_task.TaskModeTest.test_series_carries_accepted_status_only_within_account) ... ok
+test_status_endpoint_marks_valid_to_not_start (test_temporal_task.TaskModeTest.test_status_endpoint_marks_valid_to_not_start) ... ok
+test_status_uses_explicit_past_cue (test_temporal_task.TaskModeTest.test_status_uses_explicit_past_cue) ... ok
+test_accepted_status_does_not_turn_into_an_unspecified_work_stage (test_ticket_recovery.TicketAssertionsTest.test_accepted_status_does_not_turn_into_an_unspecified_work_stage) ... ok
+test_clipped_number_never_creates_a_second_ticket (test_ticket_recovery.TicketAssertionsTest.test_clipped_number_never_creates_a_second_ticket) ... ok
+test_closed_work_is_a_current_completed_status (test_ticket_recovery.TicketAssertionsTest.test_closed_work_is_a_current_completed_status) ... ok
+test_explicit_assertion_replaces_unsupported_model_status (test_ticket_recovery.TicketAssertionsTest.test_explicit_assertion_replaces_unsupported_model_status) ... ok
+test_explicit_same_day_transition_closes_old_state (test_ticket_recovery.TicketAssertionsTest.test_explicit_same_day_transition_closes_old_state) ... ok
+test_future_visit_does_not_date_the_status (test_ticket_recovery.TicketAssertionsTest.test_future_visit_does_not_date_the_status) ... ok
+test_negation_question_conditional_future_and_history_abstain (test_ticket_recovery.TicketAssertionsTest.test_negation_question_conditional_future_and_history_abstain) ... ok
+test_number_and_later_source_cannot_be_overridden (test_ticket_recovery.TicketAssertionsTest.test_number_and_later_source_cannot_be_overridden) ... ok
+test_result_after_lookup_is_a_separate_assertion (test_ticket_recovery.TicketAssertionsTest.test_result_after_lookup_is_a_separate_assertion) ... ok
+test_status_nouns_and_historical_suffixes_are_not_present_assertions (test_ticket_recovery.TicketAssertionsTest.test_status_nouns_and_historical_suffixes_are_not_present_assertions) ... ok
+test_supported_history_without_boundary_is_retained (test_ticket_recovery.TicketAssertionsTest.test_supported_history_without_boundary_is_retained) ... ok
+test_timezone_of_explicit_day_is_preserved (test_ticket_recovery.TicketAssertionsTest.test_timezone_of_explicit_day_is_preserved) ... ok
+test_today_acceptance_is_not_rejected_by_unrelated_future_refund (test_ticket_recovery.TicketAssertionsTest.test_today_acceptance_is_not_rejected_by_unrelated_future_refund) ... ok
+test_two_numbered_clauses_keep_their_subjects (test_ticket_recovery.TicketAssertionsTest.test_two_numbered_clauses_keep_their_subjects) ... ok
+test_two_numbers_without_local_subject_do_not_borrow_identity (test_ticket_recovery.TicketAssertionsTest.test_two_numbers_without_local_subject_do_not_borrow_identity) ... ok
+test_unknown_transition_cannot_mix_timezone_conventions (test_ticket_recovery.TicketAssertionsTest.test_unknown_transition_cannot_mix_timezone_conventions) ... ok
+test_unrelated_negation_does_not_negate_acceptance (test_ticket_recovery.TicketAssertionsTest.test_unrelated_negation_does_not_negate_acceptance) ... ok
+test_unresolved_negative_prediction_and_unknown_status_are_not_erased (test_ticket_recovery.TicketAssertionsTest.test_unresolved_negative_prediction_and_unknown_status_are_not_erased) ... ok
+test_hints_come_from_the_transcript_and_survive_asr_damage (test_train_variants.HintTest.test_hints_come_from_the_transcript_and_survive_asr_damage) ... ok
+test_table_and_coverage (test_train_variants.HintTest.test_table_and_coverage) ... ok
+test_train_builds_the_variant_in_memory (test_train_variants.TrainOptionTest.test_train_builds_the_variant_in_memory) ... ok
+test_reasons_target_measured_weaknesses (test_train_variants.VariantTest.test_reasons_target_measured_weaknesses) ... ok
+test_variants_keep_facts_accounts_and_unique_ids (test_train_variants.VariantTest.test_variants_keep_facts_accounts_and_unique_ids) ... ok
+test_account_leakage_is_rejected (test_training_data.EncodingTest.test_account_leakage_is_rejected) ... ok
+test_existing_results_need_explicit_resume (test_training_data.EncodingTest.test_existing_results_need_explicit_resume) ... ok
+test_input_budget_is_also_checked (test_training_data.EncodingTest.test_input_budget_is_also_checked) ... ok
+test_manifest_mismatch_cannot_overwrite_previous_settings (test_training_data.EncodingTest.test_manifest_mismatch_cannot_overwrite_previous_settings) ... ok
+test_only_target_tokens_have_loss (test_training_data.EncodingTest.test_only_target_tokens_have_loss) ... ok
+test_overflow_fails_instead_of_dropping_labels (test_training_data.EncodingTest.test_overflow_fails_instead_of_dropping_labels) ... ok
+test_resume_must_be_a_real_checkpoint_of_this_experiment (test_training_data.EncodingTest.test_resume_must_be_a_real_checkpoint_of_this_experiment) ... ok
+test_target_cannot_exceed_generation_budget (test_training_data.EncodingTest.test_target_cannot_exceed_generation_budget) ... ok
+test_ambiguous_wrong_hash_and_traversal_rejected (test_unified_deployment.Deployment.test_ambiguous_wrong_hash_and_traversal_rejected) ... Installing merged files from: experiment/merged
+ok
+test_install_only_merged_is_idempotent_and_preserves_old_models (test_unified_deployment.Deployment.test_install_only_merged_is_idempotent_and_preserves_old_models) ... Installing merged files from: experiment/merged
+005 INSTALLED AND VERIFIED: /tmp/tmpfpx4yya4/models/005
+005 ALREADY INSTALLED AND VERIFIED: /tmp/tmpfpx4yya4/models/005
+ok
+test_tokenizer_and_contract_assets_are_pinned (test_unified_deployment.Deployment.test_tokenizer_and_contract_assets_are_pinned) ... ok
+test_agreeing_to_offer_is_not_an_active_tariff (test_unified_tariffs.UnifiedTariffs.test_agreeing_to_offer_is_not_an_active_tariff) ... ok
+test_condition_request_and_bare_question_are_not_tariffs (test_unified_tariffs.UnifiedTariffs.test_condition_request_and_bare_question_are_not_tariffs) ... ok
+test_confirmation_uses_previous_question (test_unified_tariffs.UnifiedTariffs.test_confirmation_uses_previous_question) ... ok
+test_explicit_transition_dates_both_sides (test_unified_tariffs.UnifiedTariffs.test_explicit_transition_dates_both_sides) ... ok
+test_missing_switch_target_is_not_replaced_with_old_tariff (test_unified_tariffs.UnifiedTariffs.test_missing_switch_target_is_not_replaced_with_old_tariff) ... ok
+test_plus_is_a_distinct_tariff (test_unified_tariffs.UnifiedTariffs.test_plus_is_a_distinct_tariff) ... ok
+test_switch_target_is_grammatical_not_last_mention (test_unified_tariffs.UnifiedTariffs.test_switch_target_is_grammatical_not_last_mention) ... ok
+test_tag_question_preserves_prior_assertion (test_unified_tariffs.UnifiedTariffs.test_tag_question_preserves_prior_assertion) ... ok
+test_title_my_does_not_prove_possession (test_unified_tariffs.UnifiedTariffs.test_title_my_does_not_prove_possession) ... ok
+test_unknown_boundary_retains_supported_history (test_unified_tariffs.UnifiedTariffs.test_unknown_boundary_retains_supported_history) ... ok
+test_corrupted_or_unknown_packages_are_rejected_before_output (test_v21_package.PackageTest.test_corrupted_or_unknown_packages_are_rejected_before_output) ... ok
+test_direct_and_nested_verified_packages_and_existing_data (test_v21_package.PackageTest.test_direct_and_nested_verified_packages_and_existing_data) ... ok
+test_corruption_and_path_traversal_are_rejected (test_v21_release.ReleaseTest.test_corruption_and_path_traversal_are_rejected) ... ok
+test_verified_release_preserves_old_model_and_rejects_replacement (test_v21_release.ReleaseTest.test_verified_release_preserves_old_model_and_rejects_replacement) ... RELEASE INSTALLED AND VERIFIED: /tmp/tmpkspj3v1c/team_shpana/releases/case-v21-002
+Existing .venv-v100, models/continue-002, data and prior results preserved.
+ALREADY INSTALLED AND VERIFIED: /tmp/tmpkspj3v1c/team_shpana/releases/case-v21-002
+ok
+
+----------------------------------------------------------------------
+Ran 334 tests in 9.146s
+
+OK
+Starting data-check: /home/ubuntu/mws/.venv/bin/python /home/ubuntu/mws-v21/releases/case-v21-unified-001/src/train.py --train /home/ubuntu/mws-v21/data/organizer-v2.1-verified/train.jsonl --val /home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/val.jsonl --catalog /home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/catalog.json --train-variant plain --check-data
+{
+  "train_calls": 3926,
+  "val_calls": 383,
+  "train_variant": "plain",
+  "train_source_calls": 3926,
+  "model": "/home/ubuntu/mws-v21/models/005-noise-20261115",
+  "gpu_run": false,
+  "run_context": {
+    "contract": {
+      "signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "contract_version": "2.1",
+      "target_version": 2
+    },
+    "json_schema_sha256": "6b7d699659e4f92e3e552263de980e4093d06dd5a0d66fc1ba177df7cc8cddd7",
+    "scoring": {
+      "scorer_version": "2.1",
+      "official_metrics_version": "2.1",
+      "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "official_source_modified": false,
+      "local_patch": null,
+      "patch_adapter_sha256": null,
+      "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb"
+    },
+    "train": {
+      "path": "/home/ubuntu/mws-v21/data/organizer-v2.1-verified/train.jsonl",
+      "sha256": "0878bfd983e14c75b51f32f04d961c5b82b10fa243845a25fe1c811cb4882466",
+      "bytes": 31048311,
+      "recognized_version": "organizer-2.1-train"
+    },
+    "val": {
+      "path": "/home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/val.jsonl",
+      "sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+      "bytes": 3120190,
+      "recognized_version": "organizer-2.1-val"
+    },
+    "catalog": {
+      "path": "/home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/catalog.json",
+      "sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+      "bytes": 16809,
+      "recognized_version": "custom-or-different-bytes"
+    },
+    "context_sha256": "ff9eff6e91f48cffb5efccaf84dc8bd0e2147091002b4612f1d47860bdaceff2"
+  }
+}
+Starting train: /home/ubuntu/mws/.venv/bin/python -u /home/ubuntu/mws-v21/releases/case-v21-unified-001/src/train.py --train /home/ubuntu/mws-v21/data/organizer-v2.1-verified/train.jsonl --val /home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/val.jsonl --catalog /home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/catalog.json --train-variant plain --epochs 1 --batch-size 1 --learning-rate 0.00003 --seed 42 --save-steps 50 --output-dir /home/ubuntu/mws-v21/out/005-plain-epoch-001/adapter
+
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/310 [00:00<01:01,  5.02it/s]
+Loading weights:   1%|          | 3/310 [00:00<00:27, 11.09it/s]
+Loading weights:  14%|█▍        | 44/310 [00:00<00:01, 157.56it/s]
+Loading weights:  27%|██▋       | 85/310 [00:00<00:00, 243.93it/s]
+Loading weights:  48%|████▊     | 148/310 [00:00<00:00, 368.55it/s]
+Loading weights:  64%|██████▍   | 198/310 [00:00<00:00, 405.02it/s]
+Loading weights:  78%|███████▊  | 241/310 [00:00<00:00, 406.88it/s]
+Loading weights:  92%|█████████▏| 284/310 [00:00<00:00, 408.52it/s]
+Loading weights: 100%|██████████| 310/310 [00:00<00:00, 315.50it/s]
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:3195: FutureWarning: `gradient_checkpointing_enable` is deprecated and will be removed in v6. Use `activation_checkpointing_enable` instead.
+  warnings.warn(
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:3303: FutureWarning: `is_gradient_checkpointing` is deprecated and will be removed in v6. Use `is_activation_checkpointing` instead.
+  warnings.warn(
+trainable params: 10,092,544 || all params: 606,142,464 || trainable%: 1.6650
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing` is deprecated and will be removed in v6. Use `activation_checkpointing` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/training_args.py:1541: FutureWarning: `gradient_checkpointing_kwargs` is deprecated and will be removed in v6. Use `activation_checkpointing_kwargs` instead.
+  warnings.warn(f"`{old}` is deprecated and will be removed in v6. Use `{new}` instead.", FutureWarning)
+
+  0%|          | 0/246 [00:00<?, ?it/s]
+  0%|          | 1/246 [00:10<41:03, 10.05s/it]
+  1%|          | 2/246 [00:19<39:30,  9.71s/it]
+  1%|          | 3/246 [00:28<38:31,  9.51s/it]
+  2%|▏         | 4/246 [00:37<37:33,  9.31s/it]
+  2%|▏         | 5/246 [00:47<37:34,  9.35s/it]
+  2%|▏         | 6/246 [00:56<37:35,  9.40s/it]
+  3%|▎         | 7/246 [01:05<36:48,  9.24s/it]
+  3%|▎         | 8/246 [01:15<37:18,  9.40s/it]
+  4%|▎         | 9/246 [01:25<38:14,  9.68s/it]
+  4%|▍         | 10/246 [01:34<37:32,  9.54s/it]
+                                                
+{'loss': '0.08678', 'grad_norm': '0.2163', 'learning_rate': '2.25e-05', 'epoch': '0.04075'}
+
+  4%|▍         | 10/246 [01:34<37:32,  9.54s/it]
+  4%|▍         | 11/246 [01:44<37:52,  9.67s/it]
+  5%|▍         | 12/246 [01:54<37:57,  9.73s/it]
+  5%|▌         | 13/246 [02:04<37:17,  9.60s/it]
+  6%|▌         | 14/246 [02:13<37:01,  9.58s/it]
+  6%|▌         | 15/246 [02:23<36:54,  9.59s/it]
+  7%|▋         | 16/246 [02:32<36:21,  9.49s/it]
+  7%|▋         | 17/246 [02:41<36:15,  9.50s/it]
+  7%|▋         | 18/246 [02:51<36:19,  9.56s/it]
+  8%|▊         | 19/246 [03:00<35:54,  9.49s/it]
+  8%|▊         | 20/246 [03:10<35:45,  9.49s/it]
+                                                
+{'loss': '0.0847', 'grad_norm': '0.221', 'learning_rate': '2.993e-05', 'epoch': '0.08151'}
+
+  8%|▊         | 20/246 [03:10<35:45,  9.49s/it]
+  9%|▊         | 21/246 [03:20<35:38,  9.51s/it]
+  9%|▉         | 22/246 [03:29<35:23,  9.48s/it]
+  9%|▉         | 23/246 [03:38<35:08,  9.45s/it]
+ 10%|▉         | 24/246 [03:48<35:22,  9.56s/it]
+ 10%|█         | 25/246 [03:57<34:55,  9.48s/it]
+ 11%|█         | 26/246 [04:07<35:04,  9.57s/it]
+ 11%|█         | 27/246 [04:16<34:20,  9.41s/it]
+ 11%|█▏        | 28/246 [04:25<33:39,  9.26s/it]
+ 12%|█▏        | 29/246 [04:35<34:03,  9.42s/it]
+ 12%|█▏        | 30/246 [04:44<33:55,  9.43s/it]
+                                                
+{'loss': '0.08709', 'grad_norm': '0.2379', 'learning_rate': '2.961e-05', 'epoch': '0.1223'}
+
+ 12%|█▏        | 30/246 [04:44<33:55,  9.43s/it]
+ 13%|█▎        | 31/246 [04:53<33:11,  9.26s/it]
+ 13%|█▎        | 32/246 [05:03<33:26,  9.37s/it]
+ 13%|█▎        | 33/246 [05:12<33:22,  9.40s/it]
+ 14%|█▍        | 34/246 [05:22<33:00,  9.34s/it]
+ 14%|█▍        | 35/246 [05:31<33:02,  9.40s/it]
+ 15%|█▍        | 36/246 [05:40<32:39,  9.33s/it]
+ 15%|█▌        | 37/246 [05:49<32:21,  9.29s/it]
+ 15%|█▌        | 38/246 [05:59<32:12,  9.29s/it]
+ 16%|█▌        | 39/246 [06:09<32:40,  9.47s/it]
+ 16%|█▋        | 40/246 [06:18<32:21,  9.43s/it]
+                                                
+{'loss': '0.08291', 'grad_norm': '0.1945', 'learning_rate': '2.903e-05', 'epoch': '0.163'}
+
+ 16%|█▋        | 40/246 [06:18<32:21,  9.43s/it]
+ 17%|█▋        | 41/246 [06:27<31:53,  9.33s/it]
+ 17%|█▋        | 42/246 [06:37<31:55,  9.39s/it]
+ 17%|█▋        | 43/246 [06:47<32:31,  9.61s/it]
+ 18%|█▊        | 44/246 [06:56<32:13,  9.57s/it]
+ 18%|█▊        | 45/246 [07:06<32:14,  9.62s/it]
+ 19%|█▊        | 46/246 [07:15<31:51,  9.56s/it]
+ 19%|█▉        | 47/246 [07:24<31:01,  9.35s/it]
+ 20%|█▉        | 48/246 [07:34<31:14,  9.47s/it]
+ 20%|█▉        | 49/246 [07:44<31:26,  9.58s/it]
+ 20%|██        | 50/246 [07:53<30:39,  9.38s/it]
+                                                
+{'loss': '0.08325', 'grad_norm': '0.2017', 'learning_rate': '2.819e-05', 'epoch': '0.2038'}
+
+ 20%|██        | 50/246 [07:53<30:39,  9.38s/it]
+ 21%|██        | 51/246 [08:03<31:00,  9.54s/it]
+ 21%|██        | 52/246 [08:12<30:54,  9.56s/it]
+ 22%|██▏       | 53/246 [08:21<30:04,  9.35s/it]
+ 22%|██▏       | 54/246 [08:31<30:25,  9.51s/it]
+ 22%|██▏       | 55/246 [08:40<30:08,  9.47s/it]
+ 23%|██▎       | 56/246 [08:49<29:31,  9.32s/it]
+ 23%|██▎       | 57/246 [08:59<29:20,  9.31s/it]
+ 24%|██▎       | 58/246 [09:08<29:26,  9.39s/it]
+ 24%|██▍       | 59/246 [09:17<28:51,  9.26s/it]
+ 24%|██▍       | 60/246 [09:26<28:33,  9.21s/it]
+                                                
+{'loss': '0.08007', 'grad_norm': '0.1956', 'learning_rate': '2.711e-05', 'epoch': '0.2445'}
+
+ 24%|██▍       | 60/246 [09:26<28:33,  9.21s/it]
+ 25%|██▍       | 61/246 [09:36<28:26,  9.23s/it]
+ 25%|██▌       | 62/246 [09:44<28:01,  9.14s/it]
+ 26%|██▌       | 63/246 [09:54<28:12,  9.25s/it]
+ 26%|██▌       | 64/246 [10:03<28:07,  9.27s/it]
+ 26%|██▋       | 65/246 [10:13<28:20,  9.40s/it]
+ 27%|██▋       | 66/246 [10:22<27:51,  9.29s/it]
+ 27%|██▋       | 67/246 [10:32<28:01,  9.40s/it]
+ 28%|██▊       | 68/246 [10:41<27:55,  9.41s/it]
+ 28%|██▊       | 69/246 [10:50<27:37,  9.36s/it]
+ 28%|██▊       | 70/246 [10:59<27:14,  9.29s/it]
+                                                
+{'loss': '0.08164', 'grad_norm': '0.231', 'learning_rate': '2.582e-05', 'epoch': '0.2853'}
+
+ 28%|██▊       | 70/246 [10:59<27:14,  9.29s/it]
+ 29%|██▉       | 71/246 [11:08<26:50,  9.20s/it]
+ 29%|██▉       | 72/246 [11:17<26:23,  9.10s/it]
+ 30%|██▉       | 73/246 [11:27<26:29,  9.19s/it]
+ 30%|███       | 74/246 [11:36<26:43,  9.33s/it]
+ 30%|███       | 75/246 [11:46<26:38,  9.35s/it]
+ 31%|███       | 76/246 [11:56<26:49,  9.47s/it]
+ 31%|███▏      | 77/246 [12:05<26:42,  9.48s/it]
+ 32%|███▏      | 78/246 [12:14<26:16,  9.38s/it]
+ 32%|███▏      | 79/246 [12:24<26:10,  9.41s/it]
+ 33%|███▎      | 80/246 [12:33<26:21,  9.53s/it]
+                                                
+{'loss': '0.07991', 'grad_norm': '0.2045', 'learning_rate': '2.433e-05', 'epoch': '0.326'}
+
+ 33%|███▎      | 80/246 [12:33<26:21,  9.53s/it]
+ 33%|███▎      | 81/246 [12:43<26:25,  9.61s/it]
+ 33%|███▎      | 82/246 [12:53<26:05,  9.55s/it]
+ 34%|███▎      | 83/246 [13:02<25:53,  9.53s/it]
+ 34%|███▍      | 84/246 [13:11<25:27,  9.43s/it]
+ 35%|███▍      | 85/246 [13:21<25:10,  9.38s/it]
+ 35%|███▍      | 86/246 [13:30<24:56,  9.35s/it]
+ 35%|███▌      | 87/246 [13:39<24:36,  9.28s/it]
+ 36%|███▌      | 88/246 [13:49<24:36,  9.35s/it]
+ 36%|███▌      | 89/246 [13:58<24:31,  9.37s/it]
+ 37%|███▋      | 90/246 [14:07<24:24,  9.39s/it]
+                                                
+{'loss': '0.08078', 'grad_norm': '0.1939', 'learning_rate': '2.267e-05', 'epoch': '0.3668'}
+
+ 37%|███▋      | 90/246 [14:07<24:24,  9.39s/it]
+ 37%|███▋      | 91/246 [14:17<24:43,  9.57s/it]
+ 37%|███▋      | 92/246 [14:27<24:19,  9.47s/it]
+ 38%|███▊      | 93/246 [14:36<23:51,  9.35s/it]
+ 38%|███▊      | 94/246 [14:45<23:44,  9.37s/it]
+ 39%|███▊      | 95/246 [14:56<24:27,  9.72s/it]
+ 39%|███▉      | 96/246 [15:05<23:53,  9.55s/it]
+ 39%|███▉      | 97/246 [15:14<23:33,  9.49s/it]
+ 40%|███▉      | 98/246 [15:24<23:25,  9.50s/it]
+ 40%|████      | 99/246 [15:32<22:39,  9.25s/it]
+ 41%|████      | 100/246 [15:42<22:26,  9.22s/it]
+                                                 
+{'loss': '0.08832', 'grad_norm': '0.2341', 'learning_rate': '2.088e-05', 'epoch': '0.4075'}
+
+ 41%|████      | 100/246 [15:42<22:26,  9.22s/it]
+ 41%|████      | 101/246 [15:51<22:48,  9.44s/it]
+ 41%|████▏     | 102/246 [16:01<22:33,  9.40s/it]
+ 42%|████▏     | 103/246 [16:10<22:35,  9.48s/it]
+ 42%|████▏     | 104/246 [16:20<22:29,  9.51s/it]
+ 43%|████▎     | 105/246 [16:29<22:01,  9.37s/it]
+ 43%|████▎     | 106/246 [16:39<22:07,  9.48s/it]
+ 43%|████▎     | 107/246 [16:48<21:52,  9.44s/it]
+ 44%|████▍     | 108/246 [16:58<21:43,  9.44s/it]
+ 44%|████▍     | 109/246 [17:07<21:23,  9.37s/it]
+ 45%|████▍     | 110/246 [17:17<21:39,  9.55s/it]
+                                                 
+{'loss': '0.08934', 'grad_norm': '0.2657', 'learning_rate': '1.898e-05', 'epoch': '0.4483'}
+
+ 45%|████▍     | 110/246 [17:17<21:39,  9.55s/it]
+ 45%|████▌     | 111/246 [17:27<22:03,  9.80s/it]
+ 46%|████▌     | 112/246 [17:37<21:35,  9.67s/it]
+ 46%|████▌     | 113/246 [17:46<21:21,  9.64s/it]
+ 46%|████▋     | 114/246 [17:56<21:22,  9.71s/it]
+ 47%|████▋     | 115/246 [18:05<20:55,  9.58s/it]
+ 47%|████▋     | 116/246 [18:15<20:59,  9.69s/it]
+ 48%|████▊     | 117/246 [18:26<21:14,  9.88s/it]
+ 48%|████▊     | 118/246 [18:35<21:06,  9.89s/it]
+ 48%|████▊     | 119/246 [18:45<20:51,  9.86s/it]
+ 49%|████▉     | 120/246 [18:55<20:26,  9.74s/it]
+                                                 
+{'loss': '0.08499', 'grad_norm': '0.2496', 'learning_rate': '1.701e-05', 'epoch': '0.489'}
+
+ 49%|████▉     | 120/246 [18:55<20:26,  9.74s/it]
+ 49%|████▉     | 121/246 [19:04<19:43,  9.47s/it]
+ 50%|████▉     | 122/246 [19:13<19:50,  9.60s/it]
+ 50%|█████     | 123/246 [19:23<19:51,  9.68s/it]
+ 50%|█████     | 124/246 [19:33<19:42,  9.69s/it]
+ 51%|█████     | 125/246 [19:43<19:26,  9.64s/it]
+ 51%|█████     | 126/246 [19:52<19:18,  9.65s/it]
+ 52%|█████▏    | 127/246 [20:02<19:11,  9.68s/it]
+ 52%|█████▏    | 128/246 [20:11<18:52,  9.60s/it]
+ 52%|█████▏    | 129/246 [20:21<18:33,  9.52s/it]
+ 53%|█████▎    | 130/246 [20:30<18:25,  9.53s/it]
+                                                 
+{'loss': '0.08542', 'grad_norm': '0.2137', 'learning_rate': '1.5e-05', 'epoch': '0.5298'}
+
+ 53%|█████▎    | 130/246 [20:30<18:25,  9.53s/it]
+ 53%|█████▎    | 131/246 [20:39<18:00,  9.39s/it]
+ 54%|█████▎    | 132/246 [20:49<17:56,  9.45s/it]
+ 54%|█████▍    | 133/246 [20:58<17:33,  9.32s/it]
+ 54%|█████▍    | 134/246 [21:07<17:31,  9.39s/it]
+ 55%|█████▍    | 135/246 [21:17<17:26,  9.43s/it]
+ 55%|█████▌    | 136/246 [21:26<16:52,  9.20s/it]
+ 56%|█████▌    | 137/246 [21:35<16:49,  9.26s/it]
+ 56%|█████▌    | 138/246 [21:45<16:53,  9.38s/it]
+ 57%|█████▋    | 139/246 [21:54<16:37,  9.32s/it]
+ 57%|█████▋    | 140/246 [22:04<16:46,  9.50s/it]
+                                                 
+{'loss': '0.0864', 'grad_norm': '0.2477', 'learning_rate': '1.299e-05', 'epoch': '0.5706'}
+
+ 57%|█████▋    | 140/246 [22:04<16:46,  9.50s/it]
+ 57%|█████▋    | 141/246 [22:13<16:36,  9.49s/it]
+ 58%|█████▊    | 142/246 [22:23<16:20,  9.43s/it]
+ 58%|█████▊    | 143/246 [22:32<16:25,  9.57s/it]
+ 59%|█████▊    | 144/246 [22:42<16:11,  9.52s/it]
+ 59%|█████▉    | 145/246 [22:51<16:02,  9.53s/it]
+ 59%|█████▉    | 146/246 [23:01<15:44,  9.45s/it]
+ 60%|█████▉    | 147/246 [23:10<15:41,  9.51s/it]
+ 60%|██████    | 148/246 [23:20<15:32,  9.51s/it]
+ 61%|██████    | 149/246 [23:29<15:13,  9.42s/it]
+ 61%|██████    | 150/246 [23:39<15:10,  9.48s/it]
+                                                 
+{'loss': '0.09139', 'grad_norm': '0.2471', 'learning_rate': '1.102e-05', 'epoch': '0.6113'}
+
+ 61%|██████    | 150/246 [23:39<15:10,  9.48s/it]
+ 61%|██████▏   | 151/246 [23:49<15:21,  9.70s/it]
+ 62%|██████▏   | 152/246 [23:58<15:03,  9.61s/it]
+ 62%|██████▏   | 153/246 [24:08<14:57,  9.65s/it]
+ 63%|██████▎   | 154/246 [24:18<14:58,  9.76s/it]
+ 63%|██████▎   | 155/246 [24:27<14:23,  9.49s/it]
+ 63%|██████▎   | 156/246 [24:36<14:14,  9.50s/it]
+ 64%|██████▍   | 157/246 [24:46<14:06,  9.52s/it]
+ 64%|██████▍   | 158/246 [24:55<13:48,  9.42s/it]
+ 65%|██████▍   | 159/246 [25:05<13:50,  9.54s/it]
+ 65%|██████▌   | 160/246 [25:14<13:34,  9.47s/it]
+                                                 
+{'loss': '0.09367', 'grad_norm': '0.188', 'learning_rate': '9.121e-06', 'epoch': '0.6521'}
+
+ 65%|██████▌   | 160/246 [25:14<13:34,  9.47s/it]
+ 65%|██████▌   | 161/246 [25:24<13:30,  9.53s/it]
+ 66%|██████▌   | 162/246 [25:34<13:29,  9.64s/it]
+ 66%|██████▋   | 163/246 [25:44<13:20,  9.64s/it]
+ 67%|██████▋   | 164/246 [25:52<12:52,  9.42s/it]
+ 67%|██████▋   | 165/246 [26:02<12:41,  9.40s/it]
+ 67%|██████▋   | 166/246 [26:11<12:27,  9.34s/it]
+ 68%|██████▊   | 167/246 [26:20<12:17,  9.33s/it]
+ 68%|██████▊   | 168/246 [26:30<12:08,  9.34s/it]
+ 69%|██████▊   | 169/246 [26:39<11:59,  9.34s/it]
+ 69%|██████▉   | 170/246 [26:48<11:40,  9.22s/it]
+                                                 
+{'loss': '0.09345', 'grad_norm': '0.2292', 'learning_rate': '7.326e-06', 'epoch': '0.6928'}
+
+ 69%|██████▉   | 170/246 [26:48<11:40,  9.22s/it]
+ 70%|██████▉   | 171/246 [26:58<11:40,  9.34s/it]
+ 70%|██████▉   | 172/246 [27:07<11:35,  9.40s/it]
+ 70%|███████   | 173/246 [27:16<11:19,  9.31s/it]
+ 71%|███████   | 174/246 [27:26<11:11,  9.33s/it]
+ 71%|███████   | 175/246 [27:36<11:28,  9.70s/it]
+ 72%|███████▏  | 176/246 [27:45<11:04,  9.49s/it]
+ 72%|███████▏  | 177/246 [27:55<10:53,  9.47s/it]
+ 72%|███████▏  | 178/246 [28:04<10:42,  9.44s/it]
+ 73%|███████▎  | 179/246 [28:13<10:26,  9.36s/it]
+ 73%|███████▎  | 180/246 [28:23<10:22,  9.43s/it]
+                                                 
+{'loss': '0.09356', 'grad_norm': '0.236', 'learning_rate': '5.67e-06', 'epoch': '0.7336'}
+
+ 73%|███████▎  | 180/246 [28:23<10:22,  9.43s/it]
+ 74%|███████▎  | 181/246 [28:32<10:17,  9.50s/it]
+ 74%|███████▍  | 182/246 [28:42<10:02,  9.42s/it]
+ 74%|███████▍  | 183/246 [28:51<09:56,  9.47s/it]
+ 75%|███████▍  | 184/246 [29:01<09:47,  9.48s/it]
+ 75%|███████▌  | 185/246 [29:10<09:30,  9.36s/it]
+ 76%|███████▌  | 186/246 [29:19<09:23,  9.39s/it]
+ 76%|███████▌  | 187/246 [29:29<09:14,  9.40s/it]
+ 76%|███████▋  | 188/246 [29:38<09:02,  9.35s/it]
+ 77%|███████▋  | 189/246 [29:48<09:01,  9.49s/it]
+ 77%|███████▋  | 190/246 [29:58<09:08,  9.79s/it]
+                                                 
+{'loss': '0.09444', 'grad_norm': '0.2457', 'learning_rate': '4.182e-06', 'epoch': '0.7743'}
+
+ 77%|███████▋  | 190/246 [29:58<09:08,  9.79s/it]
+ 78%|███████▊  | 191/246 [30:07<08:49,  9.62s/it]
+ 78%|███████▊  | 192/246 [30:17<08:43,  9.70s/it]
+ 78%|███████▊  | 193/246 [30:27<08:31,  9.65s/it]
+ 79%|███████▉  | 194/246 [30:36<08:18,  9.59s/it]
+ 79%|███████▉  | 195/246 [30:45<08:01,  9.45s/it]
+ 80%|███████▉  | 196/246 [30:55<07:51,  9.42s/it]
+ 80%|████████  | 197/246 [31:04<07:41,  9.42s/it]
+ 80%|████████  | 198/246 [31:13<07:24,  9.25s/it]
+ 81%|████████  | 199/246 [31:23<07:18,  9.33s/it]
+ 81%|████████▏ | 200/246 [31:32<07:13,  9.43s/it]
+                                                 
+{'loss': '0.1005', 'grad_norm': '0.2067', 'learning_rate': '2.888e-06', 'epoch': '0.8151'}
+
+ 81%|████████▏ | 200/246 [31:32<07:13,  9.43s/it]
+ 82%|████████▏ | 201/246 [31:41<07:01,  9.38s/it]
+ 82%|████████▏ | 202/246 [31:51<06:51,  9.35s/it]
+ 83%|████████▎ | 203/246 [32:00<06:43,  9.38s/it]
+ 83%|████████▎ | 204/246 [32:09<06:30,  9.31s/it]
+ 83%|████████▎ | 205/246 [32:19<06:26,  9.42s/it]
+ 84%|████████▎ | 206/246 [32:29<06:22,  9.55s/it]
+ 84%|████████▍ | 207/246 [32:38<06:03,  9.32s/it]
+ 85%|████████▍ | 208/246 [32:48<06:02,  9.54s/it]
+ 85%|████████▍ | 209/246 [32:57<05:52,  9.52s/it]
+ 85%|████████▌ | 210/246 [33:06<05:39,  9.42s/it]
+                                                 
+{'loss': '0.09783', 'grad_norm': '0.2471', 'learning_rate': '1.813e-06', 'epoch': '0.8558'}
+
+ 85%|████████▌ | 210/246 [33:06<05:39,  9.42s/it]
+ 86%|████████▌ | 211/246 [33:16<05:29,  9.40s/it]
+ 86%|████████▌ | 212/246 [33:25<05:18,  9.36s/it]
+ 87%|████████▋ | 213/246 [33:35<05:10,  9.42s/it]
+ 87%|████████▋ | 214/246 [33:44<04:57,  9.31s/it]
+ 87%|████████▋ | 215/246 [33:53<04:47,  9.26s/it]
+ 88%|████████▊ | 216/246 [34:02<04:37,  9.25s/it]
+ 88%|████████▊ | 217/246 [34:11<04:23,  9.10s/it]
+ 89%|████████▊ | 218/246 [34:20<04:16,  9.15s/it]
+ 89%|████████▉ | 219/246 [34:30<04:10,  9.27s/it]
+ 89%|████████▉ | 220/246 [34:39<03:58,  9.18s/it]
+                                                 
+{'loss': '0.1016', 'grad_norm': '0.2372', 'learning_rate': '9.748e-07', 'epoch': '0.8966'}
+
+ 89%|████████▉ | 220/246 [34:39<03:58,  9.18s/it]
+ 90%|████████▉ | 221/246 [34:48<03:53,  9.32s/it]
+ 90%|█████████ | 222/246 [34:58<03:45,  9.40s/it]
+ 91%|█████████ | 223/246 [35:07<03:33,  9.29s/it]
+ 91%|█████████ | 224/246 [35:16<03:25,  9.32s/it]
+ 91%|█████████▏| 225/246 [35:26<03:20,  9.57s/it]
+ 92%|█████████▏| 226/246 [35:35<03:08,  9.43s/it]
+ 92%|█████████▏| 227/246 [35:45<03:00,  9.51s/it]
+ 93%|█████████▎| 228/246 [35:55<02:52,  9.60s/it]
+ 93%|█████████▎| 229/246 [36:04<02:40,  9.43s/it]
+ 93%|█████████▎| 230/246 [36:13<02:30,  9.38s/it]
+                                                 
+{'loss': '0.1097', 'grad_norm': '0.3027', 'learning_rate': '3.89e-07', 'epoch': '0.9373'}
+
+ 93%|█████████▎| 230/246 [36:13<02:30,  9.38s/it]
+ 94%|█████████▍| 231/246 [36:22<02:19,  9.30s/it]
+ 94%|█████████▍| 232/246 [36:31<02:08,  9.21s/it]
+ 95%|█████████▍| 233/246 [36:41<02:00,  9.25s/it]
+ 95%|█████████▌| 234/246 [36:50<01:51,  9.31s/it]
+ 96%|█████████▌| 235/246 [36:59<01:41,  9.24s/it]
+ 96%|█████████▌| 236/246 [37:09<01:32,  9.27s/it]
+ 96%|█████████▋| 237/246 [37:18<01:24,  9.34s/it]
+ 97%|█████████▋| 238/246 [37:27<01:14,  9.30s/it]
+ 97%|█████████▋| 239/246 [37:37<01:05,  9.37s/it]
+ 98%|█████████▊| 240/246 [37:47<00:56,  9.50s/it]
+                                                 
+{'loss': '0.09808', 'grad_norm': '0.2196', 'learning_rate': '6.619e-08', 'epoch': '0.9781'}
+
+ 98%|█████████▊| 240/246 [37:47<00:56,  9.50s/it]
+ 98%|█████████▊| 241/246 [37:56<00:47,  9.53s/it]
+ 98%|█████████▊| 242/246 [38:06<00:37,  9.47s/it]
+ 99%|█████████▉| 243/246 [38:15<00:28,  9.39s/it]
+ 99%|█████████▉| 244/246 [38:24<00:18,  9.27s/it]
+100%|█████████▉| 245/246 [38:33<00:09,  9.36s/it]
+100%|██████████| 246/246 [38:37<00:00,  7.59s/it]
+
+  0%|          | 0/383 [00:00<?, ?it/s][A
+
+  1%|          | 2/383 [00:00<00:22, 17.17it/s][A
+
+  1%|          | 4/383 [00:00<00:34, 10.89it/s][A
+
+  2%|▏         | 6/383 [00:00<00:38,  9.81it/s][A
+
+  2%|▏         | 8/383 [00:00<00:39,  9.38it/s][A
+
+  2%|▏         | 9/383 [00:00<00:40,  9.20it/s][A
+
+  3%|▎         | 10/383 [00:01<00:41,  9.07it/s][A
+
+  3%|▎         | 11/383 [00:01<00:41,  9.03it/s][A
+
+  3%|▎         | 12/383 [00:01<00:41,  8.98it/s][A
+
+  3%|▎         | 13/383 [00:01<00:46,  7.99it/s][A
+
+  4%|▎         | 14/383 [00:01<00:45,  8.14it/s][A
+
+  4%|▍         | 15/383 [00:01<00:44,  8.22it/s][A
+
+  4%|▍         | 16/383 [00:01<00:47,  7.75it/s][A
+
+  4%|▍         | 17/383 [00:01<00:51,  7.12it/s][A
+
+  5%|▍         | 18/383 [00:02<00:49,  7.45it/s][A
+
+  5%|▍         | 19/383 [00:02<00:47,  7.70it/s][A
+
+  5%|▌         | 20/383 [00:02<00:45,  7.89it/s][A
+
+  5%|▌         | 21/383 [00:02<00:44,  8.07it/s][A
+
+  6%|▌         | 22/383 [00:02<00:44,  8.17it/s][A
+
+  6%|▌         | 23/383 [00:02<00:43,  8.29it/s][A
+
+  6%|▋         | 24/383 [00:02<00:42,  8.41it/s][A
+
+  7%|▋         | 25/383 [00:02<00:42,  8.43it/s][A
+
+  7%|▋         | 26/383 [00:03<00:42,  8.45it/s][A
+
+  7%|▋         | 27/383 [00:03<00:42,  8.41it/s][A
+
+  7%|▋         | 28/383 [00:03<00:42,  8.27it/s][A
+
+  8%|▊         | 29/383 [00:03<00:46,  7.58it/s][A
+
+  8%|▊         | 30/383 [00:03<00:45,  7.81it/s][A
+
+  8%|▊         | 31/383 [00:03<00:43,  8.04it/s][A
+
+  8%|▊         | 32/383 [00:03<00:43,  8.09it/s][A
+
+  9%|▊         | 33/383 [00:03<00:42,  8.25it/s][A
+
+  9%|▉         | 34/383 [00:04<00:42,  8.29it/s][A
+
+  9%|▉         | 35/383 [00:04<00:41,  8.34it/s][A
+
+  9%|▉         | 36/383 [00:04<00:41,  8.39it/s][A
+
+ 10%|▉         | 37/383 [00:04<00:41,  8.41it/s][A
+
+ 10%|▉         | 38/383 [00:04<00:40,  8.43it/s][A
+
+ 10%|█         | 39/383 [00:04<00:40,  8.50it/s][A
+
+ 10%|█         | 40/383 [00:04<00:40,  8.51it/s][A
+
+ 11%|█         | 41/383 [00:04<00:40,  8.53it/s][A
+
+ 11%|█         | 42/383 [00:04<00:39,  8.53it/s][A
+
+ 11%|█         | 43/383 [00:05<00:39,  8.55it/s][A
+
+ 11%|█▏        | 44/383 [00:05<00:39,  8.51it/s][A
+
+ 12%|█▏        | 45/383 [00:05<00:39,  8.54it/s][A
+
+ 12%|█▏        | 46/383 [00:05<00:39,  8.50it/s][A
+
+ 12%|█▏        | 47/383 [00:05<00:39,  8.52it/s][A
+
+ 13%|█▎        | 48/383 [00:05<00:39,  8.52it/s][A
+
+ 13%|█▎        | 49/383 [00:05<00:39,  8.51it/s][A
+
+ 13%|█▎        | 50/383 [00:05<00:39,  8.46it/s][A
+
+ 13%|█▎        | 51/383 [00:06<00:39,  8.50it/s][A
+
+ 14%|█▎        | 52/383 [00:06<00:38,  8.50it/s][A
+
+ 14%|█▍        | 53/383 [00:06<00:38,  8.52it/s][A
+
+ 14%|█▍        | 54/383 [00:06<00:38,  8.55it/s][A
+
+ 14%|█▍        | 55/383 [00:06<00:38,  8.55it/s][A
+
+ 15%|█▍        | 56/383 [00:06<00:38,  8.53it/s][A
+
+ 15%|█▍        | 57/383 [00:06<00:37,  8.60it/s][A
+
+ 15%|█▌        | 58/383 [00:06<00:37,  8.58it/s][A
+
+ 15%|█▌        | 59/383 [00:06<00:37,  8.55it/s][A
+
+ 16%|█▌        | 60/383 [00:07<00:37,  8.57it/s][A
+
+ 16%|█▌        | 61/383 [00:07<00:37,  8.53it/s][A
+
+ 16%|█▌        | 62/383 [00:07<00:37,  8.53it/s][A
+
+ 16%|█▋        | 63/383 [00:07<00:37,  8.57it/s][A
+
+ 17%|█▋        | 64/383 [00:07<00:37,  8.57it/s][A
+
+ 17%|█▋        | 65/383 [00:07<00:36,  8.60it/s][A
+
+ 17%|█▋        | 66/383 [00:07<00:36,  8.60it/s][A
+
+ 17%|█▋        | 67/383 [00:07<00:37,  8.51it/s][A
+
+ 18%|█▊        | 68/383 [00:08<00:37,  8.46it/s][A
+
+ 18%|█▊        | 69/383 [00:08<00:37,  8.47it/s][A
+
+ 18%|█▊        | 70/383 [00:08<00:36,  8.49it/s][A
+
+ 19%|█▊        | 71/383 [00:08<00:36,  8.49it/s][A
+
+ 19%|█▉        | 72/383 [00:08<00:36,  8.52it/s][A
+
+ 19%|█▉        | 73/383 [00:08<00:36,  8.51it/s][A
+
+ 19%|█▉        | 74/383 [00:08<00:36,  8.55it/s][A
+
+ 20%|█▉        | 75/383 [00:08<00:35,  8.56it/s][A
+
+ 20%|█▉        | 76/383 [00:08<00:35,  8.56it/s][A
+
+ 20%|██        | 77/383 [00:09<00:35,  8.56it/s][A
+
+ 20%|██        | 78/383 [00:09<00:35,  8.55it/s][A
+
+ 21%|██        | 79/383 [00:09<00:36,  8.42it/s][A
+
+ 21%|██        | 80/383 [00:09<00:35,  8.47it/s][A
+
+ 21%|██        | 81/383 [00:09<00:35,  8.46it/s][A
+
+ 21%|██▏       | 82/383 [00:09<00:35,  8.51it/s][A
+
+ 22%|██▏       | 83/383 [00:09<00:35,  8.52it/s][A
+
+ 22%|██▏       | 84/383 [00:09<00:35,  8.53it/s][A
+
+ 22%|██▏       | 85/383 [00:10<00:34,  8.56it/s][A
+
+ 22%|██▏       | 86/383 [00:10<00:35,  8.46it/s][A
+
+ 23%|██▎       | 87/383 [00:10<00:35,  8.41it/s][A
+
+ 23%|██▎       | 88/383 [00:10<00:35,  8.36it/s][A
+
+ 23%|██▎       | 89/383 [00:10<00:35,  8.34it/s][A
+
+ 23%|██▎       | 90/383 [00:10<00:35,  8.34it/s][A
+
+ 24%|██▍       | 91/383 [00:10<00:34,  8.44it/s][A
+
+ 24%|██▍       | 92/383 [00:10<00:34,  8.51it/s][A
+
+ 24%|██▍       | 93/383 [00:10<00:33,  8.57it/s][A
+
+ 25%|██▍       | 94/383 [00:11<00:33,  8.51it/s][A
+
+ 25%|██▍       | 95/383 [00:11<00:33,  8.58it/s][A
+
+ 25%|██▌       | 96/383 [00:11<00:33,  8.64it/s][A
+
+ 25%|██▌       | 97/383 [00:11<00:33,  8.56it/s][A
+
+ 26%|██▌       | 98/383 [00:11<00:35,  8.05it/s][A
+
+ 26%|██▌       | 99/383 [00:11<00:34,  8.15it/s][A
+
+ 26%|██▌       | 100/383 [00:11<00:34,  8.23it/s][A
+
+ 26%|██▋       | 101/383 [00:11<00:33,  8.32it/s][A
+
+ 27%|██▋       | 102/383 [00:12<00:33,  8.44it/s][A
+
+ 27%|██▋       | 103/383 [00:12<00:32,  8.58it/s][A
+
+ 27%|██▋       | 104/383 [00:12<00:32,  8.59it/s][A
+
+ 27%|██▋       | 105/383 [00:12<00:34,  8.07it/s][A
+
+ 28%|██▊       | 106/383 [00:12<00:33,  8.16it/s][A
+
+ 28%|██▊       | 107/383 [00:12<00:33,  8.23it/s][A
+
+ 28%|██▊       | 108/383 [00:12<00:35,  7.74it/s][A
+
+ 28%|██▊       | 109/383 [00:12<00:34,  7.94it/s][A
+
+ 29%|██▊       | 110/383 [00:13<00:33,  8.16it/s][A
+
+ 29%|██▉       | 111/383 [00:13<00:32,  8.31it/s][A
+
+ 29%|██▉       | 112/383 [00:13<00:32,  8.45it/s][A
+
+ 30%|██▉       | 113/383 [00:13<00:31,  8.48it/s][A
+
+ 30%|██▉       | 114/383 [00:13<00:31,  8.51it/s][A
+
+ 30%|███       | 115/383 [00:13<00:31,  8.48it/s][A
+
+ 30%|███       | 116/383 [00:13<00:31,  8.50it/s][A
+
+ 31%|███       | 117/383 [00:13<00:31,  8.49it/s][A
+
+ 31%|███       | 118/383 [00:13<00:31,  8.52it/s][A
+
+ 31%|███       | 119/383 [00:14<00:32,  8.04it/s][A
+
+ 31%|███▏      | 120/383 [00:14<00:34,  7.70it/s][A
+
+ 32%|███▏      | 121/383 [00:14<00:33,  7.76it/s][A
+
+ 32%|███▏      | 122/383 [00:14<00:32,  7.96it/s][A
+
+ 32%|███▏      | 123/383 [00:14<00:31,  8.15it/s][A
+
+ 32%|███▏      | 124/383 [00:14<00:31,  8.27it/s][A
+
+ 33%|███▎      | 125/383 [00:14<00:30,  8.33it/s][A
+
+ 33%|███▎      | 126/383 [00:14<00:30,  8.40it/s][A
+
+ 33%|███▎      | 127/383 [00:15<00:30,  8.48it/s][A
+
+ 33%|███▎      | 128/383 [00:15<00:29,  8.53it/s][A
+
+ 34%|███▎      | 129/383 [00:15<00:29,  8.52it/s][A
+
+ 34%|███▍      | 130/383 [00:15<00:29,  8.53it/s][A
+
+ 34%|███▍      | 131/383 [00:15<00:29,  8.49it/s][A
+
+ 34%|███▍      | 132/383 [00:15<00:31,  8.01it/s][A
+
+ 35%|███▍      | 133/383 [00:15<00:30,  8.12it/s][A
+
+ 35%|███▍      | 134/383 [00:15<00:30,  8.23it/s][A
+
+ 35%|███▌      | 135/383 [00:16<00:29,  8.32it/s][A
+
+ 36%|███▌      | 136/383 [00:16<00:29,  8.43it/s][A
+
+ 36%|███▌      | 137/383 [00:16<00:29,  8.41it/s][A
+
+ 36%|███▌      | 138/383 [00:16<00:29,  8.36it/s][A
+
+ 36%|███▋      | 139/383 [00:16<00:29,  8.29it/s][A
+
+ 37%|███▋      | 140/383 [00:16<00:29,  8.33it/s][A
+
+ 37%|███▋      | 141/383 [00:16<00:28,  8.37it/s][A
+
+ 37%|███▋      | 142/383 [00:16<00:28,  8.33it/s][A
+
+ 37%|███▋      | 143/383 [00:16<00:28,  8.40it/s][A
+
+ 38%|███▊      | 144/383 [00:17<00:28,  8.30it/s][A
+
+ 38%|███▊      | 145/383 [00:17<00:28,  8.30it/s][A
+
+ 38%|███▊      | 146/383 [00:17<00:28,  8.29it/s][A
+
+ 38%|███▊      | 147/383 [00:17<00:28,  8.31it/s][A
+
+ 39%|███▊      | 148/383 [00:17<00:27,  8.40it/s][A
+
+ 39%|███▉      | 149/383 [00:17<00:27,  8.45it/s][A
+
+ 39%|███▉      | 150/383 [00:17<00:27,  8.48it/s][A
+
+ 39%|███▉      | 151/383 [00:17<00:27,  8.51it/s][A
+
+ 40%|███▉      | 152/383 [00:18<00:27,  8.51it/s][A
+
+ 40%|███▉      | 153/383 [00:18<00:27,  8.51it/s][A
+
+ 40%|████      | 154/383 [00:18<00:27,  8.41it/s][A
+
+ 40%|████      | 155/383 [00:18<00:27,  8.44it/s][A
+
+ 41%|████      | 156/383 [00:18<00:26,  8.49it/s][A
+
+ 41%|████      | 157/383 [00:18<00:27,  8.10it/s][A
+
+ 41%|████▏     | 158/383 [00:18<00:29,  7.65it/s][A
+
+ 42%|████▏     | 159/383 [00:18<00:28,  7.73it/s][A
+
+ 42%|████▏     | 160/383 [00:19<00:28,  7.88it/s][A
+
+ 42%|████▏     | 161/383 [00:19<00:27,  7.95it/s][A
+
+ 42%|████▏     | 162/383 [00:19<00:27,  8.03it/s][A
+
+ 43%|████▎     | 163/383 [00:19<00:27,  8.01it/s][A
+
+ 43%|████▎     | 164/383 [00:19<00:27,  8.02it/s][A
+
+ 43%|████▎     | 165/383 [00:19<00:26,  8.13it/s][A
+
+ 43%|████▎     | 166/383 [00:19<00:26,  8.13it/s][A
+
+ 44%|████▎     | 167/383 [00:19<00:26,  8.17it/s][A
+
+ 44%|████▍     | 168/383 [00:20<00:26,  8.21it/s][A
+
+ 44%|████▍     | 169/383 [00:20<00:25,  8.27it/s][A
+
+ 44%|████▍     | 170/383 [00:20<00:25,  8.29it/s][A
+
+ 45%|████▍     | 171/383 [00:20<00:25,  8.35it/s][A
+
+ 45%|████▍     | 172/383 [00:20<00:25,  8.37it/s][A
+
+ 45%|████▌     | 173/383 [00:20<00:24,  8.44it/s][A
+
+ 45%|████▌     | 174/383 [00:20<00:24,  8.39it/s][A
+
+ 46%|████▌     | 175/383 [00:20<00:24,  8.40it/s][A
+
+ 46%|████▌     | 176/383 [00:20<00:24,  8.39it/s][A
+
+ 46%|████▌     | 177/383 [00:21<00:24,  8.34it/s][A
+
+ 46%|████▋     | 178/383 [00:21<00:24,  8.36it/s][A
+
+ 47%|████▋     | 179/383 [00:21<00:24,  8.36it/s][A
+
+ 47%|████▋     | 180/383 [00:21<00:24,  8.44it/s][A
+
+ 47%|████▋     | 181/383 [00:21<00:23,  8.45it/s][A
+
+ 48%|████▊     | 182/383 [00:21<00:23,  8.48it/s][A
+
+ 48%|████▊     | 183/383 [00:21<00:23,  8.43it/s][A
+
+ 48%|████▊     | 184/383 [00:21<00:23,  8.50it/s][A
+
+ 48%|████▊     | 185/383 [00:22<00:23,  8.46it/s][A
+
+ 49%|████▊     | 186/383 [00:22<00:23,  8.41it/s][A
+
+ 49%|████▉     | 187/383 [00:22<00:26,  7.40it/s][A
+
+ 49%|████▉     | 188/383 [00:22<00:28,  6.78it/s][A
+
+ 49%|████▉     | 189/383 [00:22<00:26,  7.20it/s][A
+
+ 50%|████▉     | 190/383 [00:22<00:25,  7.53it/s][A
+
+ 50%|████▉     | 191/383 [00:22<00:24,  7.78it/s][A
+
+ 50%|█████     | 192/383 [00:22<00:23,  8.02it/s][A
+
+ 50%|█████     | 193/383 [00:23<00:23,  8.10it/s][A
+
+ 51%|█████     | 194/383 [00:23<00:23,  8.17it/s][A
+
+ 51%|█████     | 195/383 [00:23<00:23,  8.17it/s][A
+
+ 51%|█████     | 196/383 [00:23<00:23,  7.94it/s][A
+
+ 51%|█████▏    | 197/383 [00:23<00:25,  7.31it/s][A
+
+ 52%|█████▏    | 198/383 [00:23<00:24,  7.61it/s][A
+
+ 52%|█████▏    | 199/383 [00:23<00:23,  7.81it/s][A
+
+ 52%|█████▏    | 200/383 [00:24<00:23,  7.94it/s][A
+
+ 52%|█████▏    | 201/383 [00:24<00:22,  7.99it/s][A
+
+ 53%|█████▎    | 202/383 [00:24<00:22,  8.07it/s][A
+
+ 53%|█████▎    | 203/383 [00:24<00:22,  8.15it/s][A
+
+ 53%|█████▎    | 204/383 [00:24<00:22,  8.11it/s][A
+
+ 54%|█████▎    | 205/383 [00:24<00:21,  8.16it/s][A
+
+ 54%|█████▍    | 206/383 [00:24<00:21,  8.22it/s][A
+
+ 54%|█████▍    | 207/383 [00:24<00:21,  8.18it/s][A
+
+ 54%|█████▍    | 208/383 [00:24<00:21,  8.19it/s][A
+
+ 55%|█████▍    | 209/383 [00:25<00:21,  8.19it/s][A
+
+ 55%|█████▍    | 210/383 [00:25<00:21,  8.17it/s][A
+
+ 55%|█████▌    | 211/383 [00:25<00:21,  8.17it/s][A
+
+ 55%|█████▌    | 212/383 [00:25<00:20,  8.19it/s][A
+
+ 56%|█████▌    | 213/383 [00:25<00:20,  8.18it/s][A
+
+ 56%|█████▌    | 214/383 [00:25<00:20,  8.18it/s][A
+
+ 56%|█████▌    | 215/383 [00:25<00:20,  8.20it/s][A
+
+ 56%|█████▋    | 216/383 [00:25<00:20,  8.21it/s][A
+
+ 57%|█████▋    | 217/383 [00:26<00:20,  8.20it/s][A
+
+ 57%|█████▋    | 218/383 [00:26<00:20,  8.21it/s][A
+
+ 57%|█████▋    | 219/383 [00:26<00:19,  8.22it/s][A
+
+ 57%|█████▋    | 220/383 [00:26<00:19,  8.26it/s][A
+
+ 58%|█████▊    | 221/383 [00:26<00:19,  8.23it/s][A
+
+ 58%|█████▊    | 222/383 [00:26<00:19,  8.24it/s][A
+
+ 58%|█████▊    | 223/383 [00:26<00:19,  8.25it/s][A
+
+ 58%|█████▊    | 224/383 [00:26<00:19,  8.29it/s][A
+
+ 59%|█████▊    | 225/383 [00:27<00:18,  8.34it/s][A
+
+ 59%|█████▉    | 226/383 [00:27<00:18,  8.30it/s][A
+
+ 59%|█████▉    | 227/383 [00:27<00:19,  8.07it/s][A
+
+ 60%|█████▉    | 228/383 [00:27<00:20,  7.40it/s][A
+
+ 60%|█████▉    | 229/383 [00:27<00:20,  7.60it/s][A
+
+ 60%|██████    | 230/383 [00:27<00:19,  7.82it/s][A
+
+ 60%|██████    | 231/383 [00:27<00:19,  7.96it/s][A
+
+ 61%|██████    | 232/383 [00:27<00:18,  7.99it/s][A
+
+ 61%|██████    | 233/383 [00:28<00:19,  7.74it/s][A
+
+ 61%|██████    | 234/383 [00:28<00:18,  7.98it/s][A
+
+ 61%|██████▏   | 235/383 [00:28<00:18,  8.14it/s][A
+
+ 62%|██████▏   | 236/383 [00:28<00:17,  8.19it/s][A
+
+ 62%|██████▏   | 237/383 [00:28<00:17,  8.26it/s][A
+
+ 62%|██████▏   | 238/383 [00:28<00:17,  8.32it/s][A
+
+ 62%|██████▏   | 239/383 [00:28<00:17,  8.03it/s][A
+
+ 63%|██████▎   | 240/383 [00:28<00:17,  7.99it/s][A
+
+ 63%|██████▎   | 241/383 [00:29<00:17,  7.89it/s][A
+
+ 63%|██████▎   | 242/383 [00:29<00:17,  8.07it/s][A
+
+ 63%|██████▎   | 243/383 [00:29<00:17,  8.19it/s][A
+
+ 64%|██████▎   | 244/383 [00:29<00:18,  7.67it/s][A
+
+ 64%|██████▍   | 245/383 [00:29<00:18,  7.37it/s][A
+
+ 64%|██████▍   | 246/383 [00:29<00:19,  7.21it/s][A
+
+ 64%|██████▍   | 247/383 [00:29<00:20,  6.78it/s][A
+
+ 65%|██████▍   | 248/383 [00:30<00:20,  6.65it/s][A
+
+ 65%|██████▌   | 249/383 [00:30<00:18,  7.11it/s][A
+
+ 65%|██████▌   | 250/383 [00:30<00:17,  7.50it/s][A
+
+ 66%|██████▌   | 251/383 [00:30<00:16,  7.81it/s][A
+
+ 66%|██████▌   | 252/383 [00:30<00:16,  8.04it/s][A
+
+ 66%|██████▌   | 253/383 [00:30<00:15,  8.16it/s][A
+
+ 66%|██████▋   | 254/383 [00:30<00:15,  8.31it/s][A
+
+ 67%|██████▋   | 255/383 [00:30<00:15,  8.42it/s][A
+
+ 67%|██████▋   | 256/383 [00:31<00:14,  8.52it/s][A
+
+ 67%|██████▋   | 257/383 [00:31<00:14,  8.65it/s][A
+
+ 67%|██████▋   | 258/383 [00:31<00:14,  8.76it/s][A
+
+ 68%|██████▊   | 259/383 [00:31<00:14,  8.71it/s][A
+
+ 68%|██████▊   | 260/383 [00:31<00:14,  8.70it/s][A
+
+ 68%|██████▊   | 261/383 [00:31<00:13,  8.72it/s][A
+
+ 68%|██████▊   | 262/383 [00:31<00:16,  7.56it/s][A
+
+ 69%|██████▊   | 263/383 [00:31<00:15,  7.78it/s][A
+
+ 69%|██████▉   | 264/383 [00:31<00:14,  8.06it/s][A
+
+ 69%|██████▉   | 265/383 [00:32<00:14,  8.18it/s][A
+
+ 69%|██████▉   | 266/383 [00:32<00:14,  8.25it/s][A
+
+ 70%|██████▉   | 267/383 [00:32<00:13,  8.40it/s][A
+
+ 70%|██████▉   | 268/383 [00:32<00:13,  8.44it/s][A
+
+ 70%|███████   | 269/383 [00:32<00:13,  8.26it/s][A
+
+ 70%|███████   | 270/383 [00:32<00:14,  7.55it/s][A
+
+ 71%|███████   | 271/383 [00:32<00:14,  7.83it/s][A
+
+ 71%|███████   | 272/383 [00:32<00:13,  8.02it/s][A
+
+ 71%|███████▏  | 273/383 [00:33<00:13,  8.20it/s][A
+
+ 72%|███████▏  | 274/383 [00:33<00:13,  8.28it/s][A
+
+ 72%|███████▏  | 275/383 [00:33<00:14,  7.63it/s][A
+
+ 72%|███████▏  | 276/383 [00:33<00:13,  7.92it/s][A
+
+ 72%|███████▏  | 277/383 [00:33<00:13,  8.10it/s][A
+
+ 73%|███████▎  | 278/383 [00:33<00:12,  8.20it/s][A
+
+ 73%|███████▎  | 279/383 [00:33<00:12,  8.27it/s][A
+
+ 73%|███████▎  | 280/383 [00:33<00:12,  8.32it/s][A
+
+ 73%|███████▎  | 281/383 [00:34<00:12,  8.36it/s][A
+
+ 74%|███████▎  | 282/383 [00:34<00:12,  8.34it/s][A
+
+ 74%|███████▍  | 283/383 [00:34<00:13,  7.68it/s][A
+
+ 74%|███████▍  | 284/383 [00:34<00:12,  7.79it/s][A
+
+ 74%|███████▍  | 285/383 [00:34<00:12,  7.98it/s][A
+
+ 75%|███████▍  | 286/383 [00:34<00:12,  8.08it/s][A
+
+ 75%|███████▍  | 287/383 [00:34<00:11,  8.18it/s][A
+
+ 75%|███████▌  | 288/383 [00:34<00:11,  8.33it/s][A
+
+ 75%|███████▌  | 289/383 [00:35<00:11,  8.41it/s][A
+
+ 76%|███████▌  | 290/383 [00:35<00:11,  8.37it/s][A
+
+ 76%|███████▌  | 291/383 [00:35<00:11,  8.34it/s][A
+
+ 76%|███████▌  | 292/383 [00:35<00:10,  8.43it/s][A
+
+ 77%|███████▋  | 293/383 [00:35<00:10,  8.48it/s][A
+
+ 77%|███████▋  | 294/383 [00:35<00:10,  8.30it/s][A
+
+ 77%|███████▋  | 295/383 [00:35<00:10,  8.37it/s][A
+
+ 77%|███████▋  | 296/383 [00:35<00:10,  8.44it/s][A
+
+ 78%|███████▊  | 297/383 [00:36<00:10,  8.45it/s][A
+
+ 78%|███████▊  | 298/383 [00:36<00:10,  8.44it/s][A
+
+ 78%|███████▊  | 299/383 [00:36<00:09,  8.44it/s][A
+
+ 78%|███████▊  | 300/383 [00:36<00:09,  8.50it/s][A
+
+ 79%|███████▊  | 301/383 [00:36<00:09,  8.52it/s][A
+
+ 79%|███████▉  | 302/383 [00:36<00:09,  8.53it/s][A
+
+ 79%|███████▉  | 303/383 [00:36<00:09,  8.47it/s][A
+
+ 79%|███████▉  | 304/383 [00:36<00:09,  8.50it/s][A
+
+ 80%|███████▉  | 305/383 [00:36<00:09,  8.42it/s][A
+
+ 80%|███████▉  | 306/383 [00:37<00:12,  6.12it/s][A
+
+ 80%|████████  | 307/383 [00:37<00:13,  5.62it/s][A
+
+ 80%|████████  | 308/383 [00:37<00:14,  5.05it/s][A
+
+ 81%|████████  | 309/383 [00:37<00:14,  5.03it/s][A
+
+ 81%|████████  | 310/383 [00:37<00:12,  5.70it/s][A
+
+ 81%|████████  | 311/383 [00:38<00:11,  6.35it/s][A
+
+ 81%|████████▏ | 312/383 [00:38<00:10,  6.86it/s][A
+
+ 82%|████████▏ | 313/383 [00:38<00:09,  7.30it/s][A
+
+ 82%|████████▏ | 314/383 [00:38<00:09,  7.61it/s][A
+
+ 82%|████████▏ | 315/383 [00:38<00:08,  7.82it/s][A
+
+ 83%|████████▎ | 316/383 [00:38<00:08,  7.99it/s][A
+
+ 83%|████████▎ | 317/383 [00:38<00:08,  8.18it/s][A
+
+ 83%|████████▎ | 318/383 [00:38<00:07,  8.27it/s][A
+
+ 83%|████████▎ | 319/383 [00:39<00:07,  8.31it/s][A
+
+ 84%|████████▎ | 320/383 [00:39<00:07,  8.31it/s][A
+
+ 84%|████████▍ | 321/383 [00:39<00:07,  8.41it/s][A
+
+ 84%|████████▍ | 322/383 [00:39<00:07,  8.52it/s][A
+
+ 84%|████████▍ | 323/383 [00:39<00:07,  8.45it/s][A
+
+ 85%|████████▍ | 324/383 [00:39<00:06,  8.50it/s][A
+
+ 85%|████████▍ | 325/383 [00:39<00:06,  8.58it/s][A
+
+ 85%|████████▌ | 326/383 [00:39<00:06,  8.62it/s][A
+
+ 85%|████████▌ | 327/383 [00:39<00:06,  8.66it/s][A
+
+ 86%|████████▌ | 328/383 [00:40<00:06,  8.56it/s][A
+
+ 86%|████████▌ | 329/383 [00:40<00:06,  8.62it/s][A
+
+ 86%|████████▌ | 330/383 [00:40<00:06,  8.63it/s][A
+
+ 86%|████████▋ | 331/383 [00:40<00:06,  8.57it/s][A
+
+ 87%|████████▋ | 332/383 [00:40<00:06,  8.38it/s][A
+
+ 87%|████████▋ | 333/383 [00:40<00:05,  8.48it/s][A
+
+ 87%|████████▋ | 334/383 [00:40<00:05,  8.41it/s][A
+
+ 87%|████████▋ | 335/383 [00:40<00:05,  8.34it/s][A
+
+ 88%|████████▊ | 336/383 [00:41<00:05,  8.33it/s][A
+
+ 88%|████████▊ | 337/383 [00:41<00:05,  8.34it/s][A
+
+ 88%|████████▊ | 338/383 [00:41<00:05,  8.44it/s][A
+
+ 89%|████████▊ | 339/383 [00:41<00:05,  8.51it/s][A
+
+ 89%|████████▉ | 340/383 [00:41<00:05,  8.54it/s][A
+
+ 89%|████████▉ | 341/383 [00:41<00:04,  8.55it/s][A
+
+ 89%|████████▉ | 342/383 [00:41<00:04,  8.52it/s][A
+
+ 90%|████████▉ | 343/383 [00:41<00:04,  8.58it/s][A
+
+ 90%|████████▉ | 344/383 [00:41<00:04,  8.47it/s][A
+
+ 90%|█████████ | 345/383 [00:42<00:04,  8.51it/s][A
+
+ 90%|█████████ | 346/383 [00:42<00:04,  8.56it/s][A
+
+ 91%|█████████ | 347/383 [00:42<00:04,  8.54it/s][A
+
+ 91%|█████████ | 348/383 [00:42<00:04,  8.51it/s][A
+
+ 91%|█████████ | 349/383 [00:42<00:04,  8.48it/s][A
+
+ 91%|█████████▏| 350/383 [00:42<00:03,  8.46it/s][A
+
+ 92%|█████████▏| 351/383 [00:42<00:03,  8.50it/s][A
+
+ 92%|█████████▏| 352/383 [00:42<00:03,  8.47it/s][A
+
+ 92%|█████████▏| 353/383 [00:43<00:03,  8.53it/s][A
+
+ 92%|█████████▏| 354/383 [00:43<00:03,  8.54it/s][A
+
+ 93%|█████████▎| 355/383 [00:43<00:03,  8.50it/s][A
+
+ 93%|█████████▎| 356/383 [00:43<00:03,  8.44it/s][A
+
+ 93%|█████████▎| 357/383 [00:43<00:03,  8.45it/s][A
+
+ 93%|█████████▎| 358/383 [00:43<00:02,  8.53it/s][A
+
+ 94%|█████████▎| 359/383 [00:43<00:02,  8.54it/s][A
+
+ 94%|█████████▍| 360/383 [00:43<00:02,  8.57it/s][A
+
+ 94%|█████████▍| 361/383 [00:43<00:02,  8.57it/s][A
+
+ 95%|█████████▍| 362/383 [00:44<00:02,  8.64it/s][A
+
+ 95%|█████████▍| 363/383 [00:44<00:02,  8.62it/s][A
+
+ 95%|█████████▌| 364/383 [00:44<00:02,  8.63it/s][A
+
+ 95%|█████████▌| 365/383 [00:44<00:02,  8.63it/s][A
+
+ 96%|█████████▌| 366/383 [00:44<00:01,  8.59it/s][A
+
+ 96%|█████████▌| 367/383 [00:44<00:01,  8.62it/s][A
+
+ 96%|█████████▌| 368/383 [00:44<00:01,  8.63it/s][A
+
+ 96%|█████████▋| 369/383 [00:44<00:01,  8.62it/s][A
+
+ 97%|█████████▋| 370/383 [00:45<00:01,  8.59it/s][A
+
+ 97%|█████████▋| 371/383 [00:45<00:01,  8.63it/s][A
+
+ 97%|█████████▋| 372/383 [00:45<00:01,  8.60it/s][A
+
+ 97%|█████████▋| 373/383 [00:45<00:01,  8.62it/s][A
+
+ 98%|█████████▊| 374/383 [00:45<00:01,  8.53it/s][A
+
+ 98%|█████████▊| 375/383 [00:45<00:00,  8.57it/s][A
+
+ 98%|█████████▊| 376/383 [00:45<00:00,  8.62it/s][A
+
+ 98%|█████████▊| 377/383 [00:45<00:00,  8.63it/s][A
+
+ 99%|█████████▊| 378/383 [00:45<00:00,  8.60it/s][A
+
+ 99%|█████████▉| 379/383 [00:46<00:00,  8.57it/s][A
+
+ 99%|█████████▉| 380/383 [00:46<00:00,  8.50it/s][A
+
+ 99%|█████████▉| 381/383 [00:46<00:00,  8.51it/s][A
+
+100%|█████████▉| 382/383 [00:46<00:00,  8.55it/s][A
+
+100%|██████████| 383/383 [00:46<00:00,  8.48it/s][A
+                                                 
+
+                                                 
+[A{'eval_loss': '0.1277', 'eval_runtime': '46.68', 'eval_samples_per_second': '8.205', 'eval_steps_per_second': '8.205', 'epoch': '1'}
+
+100%|██████████| 246/246 [39:24<00:00,  7.59s/it]
+
+100%|██████████| 383/383 [00:46<00:00,  8.48it/s][A
+
+                                                 [A
+                                                 
+{'train_runtime': '2364', 'train_samples_per_second': '1.661', 'train_steps_per_second': '0.104', 'train_loss': '0.09014', 'epoch': '1'}
+
+100%|██████████| 246/246 [39:24<00:00,  7.59s/it]
+100%|██████████| 246/246 [39:24<00:00,  9.61s/it]
+{
+  "elapsed_seconds": 2364.9105749869996,
+  "completed_global_steps": 246,
+  "peak_allocated_gib": 3.592123031616211,
+  "peak_reserved_gib": 14.654296875,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "base_parameters": 596049920,
+  "torch": "2.14.1+cu130",
+  "context_sha256": "ff9eff6e91f48cffb5efccaf84dc8bd0e2147091002b4612f1d47860bdaceff2",
+  "contract_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+  "scorer_version": "2.1",
+  "training_precision": "torch.bfloat16"
+}
+Adapter and checkpoints saved in /home/ubuntu/mws-v21/out/005-plain-epoch-001/adapter
+Starting merge: /home/ubuntu/mws/.venv/bin/python -u /home/ubuntu/mws-v21/releases/case-v21-unified-001/src/merge.py --adapter-dir /home/ubuntu/mws-v21/out/005-plain-epoch-001/adapter --output /home/ubuntu/mws-v21/out/005-plain-epoch-001/merged
+Base: /home/ubuntu/mws-v21/models/005-noise-20261115; adapter: /home/ubuntu/mws-v21/out/005-plain-epoch-001/adapter
+
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]
+Loading weights:  32%|███▏      | 100/310 [00:00<00:00, 996.79it/s]
+Loading weights:  65%|██████▍   | 200/310 [00:00<00:00, 819.27it/s]
+Loading weights: 100%|██████████| 310/310 [00:00<00:00, 1122.58it/s]
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:3303: FutureWarning: `is_gradient_checkpointing` is deprecated and will be removed in v6. Use `is_activation_checkpointing` instead.
+  warnings.warn(
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  1.54it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  1.54it/s]
+Merged model saved in /home/ubuntu/mws-v21/out/005-plain-epoch-001/merged
+Starting validation: /home/ubuntu/mws/.venv/bin/python -u /home/ubuntu/mws-v21/releases/case-v21-unified-001/src/benchmark.py --model /home/ubuntu/mws-v21/out/005-plain-epoch-001/merged --input /home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/val.jsonl --device cuda --batch-size 2 --warmup-batches 1 --output-dir /home/ubuntu/mws-v21/out/005-plain-epoch-001/validation
+
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]
+Loading weights:  70%|███████   | 218/310 [00:00<00:00, 2176.14it/s]
+Loading weights: 100%|██████████| 310/310 [00:00<00:00, 2209.60it/s]
+Completed 2/383; failed: 0
+Completed 4/383; failed: 0
+Completed 6/383; failed: 0
+Completed 8/383; failed: 0
+Completed 10/383; failed: 0
+Completed 12/383; failed: 0
+Completed 14/383; failed: 0
+Completed 16/383; failed: 0
+Completed 18/383; failed: 0
+Completed 20/383; failed: 0
+Completed 22/383; failed: 0
+Completed 24/383; failed: 0
+Completed 26/383; failed: 0
+Completed 28/383; failed: 0
+Completed 30/383; failed: 0
+Completed 32/383; failed: 0
+Completed 34/383; failed: 0
+Completed 36/383; failed: 0
+Completed 38/383; failed: 0
+Completed 40/383; failed: 0
+Completed 42/383; failed: 0
+Completed 44/383; failed: 0
+Completed 46/383; failed: 0
+Completed 48/383; failed: 0
+Completed 50/383; failed: 0
+Completed 52/383; failed: 0
+Completed 54/383; failed: 0
+Completed 56/383; failed: 0
+Completed 58/383; failed: 0
+Completed 60/383; failed: 0
+Completed 62/383; failed: 0
+Completed 64/383; failed: 0
+Completed 66/383; failed: 0
+Completed 68/383; failed: 0
+Completed 70/383; failed: 0
+Completed 72/383; failed: 0
+Completed 74/383; failed: 0
+Completed 76/383; failed: 0
+Completed 78/383; failed: 0
+Completed 80/383; failed: 0
+Completed 82/383; failed: 0
+Completed 84/383; failed: 0
+Completed 86/383; failed: 0
+Completed 88/383; failed: 0
+Completed 90/383; failed: 0
+Completed 92/383; failed: 0
+Completed 94/383; failed: 0
+Completed 96/383; failed: 0
+Completed 98/383; failed: 0
+Completed 100/383; failed: 0
+Completed 102/383; failed: 0
+Completed 104/383; failed: 0
+Completed 106/383; failed: 0
+Completed 108/383; failed: 0
+Completed 110/383; failed: 0
+Completed 112/383; failed: 0
+Completed 114/383; failed: 0
+Completed 116/383; failed: 0
+Completed 118/383; failed: 0
+Completed 120/383; failed: 0
+Completed 122/383; failed: 0
+Completed 124/383; failed: 0
+Completed 126/383; failed: 0
+Completed 128/383; failed: 0
+Completed 130/383; failed: 0
+Completed 132/383; failed: 0
+Completed 134/383; failed: 0
+Completed 136/383; failed: 0
+Completed 138/383; failed: 0
+Completed 140/383; failed: 0
+Completed 142/383; failed: 0
+Completed 144/383; failed: 0
+Completed 146/383; failed: 0
+Completed 148/383; failed: 0
+Completed 150/383; failed: 0
+Completed 152/383; failed: 0
+Completed 154/383; failed: 0
+Completed 156/383; failed: 0
+Completed 158/383; failed: 0
+Completed 160/383; failed: 0
+Completed 162/383; failed: 0
+Completed 164/383; failed: 0
+Completed 166/383; failed: 0
+Completed 168/383; failed: 0
+Completed 170/383; failed: 0
+Completed 172/383; failed: 0
+Completed 174/383; failed: 0
+Completed 176/383; failed: 0
+Completed 178/383; failed: 0
+Completed 180/383; failed: 0
+Completed 182/383; failed: 0
+Completed 184/383; failed: 0
+Completed 186/383; failed: 0
+Completed 188/383; failed: 0
+Completed 190/383; failed: 0
+Completed 192/383; failed: 0
+Completed 194/383; failed: 0
+Completed 196/383; failed: 0
+Completed 198/383; failed: 0
+Completed 200/383; failed: 0
+Completed 202/383; failed: 0
+Completed 204/383; failed: 0
+Completed 206/383; failed: 0
+Completed 208/383; failed: 0
+Completed 210/383; failed: 0
+Completed 212/383; failed: 0
+Completed 214/383; failed: 0
+Completed 216/383; failed: 0
+Completed 218/383; failed: 0
+Completed 220/383; failed: 0
+Completed 222/383; failed: 0
+Completed 224/383; failed: 0
+Completed 226/383; failed: 0
+Completed 228/383; failed: 0
+Completed 230/383; failed: 0
+Completed 232/383; failed: 0
+Completed 234/383; failed: 0
+Completed 236/383; failed: 0
+Completed 238/383; failed: 0
+Completed 240/383; failed: 0
+Completed 242/383; failed: 0
+Completed 244/383; failed: 0
+Completed 246/383; failed: 0
+Completed 248/383; failed: 0
+Completed 250/383; failed: 0
+Completed 252/383; failed: 0
+Completed 254/383; failed: 0
+Completed 256/383; failed: 0
+Completed 258/383; failed: 0
+Completed 260/383; failed: 0
+Completed 262/383; failed: 0
+Completed 264/383; failed: 0
+Completed 266/383; failed: 0
+Completed 268/383; failed: 0
+Completed 270/383; failed: 0
+Completed 272/383; failed: 0
+Completed 274/383; failed: 0
+Completed 276/383; failed: 0
+Completed 278/383; failed: 0
+Completed 280/383; failed: 0
+Completed 282/383; failed: 0
+Completed 284/383; failed: 0
+Completed 286/383; failed: 0
+Completed 288/383; failed: 0
+Completed 290/383; failed: 0
+Completed 292/383; failed: 0
+Completed 294/383; failed: 0
+Completed 296/383; failed: 0
+Completed 298/383; failed: 0
+Completed 300/383; failed: 0
+Completed 302/383; failed: 0
+Completed 304/383; failed: 0
+Completed 306/383; failed: 0
+Completed 308/383; failed: 0
+Completed 310/383; failed: 0
+Completed 312/383; failed: 0
+Completed 314/383; failed: 0
+Completed 316/383; failed: 0
+Completed 318/383; failed: 0
+Completed 320/383; failed: 0
+Completed 322/383; failed: 0
+Completed 324/383; failed: 0
+Completed 326/383; failed: 0
+Completed 328/383; failed: 0
+Completed 330/383; failed: 0
+Completed 332/383; failed: 0
+Completed 334/383; failed: 0
+Completed 336/383; failed: 0
+Completed 338/383; failed: 0
+Completed 340/383; failed: 0
+Completed 342/383; failed: 0
+Completed 344/383; failed: 0
+Completed 346/383; failed: 0
+Completed 348/383; failed: 0
+Completed 350/383; failed: 0
+Completed 352/383; failed: 0
+Completed 354/383; failed: 0
+Completed 356/383; failed: 0
+Completed 358/383; failed: 0
+Completed 360/383; failed: 0
+Completed 362/383; failed: 0
+Completed 364/383; failed: 0
+Completed 366/383; failed: 0
+Completed 368/383; failed: 0
+Completed 370/383; failed: 0
+Completed 372/383; failed: 0
+Completed 374/383; failed: 0
+Completed 376/383; failed: 0
+Completed 378/383; failed: 0
+Completed 380/383; failed: 0
+Completed 382/383; failed: 0
+Completed 383/383; failed: 0
+{
+  "protocol": "local-inference-v2",
+  "settings": {
+    "input": "/home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/val.jsonl",
+    "model": "/home/ubuntu/mws-v21/out/005-plain-epoch-001/merged",
+    "device": "cuda",
+    "batch_size": 2,
+    "warmup_batches": 1,
+    "limit": null,
+    "failures": null,
+    "with_schema": false,
+    "output_dir": "/home/ubuntu/mws-v21/out/005-plain-epoch-001/validation"
+  },
+  "dataset_sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+  "selected_calls_sha256": "a0285d0fb339cb42d22a4a0222727115a0d41c3ba923ed6b16dbfeb62b0d15cc",
+  "contract_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+  "diagnostic_subset": false,
+  "failures_sha256": null,
+  "limits": {
+    "input": 12288,
+    "output": 4096
+  },
+  "prompt_lookup_tokens": 0,
+  "grammar_backend": "torch_native",
+  "grammar_threads": 4,
+  "save_raw_responses": true,
+  "retry_on_token_limit": true,
+  "retry_repetition_penalty": 1.2,
+  "run_context": {
+    "contract": {
+      "signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "contract_version": "2.1",
+      "target_version": 2
+    },
+    "json_schema_sha256": "6b7d699659e4f92e3e552263de980e4093d06dd5a0d66fc1ba177df7cc8cddd7",
+    "scoring": {
+      "scorer_version": "2.1",
+      "official_metrics_version": "2.1",
+      "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "official_source_modified": false,
+      "local_patch": null,
+      "patch_adapter_sha256": null,
+      "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb"
+    },
+    "train": null,
+    "val": {
+      "path": "/home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/val.jsonl",
+      "sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+      "bytes": 3120190,
+      "recognized_version": "organizer-2.1-val"
+    },
+    "catalog": {
+      "path": "/home/ubuntu/mws-v21/releases/case-v21-unified-001/data/organizer-v2.1/catalog.json",
+      "sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+      "bytes": 16809,
+      "recognized_version": "custom-or-different-bytes"
+    },
+    "context_sha256": "3ba78ce1451a4b73e737b2184d37a35bded8f4e250b5845d9294c377bc954155"
+  },
+  "hardware": {
+    "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "cpu": "Intel Xeon Processor (Icelake)",
+    "logical_cpus": 8,
+    "ram_bytes": 33642676224,
+    "packages": {
+      "torch": "2.14.1+cu130",
+      "transformers": "5.23.0",
+      "peft": "0.21.3",
+      "accelerate": "1.15.0",
+      "bitsandbytes": "0.50.2",
+      "xgrammar": "0.2.9",
+      "psutil": "7.2.2"
+    },
+    "installed_packages": {
+      "shellingham": "1.5.4",
+      "cuda-pathfinder": "1.8.4",
+      "hf-xet": "1.8.0",
+      "urllib3": "2.8.0",
+      "nvidia-cusolver": "12.0.4.66",
+      "nvidia-nccl-cu13": "2.30.7",
+      "nvidia-nvshmem-cu13": "3.4.5",
+      "charset-normalizer": "3.5.2",
+      "safetensors": "0.8.0",
+      "h11": "0.16.0",
+      "tokenizers": "0.23.3",
+      "networkx": "3.7",
+      "pydantic_core": "2.50.4",
+      "httpcore": "1.0.9",
+      "triton": "3.8.0",
+      "bitsandbytes": "0.50.2",
+      "Jinja2": "3.1.6",
+      "uvicorn": "0.54.0",
+      "typing_extensions": "4.16.0",
+      "requests": "2.34.2",
+      "httpx2": "2.16.0",
+      "httpx": "0.28.1",
+      "mdurl": "0.1.2",
+      "accelerate": "1.15.0",
+      "xgrammar": "0.2.9",
+      "transformers": "5.23.0",
+      "anyio": "4.16.0",
+      "nvidia-cuda-cupti": "13.0.85",
+      "cuda-toolkit": "13.0.3.0",
+      "httpcore2": "2.16.0",
+      "sympy": "1.14.0",
+      "PyYAML": "6.0.3",
+      "packaging": "26.3",
+      "nvidia-cufft": "12.0.0.61",
+      "peft": "0.21.3",
+      "MarkupSafe": "3.0.3",
+      "regex": "2026.11.9",
+      "nvidia-cuda-nvrtc": "13.0.88",
+      "nvidia-nvjitlink": "13.4.92",
+      "Pygments": "2.21.0",
+      "nvidia-nvtx": "13.0.85",
+      "filelock": "4.2.4",
+      "certifi": "2026.10.23",
+      "mpmath": "1.3.0",
+      "huggingface_hub": "2.4.0",
+      "tqdm": "4.70.1",
+      "truststore": "0.10.5",
+      "pydantic": "2.14.3",
+      "opentelemetry-api": "1.45.2",
+      "annotated-doc": "0.0.6",
+      "psutil": "7.2.2",
+      "typer": "0.29.1",
+      "annotated-types": "0.8.0",
+      "nvidia-cudnn-cu13": "9.24.0.43",
+      "fsspec": "2026.9.0",
+      "fastapi": "0.162.7",
+      "markdown-it-py": "4.3.0",
+      "pip": "26.3",
+      "nvidia-cublas": "13.1.1.3",
+      "nvidia-cuda-runtime": "13.0.96",
+      "cuda-bindings": "13.4.4",
+      "nvidia-curand": "10.4.0.35",
+      "numpy": "2.5.4",
+      "nvidia-cufile": "1.15.1.6",
+      "setuptools": "78.1.0",
+      "idna": "3.20",
+      "nvidia-cusparselt-cu13": "0.8.1",
+      "starlette": "1.10.0",
+      "nvidia-cusparse": "12.6.3.3",
+      "click": "8.5.1",
+      "torch": "2.14.1+cu130",
+      "rich": "15.0.0",
+      "apache-tvm-ffi": "0.1.16",
+      "typing-inspection": "0.4.5"
+    },
+    "git_commit": "case-v21-unified-001",
+    "git_status": null,
+    "source_sha256": {
+      "src/benchmark.py": "05b216a059ee3ef04fc56fb34d01681a3cd5362422d1c85c1e3537fade4fe037",
+      "src/cascade_simulation.py": "b6d51b9575a8d3784f1317326f6e17a296499eb2867f2c4a5cb2169882929364",
+      "src/case_evaluation.py": "cd43ec91c24515c24d1fa728ba1de679a6e634f959656991be017cd2bb86e759",
+      "src/case_io.py": "9f11ead7c5bfdbcd5363dbd9cbdb29ef1260db0409802b999f5003c26a26da1e",
+      "src/catalog_hints.py": "d5472ae5d5d6cea87b7c9399d9c8e18bb04f982965dd9c4a429cc5f1b345f8f7",
+      "src/catalog_normalization.py": "239660bd0417070e60294ca5eeb9edb3c493b25d8fcee4bd50c4431298d59c7d",
+      "src/check_data.py": "1d883ed8de71877d5b8a378dca97c9819d3608cad52dc4ec81f52b6a9266a2b1",
+      "src/checkpoint_agreement.py": "395e24503e7faa7366bbad093e29454fcc48853eb5080664aa1bdb0dc8280a21",
+      "src/compare_runs.py": "88ef1e10f19e15bdf76e7b039648ac3b4af16b290174eb5991ae931486e9785f",
+      "src/compare_temporal.py": "72583749b7de6c75ad6366b6fe93895f345e12beadb362405dad0d76fd6f0c8a",
+      "src/config.py": "7ccb8a94a4cf2c0a0657e7ec3994ad305836a5f89c634615af2f51a826a8e1a5",
+      "src/doctor.py": "89c61107aab8736bfb352a149a557ad33ceb40025f26eb13684eef3fe5abcc0f",
+      "src/eval.py": "3eec4f9bd80a16d6f02615afd572204d8b2d9ea22ee732ab2f580e2913d08599",
+      "src/extractor.py": "6dd9769fa64b1ae666279ae616838942f2bd43421c5f4c38899d08eba1d17da1",
+      "src/fact_recovery.py": "a1c77412ac0ffae774d416f7c765ac9740cacc6ca92b96a07e8671c221ee4451",
+      "src/gpu_precision.py": "6edb04ad7fe367d99d3a56672c1f79ed5ed08830e13ae5ad566320d66b3fb589",
+      "src/json_constraints.py": "d92c02318c062c07e8d6f71e881d25e66b01b78c3df3f88ebe8abc11deac8dc0",
+      "src/llm_api.py": "c4e251de4e3cb6b2915b6f5493e16c65d9fb7bda483d9a474aa4b1e6661d144f",
+      "src/make_noisy_val.py": "1f285051a933c3522518613d0258e80df3b95e380de1bd55b5d3a01775ef77de",
+      "src/make_train_variants.py": "7f402a702c8dc958c848461f2d1bf9d714ce4376232d655ea8f5182ac9a720db",
+      "src/mcp_server.py": "7239ab15ef09b98273b2e51239a026d004adbd2bd5cf3be5aaadb7b901e47ccc",
+      "src/measurements.py": "1e8c293883449f4090f7aaff8a932e79da08b21fd1063f257d6698c4a1ddf45f",
+      "src/merge.py": "67dca455919a57a7266864ff39cad933618415558084069709dcc0f24eaf4714",
+      "src/official_case_metrics.py": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+      "src/official_case_metrics_v21.py": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "src/postprocess_dates.py": "1f80f68e6fbafef0af460ce2b5e3cbe21d71af15063613ba03f28c6bda210918",
+      "src/predict.py": "0ff76828e2d6727ade7db3394647c5737d52bb5c6928c72968fdfbec56c13684",
+      "src/prediction.py": "70e41ee9b545c99489c9384179c84af6f7f3e66c63360286afbbd2d279a58ad0",
+      "src/prepare_case.py": "2635517bcb1a061853a4d211542bf0b10d1bff1f2b9af615f688f55504a2889e",
+      "src/review_queue.py": "563bad5e1b6b745dbd959d9c9403df135791fdb406e6da76f584bdd4dbdb27a3",
+      "src/run_context.py": "8144f6c5b8b9b5176aaa1f4eb7a29a8324e68c306191ef6472c0236e55dbe548",
+      "src/run_experiment.py": "7cb5bd57fb518d10424d876556c8c9a03570a17dd1a4fba210ebf5703d5d072b",
+      "src/schema.py": "727f926239cf977128e5093da288b86665126fec732e4ee7308f53eebac7091f",
+      "src/scoring.py": "51456dc6f981150d3cd1e4bc368ad22587e211f7ef914e6596cff516a3155467",
+      "src/series_history.py": "eb405601cc2ebeb374ecf54edf24eadd0acc7230f4a2835d0d721fb45a0bfb02",
+      "src/serve.py": "96d17fa07acfa0e29bdd7c4156bf2a7db26ac9dac7c66f5a57c53d30fc92fe7d",
+      "src/serve_vllm.py": "926e26ffc3fe624cc892c1a65ed20893b3baa5e2b37a46204361a75c0a8cd5d3",
+      "src/state_intervals.py": "528d3f0664d85c0e578deafafcc0be29aaf26c845e903e25ace9068d85a367f3",
+      "src/tariff_recovery.py": "def14528339393d5c6d1f3f11deb25b14a07b21e3b5eb63e517d9f2287d6cbc8",
+      "src/temporal.py": "c20a6b549036b7502bc11a07d0d54dcfc9f3d228c7449d73945e38735f736f71",
+      "src/temporal_binding.py": "36ea9adf91b8c557341ee23109db36002b26fa088c8d2453ecab7d9c32e473b7",
+      "src/temporal_case_v2.py": "542556a85a88997ed8a01ecbd0678e64d4984e668c5f55305ed25c6a8e60fb40",
+      "src/ticket_intervals.py": "cf419b045fcb5bdc770be38a7e9743294681a04a7668bca4bd9b31fa575a9e9a",
+      "src/ticket_recovery.py": "bc5283c6699257d869bcaedf9347ee03be33407987a8946173a4c67ed8fe678e",
+      "src/train.py": "78cab93ffa353771c78358ac28f1ab996179ec3f827a7c55b24114550483a26d",
+      "src/training_data.py": "bc11e7a34b98b8f323044407859ed4a729da050cff487da4b7dbd0f007765cee",
+      "src/training_observer.py": "cac4fed0c24ee2d25726cb89bf5b4d22aecd454089ff6a062dbd0df7aa629a22",
+      "src/unified_recovery.py": "26862d54b583b4de6b1b998a0109e3417350a1555cb926f360d2708c52219654"
+    },
+    "contract_assets_sha256": {
+      "src/contracts/facts-v1.schema.json": "b33b38f1d827a7a59321fa36e2806abd2f3f36c13ef83f527f94621f1c28b6ee"
+    },
+    "nvidia_smi": "index, uuid, name, driver_version, memory.total [MiB]\n0, GPU-edffefcf-ef91-9770-b2c2-c4e78ebb09b8, NVIDIA GeForce RTX 4090, 615.71.09, 24564 MiB",
+    "image_reference": null
+  },
+  "model_artifacts": {
+    "case_contract.json": {
+      "bytes": 398,
+      "sha256": "7431a4b51f8f26d47b3f952daf61158765d3f9762c45f2a895d85b4e29e95a7c"
+    },
+    "config.json": {
+      "bytes": 1416,
+      "sha256": "474b4ae0ba806d6a4087ed76c8c970bf75cacf58ac8af34505bf79676438443b"
+    },
+    "experiment.json": {
+      "bytes": 2262,
+      "sha256": "03f60f084a21d92579d0ee6933d7e410ca99e0f8e091cbd4b638697b2e9263d4"
+    },
+    "generation_config.json": {
+      "bytes": 214,
+      "sha256": "7282475ae39d47247987be44195964496c6ac015888007f9ed830fd31287f682"
+    },
+    "model.safetensors": {
+      "bytes": 1192134784,
+      "sha256": "232db122df3e8666e4da818290741d1a55d5ad38dc2892657d525116e7e3b4ce"
+    },
+    "tokenizer.json": {
+      "bytes": 11422650,
+      "sha256": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506"
+    },
+    "tokenizer_config.json": {
+      "bytes": 692,
+      "sha256": "1cc816812993bff176eb4f7495433b736f06fba9b6e7b05cac7b4a1780650c95"
+    }
+  },
+  "model_weights_bytes": 1192134784,
+  "model_load_seconds": 6.3419235440014745,
+  "constrained_json": true,
+  "model_contract": {
+    "source_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+    "target_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+    "policy": "exact",
+    "with_schema": false
+  },
+  "temporal_normalization": "case_v2",
+  "temporal_catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+  "fact_recovery": true,
+  "fact_recovery_policy": "unified-v1-guarded-tariffs-explicit",
+  "series_history_enabled": true,
+  "series_history_max_entries": 10000,
+  "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+  "grammar_compile_seconds": 0.8021786320005049,
+  "model_parameters": 596049920,
+  "dtype": "torch.float16",
+  "torch_threads": 4,
+  "model_revision": null,
+  "calls": 383,
+  "failed_calls": 0,
+  "error_counts": {
+    "invalid_json": 0,
+    "invalid_source": 0,
+    "invalid_schema": 0,
+    "output_token_limit": 0,
+    "input_too_long": 0,
+    "out_of_memory": 0,
+    "missing_prediction": 0
+  },
+  "normalization_counts": {
+    "temporal_dates_repaired": 136,
+    "recovered_facts": 108,
+    "fact_recovery_decisions": 141,
+    "fact_recovery_add": 108,
+    "reversed_intervals_opened": 3,
+    "series_accepted_carried": 36,
+    "fact_recovery_abstained": 30,
+    "fact_recovery_remove": 3,
+    "exact_duplicates_removed": 14,
+    "catalog_fields_normalized": 1,
+    "speaker_from_turn": 2,
+    "invalid_dates_dropped": 2
+  },
+  "history_settings": {
+    "policy": "identified_ticket_explicit_priority_v3",
+    "max_entries": 10000,
+    "max_accounts": 512,
+    "max_payload_bytes": 8388608,
+    "max_account_payload_bytes": 32768,
+    "max_account_entries": 64,
+    "ttl_seconds": 3600.0
+  },
+  "history": {
+    "policy": "identified_ticket_explicit_priority_v3",
+    "max_entries": 10000,
+    "max_accounts": 512,
+    "max_payload_bytes": 8388608,
+    "max_account_payload_bytes": 32768,
+    "max_account_entries": 64,
+    "ttl_seconds": 3600.0,
+    "entries": 61,
+    "accounts": 59,
+    "serialized_payload_bytes": 21655,
+    "peak_serialized_payload_bytes": 21655,
+    "processing_seconds": 0.2255048730130511,
+    "counts": {
+      "series_accepted_carried": 36,
+      "history_replaced_entries": 67,
+      "history_interval_conflicts": 2
+    }
+  },
+  "temporal_postprocess": {
+    "stage": "backend.extract",
+    "included_in_measurement": true,
+    "mode": "case_v2",
+    "series_history_enabled": true
+  },
+  "warmup_batches": 1,
+  "warmup_seconds": 18.12366204600039,
+  "warmup_errors": [],
+  "measurement_seconds": 3501.753030594,
+  "calls_per_hour": 393.7456433831129,
+  "successful_calls_per_hour": 393.7456433831129,
+  "gpu_seconds_per_1000_calls": 9142.958304422977,
+  "gpu_seconds_definition": "one allocated GPU * measured local processing seconds; not CUDA kernel time",
+  "latency_definition": "local end-to-end batch completion, shared by calls in batch; excludes queue, network and file I/O",
+  "percentile_method": "nearest_rank",
+  "call_completion_seconds": {
+    "count": 383,
+    "unknown": 0,
+    "p50": 18.08020329899955,
+    "p95": 23.60490792500059,
+    "max": 26.270165818998066
+  },
+  "batch_seconds": {
+    "count": 192,
+    "unknown": 0,
+    "p50": 18.08020329899955,
+    "p95": 23.60490792500059,
+    "max": 26.270165818998066
+  },
+  "input_tokens": {
+    "count": 383,
+    "unknown": 0,
+    "p50": 1233,
+    "p95": 3669,
+    "max": 10095
+  },
+  "output_tokens": {
+    "count": 383,
+    "unknown": 0,
+    "p50": 434,
+    "p95": 644,
+    "max": 739
+  },
+  "output_token_definition": "generated token IDs through first EOS inclusive; excludes padding",
+  "memory": {
+    "process_rss_sampled_peak_bytes": 2007171072,
+    "rss_sample_interval_seconds": 0.05,
+    "rss_samples": 69442,
+    "sampling_error": null,
+    "cuda_peak_allocated_bytes": 4918446080,
+    "cuda_peak_reserved_bytes": 6679429120
+  },
+  "quality": {
+    "official": {
+      "metrics_version": "2.1",
+      "n_calls": 383,
+      "n_gold_facts": 1845,
+      "n_pred_facts": 2117,
+      "fact_precision": 0.5073,
+      "fact_recall": 0.5821,
+      "temporal_recall": 0.5152,
+      "n_temporal": 656,
+      "state_accuracy": 0.5602,
+      "n_state": 623,
+      "grounding_turn": 0.7924,
+      "grounding_span": null,
+      "n_grounded": 1074
+    },
+    "diagnostics": {
+      "invalid_or_failed_calls": 0,
+      "missing_calls": 0,
+      "format_valid_rate": 1.0,
+      "calls_with_invalid_sources": 0
+    },
+    "per_attribute": {
+      "service_state": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 453,
+        "n_pred_facts": 258,
+        "fact_precision": 0.7016,
+        "fact_recall": 0.3996,
+        "temporal_recall": 0.2344,
+        "n_temporal": 128,
+        "state_accuracy": 0.301,
+        "n_state": 309,
+        "grounding_turn": 0.8564,
+        "matched_facts": 181,
+        "missed_facts": 272,
+        "extra_facts": 77,
+        "valid_from_errors": 149,
+        "valid_to_errors": 45,
+        "date_errors": 149,
+        "source_turn_errors": 26,
+        "temporal_eligible_matched_facts": 128,
+        "temporal_correct_pairs": 30,
+        "temporal_date_errors": 98
+      },
+      "tariff": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 146,
+        "n_pred_facts": 179,
+        "fact_precision": 0.6425,
+        "fact_recall": 0.7877,
+        "temporal_recall": 0.2597,
+        "n_temporal": 77,
+        "state_accuracy": 0.717,
+        "n_state": 106,
+        "grounding_turn": 0.6783,
+        "matched_facts": 115,
+        "missed_facts": 31,
+        "extra_facts": 64,
+        "valid_from_errors": 65,
+        "valid_to_errors": 28,
+        "date_errors": 65,
+        "source_turn_errors": 37,
+        "temporal_eligible_matched_facts": 77,
+        "temporal_correct_pairs": 20,
+        "temporal_date_errors": 57
+      },
+      "ticket_status": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 400,
+        "n_pred_facts": 405,
+        "fact_precision": 0.9358,
+        "fact_recall": 0.9475,
+        "temporal_recall": 0.5204,
+        "n_temporal": 294,
+        "state_accuracy": 0.8654,
+        "n_state": 208,
+        "grounding_turn": 0.905,
+        "matched_facts": 379,
+        "missed_facts": 21,
+        "extra_facts": 26,
+        "valid_from_errors": 165,
+        "valid_to_errors": 99,
+        "date_errors": 203,
+        "source_turn_errors": 36,
+        "temporal_eligible_matched_facts": 294,
+        "temporal_correct_pairs": 153,
+        "temporal_date_errors": 141
+      },
+      "action": {
+        "attribute_kind": "static",
+        "n_gold_facts": 368,
+        "n_pred_facts": 261,
+        "fact_precision": 0.5364,
+        "fact_recall": 0.3804,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": 0.9571,
+        "matched_facts": 140,
+        "missed_facts": 228,
+        "extra_facts": 121,
+        "valid_from_errors": 32,
+        "valid_to_errors": 0,
+        "date_errors": 32,
+        "source_turn_errors": 6,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "agreement": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 478,
+        "n_pred_facts": 1014,
+        "fact_precision": 0.2554,
+        "fact_recall": 0.5418,
+        "temporal_recall": 0.8599,
+        "n_temporal": 157,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": 0.5444,
+        "matched_facts": 259,
+        "missed_facts": 219,
+        "extra_facts": 755,
+        "valid_from_errors": 30,
+        "valid_to_errors": 0,
+        "date_errors": 30,
+        "source_turn_errors": 118,
+        "temporal_eligible_matched_facts": 157,
+        "temporal_correct_pairs": 135,
+        "temporal_date_errors": 22
+      }
+    },
+    "scorer_version": "2.1",
+    "official_metrics_version": "2.1",
+    "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+    "official_source_modified": false,
+    "local_patch": null,
+    "patch_adapter_sha256": null,
+    "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+    "known_scorer_issues": [
+      "Organizer v2.1 gold-vs-gold state_accuracy is not necessarily 1.0.",
+      "Temporal recall is conditional on matched facts and recoverable dates; action is excluded.",
+      "Official v2.1 has two known date-set.update TypeErrors; use explicitly labelled 2.1-datefix for those inputs."
+    ]
+  },
+  "status": "complete"
+}
+DONE: /home/ubuntu/mws-v21/out/005-plain-epoch-001/comparison.json

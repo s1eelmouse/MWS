@@ -1,0 +1,13 @@
+﻿{
+    "run_id":  "005-plain-epoch-001",
+    "archive":  "C:\\Users\\Tripozik\\Desktop\\MWS\\server-results\\005-plain-epoch-001\\005-plain-epoch-001-results.tar.gz",
+    "archive_sha256":  "1f8597fe93c00fb931f90dbf4765d1b5366e430e4e04779b0707f4d1fc4a026a",
+    "complete_results":  "C:\\Users\\Tripozik\\Desktop\\MWS\\server-results\\005-plain-epoch-001\\extracted\\005-plain-epoch-001",
+    "merged_model":  "C:\\Users\\Tripozik\\Desktop\\MWS\\server-results\\005-plain-epoch-001\\extracted\\005-plain-epoch-001\\merged",
+    "adapter":  "C:\\Users\\Tripozik\\Desktop\\MWS\\server-results\\005-plain-epoch-001\\extracted\\005-plain-epoch-001\\adapter",
+    "checkpoints":  "C:\\Users\\Tripozik\\Desktop\\MWS\\server-results\\005-plain-epoch-001\\extracted\\005-plain-epoch-001\\adapter\\checkpoints",
+    "report_copy":  "C:\\Users\\Tripozik\\Desktop\\MWS\\repository\\docs\\experiments\\4090-005-plain-epoch-001\\attachments\\download\\005-plain-epoch-001",
+    "weight_files_in_bulk_directory":  true,
+    "calls":  383,
+    "failed_calls":  0
+}

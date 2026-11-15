@@ -1,0 +1,34 @@
+{
+  "before": {
+    "fact_precision": 0.5415,
+    "fact_recall": 0.5805,
+    "temporal_recall": 0.5061,
+    "state_accuracy": 0.5602,
+    "grounding_turn": 0.7824
+  },
+  "after": {
+    "metrics_version": "2.1",
+    "n_calls": 383,
+    "n_gold_facts": 1845,
+    "n_pred_facts": 2117,
+    "fact_precision": 0.5073,
+    "fact_recall": 0.5821,
+    "temporal_recall": 0.5152,
+    "n_temporal": 656,
+    "state_accuracy": 0.5602,
+    "n_state": 623,
+    "grounding_turn": 0.7924,
+    "grounding_span": null,
+    "n_grounded": 1074
+  },
+  "delta_percentage_points": {
+    "fact_precision": -3.42,
+    "fact_recall": 0.16,
+    "temporal_recall": 0.91,
+    "state_accuracy": 0.0,
+    "grounding_turn": 1.0
+  },
+  "failed_calls": 0,
+  "automatic_replacement": false,
+  "noisy_validation": "not run; required before claiming noise robustness"
+}

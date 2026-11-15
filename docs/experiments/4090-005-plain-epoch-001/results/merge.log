@@ -1,0 +1,13 @@
+Base: /home/ubuntu/mws-v21/models/005-noise-20261115; adapter: /home/ubuntu/mws-v21/out/005-plain-epoch-001/adapter
+
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]
+Loading weights:  32%|███▏      | 100/310 [00:00<00:00, 996.79it/s]
+Loading weights:  65%|██████▍   | 200/310 [00:00<00:00, 819.27it/s]
+Loading weights: 100%|██████████| 310/310 [00:00<00:00, 1122.58it/s]
+/home/ubuntu/mws/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:3303: FutureWarning: `is_gradient_checkpointing` is deprecated and will be removed in v6. Use `is_activation_checkpointing` instead.
+  warnings.warn(
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  1.54it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  1.54it/s]
+Merged model saved in /home/ubuntu/mws-v21/out/005-plain-epoch-001/merged

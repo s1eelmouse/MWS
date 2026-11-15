@@ -1,0 +1,17 @@
+# Override for a NVIDIA GPU host with the NVIDIA Container Toolkit:
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build
+# Select a PyTorch CUDA index compatible with the installed driver.
+services:
+  extractor:
+    build:
+      args:
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu126}
+    image: compactfactextraction:${TAG:-cuda}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu

@@ -1,0 +1,320 @@
+{
+  "downloaded_utc": "2026-11-15T21:56:52.447117+00:00",
+  "archive": "C:\\Users\\Tripozik\\Desktop\\MWS\\server-results\\005-plain-epoch-001\\005-plain-epoch-001-results.tar.gz",
+  "archive_sha256": "1f8597fe93c00fb931f90dbf4765d1b5366e430e4e04779b0707f4d1fc4a026a",
+  "server_checksum_matches": true,
+  "extracted_files": 62,
+  "destination": "C:\\Users\\Tripozik\\Desktop\\MWS\\server-results\\005-plain-epoch-001\\extracted",
+  "files": [
+    {
+      "path": "005-plain-epoch-001/adapter/adapter_config.json",
+      "bytes": 1202,
+      "sha256": "0a3f98cb1c8c7edb6a75ece26c1bbecdee423a8d2a46f75c2b738e0ccfdd2d92"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/adapter_model.safetensors",
+      "bytes": 40422168,
+      "sha256": "bb7ef6356750f3b4daa8c8b29111be09f4b0f3a29e6b31d93e8a92fc68ba96ff"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/attempt-1794773307074588023/context.json",
+      "bytes": 1493,
+      "sha256": "721cbd1d88ed33c7d3fa7a6428ec9090d9427a1f09d04ea621ef86b80f4b01b7"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/attempt-1794773307074588023/environment.json",
+      "bytes": 7510,
+      "sha256": "6f29dea4954c2a8ae16c1050709b3e490abd3bda459e569e0ab7a7fa29c867f9"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/attempt-1794773307074588023/events.jsonl",
+      "bytes": 14790,
+      "sha256": "120be11e27eba73c46b2a5a343468d10410f0b477385ffd5ea1686073407e27c"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/attempt-1794773307074588023/loss-history.json",
+      "bytes": 4536,
+      "sha256": "8eb1fda068a327fc82387494fa59b1e0d309284e54768fa8b74b590d0f923135"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/attempt-1794773307074588023/settings.json",
+      "bytes": 3010,
+      "sha256": "e7f2cb306de91af06e31cf66540a60277ca4288b37862a81b60233206143015e"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/attempt-1794773307074588023/status.json",
+      "bytes": 280,
+      "sha256": "8cac72bd7f3deddc607fcf858217770c8a228dc834d30c74921155ad95292af6"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/case_contract.json",
+      "bytes": 138,
+      "sha256": "e87701e8496749cdca9df0d96fcf4c8df649b292b1673ec7db34372903a5f24c"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/chat_template.jinja",
+      "bytes": 4168,
+      "sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-200/adapter_config.json",
+      "bytes": 1202,
+      "sha256": "0a3f98cb1c8c7edb6a75ece26c1bbecdee423a8d2a46f75c2b738e0ccfdd2d92"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-200/adapter_model.safetensors",
+      "bytes": 40422168,
+      "sha256": "58eef589fd8284456324a9b2003df5fcef4a45a8171aca2d997163c13260d72e"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-200/optimizer.pt",
+      "bytes": 81075515,
+      "sha256": "7cae9356c1c88512d668c04394a8cbadb32b67039fe9792880d5f4b6632ce1c1"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-200/README.md",
+      "bytes": 5246,
+      "sha256": "5473f714ec6b02896c528cd8206eae330ee7cb1ea9aa29eac6a1a09db5c1c55f"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-200/rng_state.pth",
+      "bytes": 14645,
+      "sha256": "c4c4e896ae87909ef0f9a89e6dbd41c2fd981cfcf33c2d37429c7cb0c42b0e7f"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-200/scheduler.pt",
+      "bytes": 1465,
+      "sha256": "97a67cc5586618ffe569b5139b4197addf154f3998150f98fbacb8f57667e5eb"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-200/trainer_state.json",
+      "bytes": 4496,
+      "sha256": "21538968ac0967f0c672ed164e5cab346e30b101db0e13bf54b5eeee6668d968"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-200/training_args.bin",
+      "bytes": 5329,
+      "sha256": "13ad890dea60a0e47757a13da4801e26872bf87ae4780ed75809447ef405b459"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-246/adapter_config.json",
+      "bytes": 1202,
+      "sha256": "0a3f98cb1c8c7edb6a75ece26c1bbecdee423a8d2a46f75c2b738e0ccfdd2d92"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-246/adapter_model.safetensors",
+      "bytes": 40422168,
+      "sha256": "bb7ef6356750f3b4daa8c8b29111be09f4b0f3a29e6b31d93e8a92fc68ba96ff"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-246/optimizer.pt",
+      "bytes": 81075515,
+      "sha256": "da4ec68238d0f2a6cd1403e50599425e89600b45759390e928240304d9368637"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-246/README.md",
+      "bytes": 5246,
+      "sha256": "5473f714ec6b02896c528cd8206eae330ee7cb1ea9aa29eac6a1a09db5c1c55f"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-246/rng_state.pth",
+      "bytes": 14645,
+      "sha256": "c640322551807c7a3325a0bab30366af71074fc57215b80832a610c1adfe4fd3"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-246/scheduler.pt",
+      "bytes": 1465,
+      "sha256": "d0fe99e742f96f1dbadcd40a690ff3f988ff9914c933256c90388c656ba30749"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-246/trainer_state.json",
+      "bytes": 5226,
+      "sha256": "854a90d4d955ddabd5d33098c35f078bc6d40fef8f4d5f28e1d14b790060fffe"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/checkpoints/checkpoint-246/training_args.bin",
+      "bytes": 5329,
+      "sha256": "13ad890dea60a0e47757a13da4801e26872bf87ae4780ed75809447ef405b459"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/experiment.json",
+      "bytes": 2262,
+      "sha256": "03f60f084a21d92579d0ee6933d7e410ca99e0f8e091cbd4b638697b2e9263d4"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/README.md",
+      "bytes": 5246,
+      "sha256": "5473f714ec6b02896c528cd8206eae330ee7cb1ea9aa29eac6a1a09db5c1c55f"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/tokenizer.json",
+      "bytes": 11422650,
+      "sha256": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/tokenizer_config.json",
+      "bytes": 692,
+      "sha256": "1cc816812993bff176eb4f7495433b736f06fba9b6e7b05cac7b4a1780650c95"
+    },
+    {
+      "path": "005-plain-epoch-001/adapter/training_stats_step_246_1794775672450753803.json",
+      "bytes": 500,
+      "sha256": "d08d1ab05dba256d4cf620c949e76b850831bfb181c9bc3b4a2d13ae838dab0d"
+    },
+    {
+      "path": "005-plain-epoch-001/comparison.json",
+      "bytes": 834,
+      "sha256": "bfc14a9ce3ea9fb92ba96bf92e8d22d76e27f2cedb1c4e769f82227c13fdb1f2"
+    },
+    {
+      "path": "005-plain-epoch-001/data-check.log",
+      "bytes": 1766,
+      "sha256": "6c082d0cef54f0176c608f9cfaf7c59d14d5b4e26374cd1a8e79cff5b0429307"
+    },
+    {
+      "path": "005-plain-epoch-001/merge.log",
+      "bytes": 965,
+      "sha256": "7767153accf6a617a9997108db78b0f7b79e7c8ed7c38203e882919e5ccae0d1"
+    },
+    {
+      "path": "005-plain-epoch-001/merged/case_contract.json",
+      "bytes": 398,
+      "sha256": "7431a4b51f8f26d47b3f952daf61158765d3f9762c45f2a895d85b4e29e95a7c"
+    },
+    {
+      "path": "005-plain-epoch-001/merged/chat_template.jinja",
+      "bytes": 4168,
+      "sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8"
+    },
+    {
+      "path": "005-plain-epoch-001/merged/config.json",
+      "bytes": 1416,
+      "sha256": "474b4ae0ba806d6a4087ed76c8c970bf75cacf58ac8af34505bf79676438443b"
+    },
+    {
+      "path": "005-plain-epoch-001/merged/experiment.json",
+      "bytes": 2262,
+      "sha256": "03f60f084a21d92579d0ee6933d7e410ca99e0f8e091cbd4b638697b2e9263d4"
+    },
+    {
+      "path": "005-plain-epoch-001/merged/generation_config.json",
+      "bytes": 214,
+      "sha256": "7282475ae39d47247987be44195964496c6ac015888007f9ed830fd31287f682"
+    },
+    {
+      "path": "005-plain-epoch-001/merged/model.safetensors",
+      "bytes": 1192134784,
+      "sha256": "232db122df3e8666e4da818290741d1a55d5ad38dc2892657d525116e7e3b4ce"
+    },
+    {
+      "path": "005-plain-epoch-001/merged/tokenizer.json",
+      "bytes": 11422650,
+      "sha256": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506"
+    },
+    {
+      "path": "005-plain-epoch-001/merged/tokenizer_config.json",
+      "bytes": 692,
+      "sha256": "1cc816812993bff176eb4f7495433b736f06fba9b6e7b05cac7b4a1780650c95"
+    },
+    {
+      "path": "005-plain-epoch-001/pipeline-status.json",
+      "bytes": 55,
+      "sha256": "d14fd667e1f108a2431fcbc7cd279b98b438de95909f034018eba8d8b2c8d3ca"
+    },
+    {
+      "path": "005-plain-epoch-001/release-manifest.json",
+      "bytes": 11438,
+      "sha256": "4603fdc16d7e132c48fea03a9249204a321573b7ac31060078ae0d1b762d98f9"
+    },
+    {
+      "path": "005-plain-epoch-001/settings.json",
+      "bytes": 3643,
+      "sha256": "d98547f0005838e1d00c781782af5861d200261c1b651b182ff05fc959bcddbd"
+    },
+    {
+      "path": "005-plain-epoch-001/stages.jsonl",
+      "bytes": 2272,
+      "sha256": "2578bdde6ec239d152a49d2a99379476cf0a5e0a770801c4cd51839e818a02cd"
+    },
+    {
+      "path": "005-plain-epoch-001/tests.log",
+      "bytes": 63303,
+      "sha256": "307d2ec414b30b33260f53f52d3166310121a5215833b822bb468cb5265ff1d1"
+    },
+    {
+      "path": "005-plain-epoch-001/train.log",
+      "bytes": 47579,
+      "sha256": "da76d8b314d470719826257e49e47e6e1d312fbb132db7b2aaa52443a5f7d963"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/batches.jsonl",
+      "bytes": 11533,
+      "sha256": "37fab94c7519063b81c3e6aa36f106d013141a37393fb2320258edababc18b2c"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/calls.jsonl",
+      "bytes": 567250,
+      "sha256": "9aa87497c3b8d8cfe060cd40cd018deed8d64df0a45bf4778bd0e9bdf297d53a"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/environment.json",
+      "bytes": 7510,
+      "sha256": "6f29dea4954c2a8ae16c1050709b3e490abd3bda459e569e0ab7a7fa29c867f9"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/errors.jsonl",
+      "bytes": 40020,
+      "sha256": "267ea37857983af832a9fab6bcde4ddf594f1a945ce83660b3420f87937227aa"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/failures.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/memory.csv",
+      "bytes": 2102860,
+      "sha256": "37b929e1fe5eb8227e3dc757521a213a156a5199b6dd462ca7ceb3819c9980a2"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/metrics.json",
+      "bytes": 4342,
+      "sha256": "18c2a3d1f3004c68e78fc870f0118278c353e2dae5c16ca5cb21496b4f958b6e"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/predictions-before-series.jsonl",
+      "bytes": 767925,
+      "sha256": "1888f2b00a530bc0ce731c37cc4468343f29289b4f72aee158a843e27fec49e1"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/predictions.jsonl",
+      "bytes": 767925,
+      "sha256": "6d85b7d7d405590f872ca099088cb1fc99f17cbcb3c3fb301b2074f04ab84f0e"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/raw-answers.jsonl",
+      "bytes": 656834,
+      "sha256": "321e14f86331014f3898947a642fd3437bb34fc02d306833b678565ac384f013"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/report.json",
+      "bytes": 19841,
+      "sha256": "fc1723b0232d3c313b7e53316b7e681a5d6818ccea817d2620f0da476ec26702"
+    },
+    {
+      "path": "005-plain-epoch-001/validation/temporal-audit.jsonl",
+      "bytes": 588540,
+      "sha256": "9cb403307ba0d53035b695d7ee202f49cc2cfe7cb68f7bbd3c698d610118e176"
+    },
+    {
+      "path": "005-plain-epoch-001/validation.log",
+      "bytes": 25586,
+      "sha256": "1f9528f42b5d766261228878d5d4cd9a95f7a56791052bd7b625fc55d5a13ad9"
+    },
+    {
+      "path": "005-plain-epoch-001.log",
+      "bytes": 140974,
+      "sha256": "bba66ed43f4467b159e1e82ee30f6abf0e799ef7d03d510e17a0230724921bb3"
+    }
+  ]
+}
