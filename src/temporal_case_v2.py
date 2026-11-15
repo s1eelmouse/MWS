@@ -317,17 +317,19 @@ def _bind_free(item, call, changes):
     _change(item, 'valid_from', call.started_at, changes)
 
 
-def _bind_state(item, call, call_day, turn, changes, stamp):
-    if _status_key(item['value']) == NORMAL:
-        # «до пятницы работало», «ещё вчера работало»: the normal state ends at the onset.
-        day, _named = _nearby_day(call, turn, item['value'], call_day, future=False, reach=0)
-        if day and day < call_day and _ordered(item.get('valid_from'), stamp(day)):
-            _change(item, 'valid_to', stamp(day), changes)
-        return
-    _open(item, changes)
-    day, _named = _nearby_day(call, turn, item['value'], call_day, future=False)
-    if day and day < call_day:
-        _change(item, 'valid_from', stamp(day), changes)
+def _bind_state(item, call, call_day, turn, changes, stamp, layers):
+    from state_intervals import bind_explicit_interval, service_onset_context
+    entries = [' '.join(words) for words in layers.entries['service_state']]
+    evidence = bind_explicit_interval(item, turn, call_day, entries, changes, stamp)
+    if not evidence:
+        onset = service_onset_context(item, call, turn, call_day, entries)
+        if onset:
+            day, source = onset
+            _open(item, changes)
+            _change(item, 'valid_from', stamp(day), changes)
+            evidence = [{'source_turn_idx': source, 'field': 'valid_from', 'day': day.isoformat(),
+                         'reason': 'named_symptom_onset'}]
+    return evidence
 
 
 def _bind_agreement(item, call, call_day, turn, changes, stamp):
@@ -436,7 +438,12 @@ def repair_case_v2_dates(facts, call, layers, *, close_chains=False):
         elif fact['attribute'] == 'ticket_status':
             _bind_status(item, call_day, turn, decision['changes'], stamp)
         elif fact['attribute'] == 'service_state':
-            _bind_state(item, call, call_day, turn, decision['changes'], stamp)
+            decision['evidence'] = _bind_state(item, call, call_day, turn, decision['changes'], stamp, layers)
+        elif fact['attribute'] == 'tariff':
+            from state_intervals import bind_explicit_interval
+            entries = [' '.join(words) for words in layers.entries['tariff']]
+            decision['evidence'] = bind_explicit_interval(item, turn, call_day, entries,
+                                                        decision['changes'], stamp)
         elif fact['attribute'] == 'agreement':
             # A question can become a confirmed appointment in the next answer.
             following = sorted((t for t in call.turns if t.idx > turn.idx), key=lambda t: t.idx)[:2]
