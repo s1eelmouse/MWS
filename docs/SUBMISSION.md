@@ -7,29 +7,30 @@
 
 | Артефакт | Где | Статус |
 |---|---|---|
-| Код | GitHub `main`, последний коммит | 157 тестов, `compileall` |
+| Код | GitHub `main`, последний коммит | 277 тестов (272 OK, 5 skipped), `compileall` |
 | Адаптер 002 (старый fallback) | `out/4090-continue-002`, `experiment.json` | подтверждён на старом пакете |
-| Адаптер 003 (кандидат) | `out/4090-continue-003`, `experiment.json` | 003+recovery: T 0.4663, S 0.5152 на сохранённых 2.1; свежий end-to-end не выполнен |
+| Адаптер 003 (кандидат) | `out/4090-continue-003`, `experiment.json` | 003+recovery v2: чистый val T 0.4807 / S 0.5201, 0 отказов; шумный val T 0.4582 / S 0.4141 |
 | Merged-модель 002/003 | локально `/home/user/hackathon/artifacts-4090/` | скопированы с 4090 |
-| Конфиг инференса | `README.md`, `MODEL.md` | 12288/16384/4096, XGrammar, `task` |
+| Конфиг инференса | `README.md`, `MODEL.md` | 12288/16384/4096, XGrammar, `case_v2`, recovery v2 |
 | Docker CPU | `compactfactextraction:cpu` | образ собран; `/health` и короткий `/extract` проверены; полный датовый звонок на CPU >240 с |
 | Отчёт | `MODEL.md`, `RESULTS.md`, `DEFENSE.md`, `TRAINING_REPORT.md` | готово |
-| Презентация | `docs/defense-deck.pptx` / `.pdf`, `SLIDES.md` | deck собран; проверить числа, шрифты и тайминг |
+| Презентация | `docs/defense-deck.pptx` / `.pdf`, `SLIDES.md` | deck пересобран с числами v2, 15.11; проверить шрифты и тайминг |
 | Демо/видео | `DEMO.md` | сценарий; записать видео |
 
 ## 2. Перед загрузкой
 
-- [x] `python -m unittest discover -s tests`: **157 тестов, 152 прошли, 5 skipped**.
+- [x] `python -m unittest discover -s tests`: **277 тестов, 272 прошли, 5 skipped**.
 - [x] `python -m compileall -q src tests`.
 - [x] `sha256sum src/official_case_metrics.py` совпадает с `official_case_metrics.sha256`
       (2.1: `863f8773…59c3`).
 - [x] Старый контракт `3ee403f3…a274` всё ещё принимается; новый — `40e9c449…2654`.
 - [x] В `predictions.jsonl`/`report.json` нет gold: `facts` не уходят в prompt и HTTP;
       `postprocess_dates` получает `CallInput` без gold. Проверено на отчёте 003.
-- [x] Полный val 2.1 на сохранённых 003: 0 отказов, `format_valid_rate = 1.0`;
-      T 0.4492 / S 0.4350; с recovery — T 0.4663 / S 0.5152.
-- [ ] Шумный val 2.1: 0 отказов, формат 100 %; T/S из отчёта. Для 2.1 ещё не
-      прогнан; старые шумные числа — пакет 1.
+- [x] Свежий полный val 2.1 на 4090: 0 отказов, `format_valid_rate = 1.0`;
+      `003 + recovery v2` — T 0.4807 / S 0.5201, P/R 0.4965/0.5328, G 0.7121.
+- [x] Шумный val 2.1: 0 отказов, формат 100 %, **T 0.4582 / S 0.4141**. T проходит
+      цель, S — нет; `005` на шуме обучена (чистый val T 0.4900 / S 0.5522), её шумный val ещё считается.
+      Старые шумные числа — пакет 1.
 - [ ] Docker: `/health` 200, `/extract` возвращает `call_id` и валидные `facts`;
       модель смонтирована read-only.
 - [x] Merged-модели 002/003 и их отчёты скачаны локально; SHA256 записаны.

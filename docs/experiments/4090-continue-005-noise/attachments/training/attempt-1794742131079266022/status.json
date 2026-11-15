@@ -1,0 +1,9 @@
+{
+  "status": "complete",
+  "error": null,
+  "global_step": 491,
+  "elapsed_seconds": 4113.7843914879995,
+  "cuda_peak_allocated_bytes": 3856249856,
+  "cuda_peak_reserved_bytes": 4169138176,
+  "context_sha256": "cea4e7b645321cf13008118a2121f9b509b36d171548548ee5695ebdb88561e3"
+}

@@ -23,6 +23,12 @@ def client_fact():
             'source': {'turn_idx': 0}, 'speaker': 'client'}
 
 
+def turns_call(*turns, started='2026-03-11T10:00:00'):
+    return as_call({'call_id': 'synthetic:turns', 'started_at': started,
+                    'turns': [{'idx': index, 'speaker': speaker, 'text': text}
+                              for index, (speaker, text) in enumerate(turns)]})
+
+
 class FactRecoveryTest(unittest.TestCase):
     def test_longest_catalog_name_and_plus_are_not_confused_with_shorter_tariffs(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -156,6 +162,99 @@ class FactRecoveryTest(unittest.TestCase):
         facts, decisions = recover_facts([old], call('Заявка 42 была в работе.'), None)
         self.assertEqual(facts, [old])
         self.assertFalse(decisions)
+
+    def test_first_person_tag_question_tariff_is_recovered(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Пятёрочка']}), encoding='utf-8')
+            facts, decisions = recover_facts(
+                [client_fact()],
+                call('А тариф у меня, кстати, Пятёрочка — это не влияет?'),
+                str(catalog))
+        tariff = [fact for fact in facts if fact['attribute'] == 'tariff']
+        self.assertEqual(len(tariff), 1)
+        self.assertEqual(tariff[0]['value'], 'Пятёрочка')
+        self.assertEqual(decisions[0]['reason'], 'missing_current_tariff')
+
+    def test_operator_system_question_recovers_tariff(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Квант']}), encoding='utf-8')
+            facts, decisions = recover_facts(
+                [client_fact()],
+                turns_call(('operator', 'Смотрю: тариф Квант, телевидение и домашний телефон — это вы?'),
+                           ('client', 'Да, это я.')),
+                str(catalog))
+        tariff = [fact for fact in facts if fact['attribute'] == 'tariff']
+        self.assertEqual(len(tariff), 1)
+        self.assertEqual(tariff[0]['value'], 'Квант')
+        self.assertTrue(decisions)
+
+    def test_second_person_operator_question_without_system_assertion_is_not_recovered(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Пульс']}), encoding='utf-8')
+            facts, decisions = recover_facts(
+                [client_fact()],
+                turns_call(('operator', 'У вас сейчас тариф Пульс?'),
+                           ('client', 'Не знаю.')),
+                str(catalog))
+        self.assertEqual(facts, [client_fact()])
+        self.assertFalse(decisions)
+
+    def test_switch_target_is_last_tariff_in_text(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Смарт', 'Мой максимум']}), encoding='utf-8')
+            old = {**client_fact(), 'attribute': 'tariff', 'value': 'Смарт',
+                   'valid_from': '2026-02-01T00:00:00'}
+            facts, decisions = recover_facts(
+                [old], call('Был у меня Смарт, ну я и перешла на Мой максимум.'), str(catalog))
+        current = [fact for fact in facts if fact['attribute'] == 'tariff'
+                   and not fact.get('valid_to')]
+        self.assertEqual(len(current), 1)
+        self.assertEqual(current[0]['value'], 'Мой максимум')
+        self.assertEqual(facts[0]['valid_to'], '2026-03-11T10:00:00')
+        self.assertEqual(decisions[0]['reason'], 'explicit_current_tariff_correction')
+
+    def test_confirmation_after_operator_question_recovers_tariff(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['СуперСмарт']}), encoding='utf-8')
+            facts, decisions = recover_facts(
+                [client_fact()],
+                turns_call(('operator', 'Елена Викторовна, цифровое телевидение, висиф СуперСмарт — всё верно?'),
+                           ('client', 'Да, да, СуперСмарт, оно самое...')),
+                str(catalog))
+        tariff = [fact for fact in facts if fact['attribute'] == 'tariff']
+        self.assertEqual(len(tariff), 1)
+        self.assertEqual(tariff[0]['value'], 'СуперСмарт')
+        self.assertEqual(tariff[0]['speaker'], 'client')
+
+    def test_operator_offer_is_not_a_current_tariff(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / 'catalog.json'
+            catalog.write_text(json.dumps({'tariffs': ['Пульс']}), encoding='utf-8')
+            facts, decisions = recover_facts(
+                [client_fact()],
+                turns_call(('operator', 'Могу предложить вам тариф Пульс со скидкой.'),
+                           ('client', 'Спасибо, не надо.')),
+                str(catalog))
+        self.assertEqual(facts, [client_fact()])
+        self.assertFalse(decisions)
+
+    def test_explicit_current_status_corrects_existing_current(self):
+        current = {'object': {'name': 'заявка 42', 'type': 'ticket', 'id': None},
+                   'attribute': 'ticket_status', 'value': 'принята', 'polarity': 1,
+                   'valid_from': '2026-03-10T00:00:00', 'valid_to': None,
+                   'source': {'turn_idx': 0}, 'speaker': 'operator'}
+        facts, decisions = recover_facts(
+            [current], call('Сейчас статус по заявке 42 — в работе.'), None)
+        statuses = [fact for fact in facts if fact['attribute'] == 'ticket_status']
+        self.assertEqual(len(statuses), 2)
+        self.assertEqual(statuses[0]['valid_to'], '2026-03-11T10:00:00')
+        self.assertEqual(statuses[-1]['value'], 'в работе')
+        self.assertEqual(decisions[0]['reason'], 'explicit_current_status_correction')
 
 
 if __name__ == '__main__':

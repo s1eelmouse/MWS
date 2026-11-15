@@ -1,0 +1,158 @@
+Sun Nov 15 15:38:34 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4090        Off |   00000000:05:00.0 Off |                  Off |
+|  0%   40C    P8             22W /  450W |       9MiB /  24564MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+cef9fcde9f1f2a812e42c6122a0f5094fbaa456f6077596cf03ebb86e4d552f6  /home/ubuntu/mws/out/merged-4090-continue-005-noise-001/model.safetensors
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]Loading weights:  87%|████████▋ | 270/310 [00:00<00:00, 2689.42it/s]Loading weights: 100%|██████████| 310/310 [00:00<00:00, 2695.65it/s]
+Completed 2/383; failed: 0
+Completed 4/383; failed: 0
+Completed 6/383; failed: 0
+Completed 8/383; failed: 0
+Completed 10/383; failed: 0
+Completed 12/383; failed: 0
+Completed 14/383; failed: 0
+Completed 16/383; failed: 0
+Completed 18/383; failed: 0
+Completed 20/383; failed: 0
+Completed 22/383; failed: 0
+Completed 24/383; failed: 0
+Completed 26/383; failed: 0
+Completed 28/383; failed: 0
+Completed 30/383; failed: 0
+Completed 32/383; failed: 0
+Completed 34/383; failed: 0
+Completed 36/383; failed: 0
+Completed 38/383; failed: 0
+Completed 40/383; failed: 0
+Completed 42/383; failed: 0
+Completed 44/383; failed: 0
+Completed 46/383; failed: 0
+Completed 48/383; failed: 0
+Completed 50/383; failed: 0
+Completed 52/383; failed: 0
+Completed 54/383; failed: 0
+Completed 56/383; failed: 0
+Completed 58/383; failed: 0
+Completed 60/383; failed: 0
+Completed 62/383; failed: 0
+Completed 64/383; failed: 0
+Completed 66/383; failed: 0
+Completed 68/383; failed: 0
+Completed 70/383; failed: 0
+Completed 72/383; failed: 0
+Completed 74/383; failed: 0
+Completed 76/383; failed: 0
+Completed 78/383; failed: 0
+Completed 80/383; failed: 0
+Completed 82/383; failed: 0
+Completed 84/383; failed: 0
+Completed 86/383; failed: 0
+Completed 88/383; failed: 0
+Completed 90/383; failed: 0
+Completed 92/383; failed: 0
+Completed 94/383; failed: 0
+Completed 96/383; failed: 0
+Completed 98/383; failed: 0
+Completed 100/383; failed: 0
+Completed 102/383; failed: 0
+Completed 104/383; failed: 0
+Completed 106/383; failed: 0
+Completed 108/383; failed: 0
+Completed 110/383; failed: 0
+Completed 112/383; failed: 0
+Completed 114/383; failed: 0
+Completed 116/383; failed: 0
+Completed 118/383; failed: 0
+Completed 120/383; failed: 0
+Completed 122/383; failed: 0
+Completed 124/383; failed: 0
+Completed 126/383; failed: 0
+Completed 128/383; failed: 0
+Completed 130/383; failed: 0
+Completed 132/383; failed: 0
+Completed 134/383; failed: 0
+Completed 136/383; failed: 0
+Completed 138/383; failed: 0
+Completed 140/383; failed: 0
+Completed 142/383; failed: 0
+Completed 144/383; failed: 0
+Completed 146/383; failed: 0
+Completed 148/383; failed: 0
+Completed 150/383; failed: 0
+Completed 152/383; failed: 0
+Completed 154/383; failed: 0
+Completed 156/383; failed: 0
+Completed 158/383; failed: 0
+Completed 160/383; failed: 0
+Completed 162/383; failed: 0
+Completed 164/383; failed: 0
+Completed 166/383; failed: 0
+Completed 168/383; failed: 0
+Completed 170/383; failed: 0
+Completed 172/383; failed: 0
+Completed 174/383; failed: 0
+Completed 176/383; failed: 0
+Completed 178/383; failed: 0
+Completed 180/383; failed: 0
+Completed 182/383; failed: 0
+Completed 184/383; failed: 0
+Completed 186/383; failed: 0
+Completed 188/383; failed: 0
+Completed 190/383; failed: 0
+Completed 192/383; failed: 0
+Completed 194/383; failed: 0
+Completed 196/383; failed: 0
+Completed 198/383; failed: 0
+Completed 200/383; failed: 0
+Completed 202/383; failed: 0
+Completed 204/383; failed: 0
+Completed 206/383; failed: 0
+Completed 208/383; failed: 0
+Completed 210/383; failed: 0
+Completed 212/383; failed: 0
+Completed 214/383; failed: 0
+Completed 216/383; failed: 0
+Completed 218/383; failed: 0
+Completed 220/383; failed: 0
+Completed 222/383; failed: 0
+Completed 224/383; failed: 0
+Completed 226/383; failed: 0
+Completed 228/383; failed: 0
+Completed 230/383; failed: 0
+Completed 232/383; failed: 0
+Completed 234/383; failed: 0
+Completed 236/383; failed: 0
+Completed 238/383; failed: 0
+Completed 240/383; failed: 0
+Completed 242/383; failed: 0
+Completed 244/383; failed: 0
+Completed 246/383; failed: 0
+Completed 248/383; failed: 0
+Completed 250/383; failed: 0
+Completed 252/383; failed: 0
+Completed 254/383; failed: 0
+Completed 256/383; failed: 0
+Completed 258/383; failed: 0
+Completed 260/383; failed: 0
+Completed 262/383; failed: 0
+Completed 264/383; failed: 0
+Completed 266/383; failed: 0
+Completed 268/383; failed: 0
+Completed 270/383; failed: 0
+Completed 272/383; failed: 0
