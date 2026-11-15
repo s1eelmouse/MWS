@@ -142,7 +142,7 @@ def _candidates(facts, call, tariffs):
 
 
 def recover_facts(facts, call, catalog_path=None):
-    """Return copies plus an audit. Existing current state wins for its own object."""
+    """Return copies and evidence; preserve current states except explicit tariff corrections."""
     output = copy.deepcopy(facts)
     grouped = {}
     for attribute, value, obj, turn in _candidates(output, call, _load_tariffs(catalog_path)):
@@ -168,4 +168,10 @@ def recover_facts(facts, call, catalog_path=None):
                           'field': attribute, 'reason': 'missing_current_tariff' if attribute == 'tariff'
                           else 'missing_current_status', 'value': value, 'object': copy.deepcopy(obj),
                           'source_turn_idx': turn.idx, 'policy': 'explicit-current-per-object-v1'})
+    from tariff_recovery import refine_tariffs
+    output, refined = refine_tariffs(output, call, _load_tariffs(catalog_path))
+    decisions.extend(refined)
+    from service_recovery import recover_services
+    output, services = recover_services(output, call, catalog_path)
+    decisions.extend(services)
     return output, decisions
