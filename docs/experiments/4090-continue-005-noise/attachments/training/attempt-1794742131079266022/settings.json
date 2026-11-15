@@ -1,0 +1,89 @@
+{
+  "train": "/home/ubuntu/mws/data/organizer_v2_1/train.jsonl",
+  "val": "/home/ubuntu/mws/data/organizer_v2_1/val.jsonl",
+  "catalog": "/home/ubuntu/mws/data/organizer_v2_1/catalog.json",
+  "allow_legacy_contract": true,
+  "epochs": 1,
+  "limit": null,
+  "batch_size": 1,
+  "no_4bit": false,
+  "max_steps": -1,
+  "train_variant": "noise",
+  "seed": 42,
+  "save_steps": 50,
+  "max_sequence_tokens": 16384,
+  "output_dir": "/home/ubuntu/mws/out/continue-005-noise-001",
+  "resume_from_checkpoint": null,
+  "init_adapter_dir": "out/adapter-003",
+  "learning_rate": 0.0001,
+  "check_data": false,
+  "model": "Qwen/Qwen3-0.6B",
+  "initial_adapter": {
+    "directory": "/home/ubuntu/mws/out/adapter-003",
+    "contract_compatibility": {
+      "source_signature": "3ee403f3b8645663828a1208bd93e81a087b234afeb566c7c36882da63c4a274",
+      "target_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "policy": "explicit-v1-to-v21-empty-object-name",
+      "with_schema": false,
+      "weights_modified": false
+    },
+    "files": {
+      "adapter_config.json": "5bc0dc06e5ec268b63936749862ef463ccc6641ae9bae28a26eb6da3c910861c",
+      "case_contract.json": "25200469c953c6a40845ca537c5c543369fdbcca0638044849245dd30d94edc4",
+      "adapter_model.safetensors": "982a8843905f76439fad72e3c9f32f96721f9aea4bd66a5ed1b92174e892a2ec"
+    }
+  },
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "max_input_tokens": 12288,
+  "max_new_tokens": 4096,
+  "trainable_parameters": 10092544,
+  "model_revision": null,
+  "run_context": {
+    "contract": {
+      "signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "contract_version": "2.1",
+      "target_version": 2
+    },
+    "json_schema_sha256": "6b7d699659e4f92e3e552263de980e4093d06dd5a0d66fc1ba177df7cc8cddd7",
+    "scoring": {
+      "scorer_version": "2.1",
+      "official_metrics_version": "2.1",
+      "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "official_source_modified": false,
+      "local_patch": null,
+      "patch_adapter_sha256": null,
+      "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb"
+    },
+    "train": {
+      "path": "/home/ubuntu/mws/data/organizer_v2_1/train.jsonl",
+      "sha256": "0878bfd983e14c75b51f32f04d961c5b82b10fa243845a25fe1c811cb4882466",
+      "bytes": 31048311,
+      "recognized_version": "organizer-2.1-train"
+    },
+    "val": {
+      "path": "/home/ubuntu/mws/data/organizer_v2_1/val.jsonl",
+      "sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+      "bytes": 3120190,
+      "recognized_version": "organizer-2.1-val"
+    },
+    "catalog": {
+      "path": "/home/ubuntu/mws/data/organizer_v2_1/catalog.json",
+      "sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+      "bytes": 16809,
+      "recognized_version": "custom-or-different-bytes"
+    },
+    "context_sha256": "cea4e7b645321cf13008118a2121f9b509b36d171548548ee5695ebdb88561e3"
+  },
+  "training_precision": "torch.bfloat16",
+  "postprocessing_used_for_training_loss": false,
+  "subsequent_inference_settings": {
+    "TEMPORAL_NORMALIZATION": "task",
+    "TEMPORAL_CATALOG_PATH": "/home/ubuntu/mws/data/organizer_v2_1/catalog.json",
+    "FACT_RECOVERY": false,
+    "TEMPORAL_SERIES_HISTORY": false,
+    "JSON_CONSTRAINED": true,
+    "CATALOG_PATH": ""
+  }
+}

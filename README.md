@@ -39,6 +39,7 @@
 | [docs/DECISION_NEXT_MODEL.md](docs/DECISION_NEXT_MODEL.md) | Решение по 1.7B и следующей эпохе |
 | [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) | Как запускать обучение с журналами и замеры CPU/GPU, методика замеров |
 | [docs/experiments/4090-continue-003-v2](docs/experiments/4090-continue-003-v2/README.md) | Свежий полный val 2.1 на 4090: `003` + recovery v2, clean T 0.4807 / S 0.5201, noisy T 0.4582 / S 0.4141 |
+| [docs/experiments/4090-continue-005-noise](docs/experiments/4090-continue-005-noise/README.md) | Дообучение на шумном train от 003: 7 852 звонка, 491 шаг; оценка clean/noisy val |
 | [docs/RESULTS.md](docs/RESULTS.md) | Таблицы результатов для отчёта и из каких файлов их заполнять |
 | [docs/TRAINING_REPORT.md](docs/TRAINING_REPORT.md) | Сводный отчёт по всем тренировкам: конфигурация, ресурсы, качество, ограничения |
 | [docs/ORGANIZER_DATA_UPDATE_V2_1.md](docs/ORGANIZER_DATA_UPDATE_V2_1.md) | Изменения пакета организаторов 2.1: данные, оценщик, baseline и совместимость |
