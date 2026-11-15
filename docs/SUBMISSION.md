@@ -23,8 +23,8 @@
 
 - [x] `python -m unittest discover -s tests`: **277 тестов, 272 прошли, 5 skipped**.
 - [x] `python -m compileall -q src tests`.
-- [x] `sha256sum src/official_case_metrics.py` совпадает с `official_case_metrics.sha256`
-      (2.1: `863f8773…59c3`).
+- [x] `sha256sum -c src/official_case_metrics.sha256` (legacy 1, `dffec9b8…`)
+      и `sha256sum -c src/official_case_metrics_v21.sha256` (2.1, `863f8773…59c3`).
 - [x] Старый контракт `3ee403f3…a274` всё ещё принимается; новый — `40e9c449…2654`.
 - [x] В `predictions.jsonl`/`report.json` нет gold: `facts` не уходят в prompt и HTTP;
       `postprocess_dates` получает `CallInput` без gold. Проверено на отчёте 003.
@@ -33,14 +33,14 @@
 - [x] Шумный val 2.1: 0 отказов, формат 100 %, **T 0.4582 / S 0.4141**. T проходит
       цель, S — нет; `005` на шуме обучена (чистый val T 0.4900 / S 0.5522), её шумный val ещё считается.
       Старые шумные числа — пакет 1.
-- [ ] Docker: `/health` 200, `/extract` возвращает `call_id` и валидные `facts`;
-      модель смонтирована read-only.
+- [x] Docker CPU: `/health` 200, короткий `/extract` возвращает `call_id` и
+      валидные `facts`; модель смонтирована read-only. GPU/vLLM не проверялись.
 - [x] Merged-модели 002/003 и их отчёты скачаны локально; SHA256 записаны.
 - [ ] Ссылка на репозиторий и веса доступна всем членам команды и жюри.
 
 ## 3. Что нельзя делать перед сдачей
 
-- Менять `val` или `official_case_metrics.py`.
+- Менять `val`, `official_case_metrics.py` или `official_case_metrics_v21.py`.
 - Тренировать 1.7B без письменного разрешения ментора и проверки лимита 1,5B.
 - Запускать новый эксперимент без fallback: текущий кандидат —
   `continue-003` + deterministic recovery; старый подтверждённый fallback —
