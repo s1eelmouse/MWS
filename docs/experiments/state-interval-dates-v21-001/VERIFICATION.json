@@ -1,0 +1,418 @@
+{
+  "date": "2026-11-15",
+  "branch": "fix/state-interval-dates-v21",
+  "base_revision": "b2cfc1b",
+  "code_revision": "652a9c47baa54891e3442a90e86e1af06eab5058",
+  "matrix": {
+    "003": {
+      "before": {
+        "metrics_version": "2.1",
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1839,
+        "fact_precision": 0.5003,
+        "fact_recall": 0.4986,
+        "temporal_recall": 0.4991,
+        "n_temporal": 561,
+        "state_accuracy": 0.4302,
+        "n_state": 623,
+        "grounding_turn": 0.7141,
+        "grounding_span": null,
+        "n_grounded": 920
+      },
+      "after": {
+        "metrics_version": "2.1",
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1839,
+        "fact_precision": 0.5003,
+        "fact_recall": 0.4986,
+        "temporal_recall": 0.5116,
+        "n_temporal": 561,
+        "state_accuracy": 0.4318,
+        "n_state": 623,
+        "grounding_turn": 0.7141,
+        "grounding_span": null,
+        "n_grounded": 920
+      },
+      "paired": {
+        "fixed": 7
+      },
+      "attributes": {
+        "agreement": {
+          "eligible": 151,
+          "before_correct": 137,
+          "after_correct": 137
+        },
+        "ticket_status": {
+          "eligible": 242,
+          "before_correct": 108,
+          "after_correct": 114,
+          "fixed": 6
+        },
+        "tariff": {
+          "eligible": 59,
+          "before_correct": 3,
+          "after_correct": 4,
+          "fixed": 1
+        },
+        "service_state": {
+          "eligible": 109,
+          "before_correct": 32,
+          "after_correct": 32
+        }
+      }
+    },
+    "003_recovery": {
+      "before": {
+        "metrics_version": "2.1",
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1976,
+        "fact_precision": 0.4929,
+        "fact_recall": 0.5279,
+        "temporal_recall": 0.5135,
+        "n_temporal": 594,
+        "state_accuracy": 0.5104,
+        "n_state": 623,
+        "grounding_turn": 0.7023,
+        "grounding_span": null,
+        "n_grounded": 974
+      },
+      "after": {
+        "metrics_version": "2.1",
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1976,
+        "fact_precision": 0.4929,
+        "fact_recall": 0.5279,
+        "temporal_recall": 0.5269,
+        "n_temporal": 594,
+        "state_accuracy": 0.512,
+        "n_state": 623,
+        "grounding_turn": 0.7023,
+        "grounding_span": null,
+        "n_grounded": 974
+      },
+      "paired": {
+        "fixed": 8
+      },
+      "attributes": {
+        "agreement": {
+          "eligible": 151,
+          "before_correct": 137,
+          "after_correct": 137
+        },
+        "ticket_status": {
+          "eligible": 259,
+          "before_correct": 120,
+          "after_correct": 127,
+          "fixed": 7
+        },
+        "tariff": {
+          "eligible": 75,
+          "before_correct": 16,
+          "after_correct": 17,
+          "fixed": 1
+        },
+        "service_state": {
+          "eligible": 109,
+          "before_correct": 32,
+          "after_correct": 32
+        }
+      }
+    },
+    "002": {
+      "before": {
+        "metrics_version": "2.1",
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1896,
+        "fact_precision": 0.4789,
+        "fact_recall": 0.4921,
+        "temporal_recall": 0.4364,
+        "n_temporal": 566,
+        "state_accuracy": 0.4222,
+        "n_state": 623,
+        "grounding_turn": 0.7137,
+        "grounding_span": null,
+        "n_grounded": 908
+      },
+      "after": {
+        "metrics_version": "2.1",
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 1896,
+        "fact_precision": 0.4789,
+        "fact_recall": 0.4921,
+        "temporal_recall": 0.4488,
+        "n_temporal": 566,
+        "state_accuracy": 0.4238,
+        "n_state": 623,
+        "grounding_turn": 0.7137,
+        "grounding_span": null,
+        "n_grounded": 908
+      },
+      "paired": {
+        "fixed": 7
+      },
+      "attributes": {
+        "agreement": {
+          "eligible": 151,
+          "before_correct": 127,
+          "after_correct": 127
+        },
+        "ticket_status": {
+          "eligible": 242,
+          "before_correct": 89,
+          "after_correct": 95,
+          "fixed": 6
+        },
+        "tariff": {
+          "eligible": 67,
+          "before_correct": 4,
+          "after_correct": 5,
+          "fixed": 1
+        },
+        "service_state": {
+          "eligible": 106,
+          "before_correct": 27,
+          "after_correct": 27
+        }
+      }
+    },
+    "baseline": {
+      "before": {
+        "metrics_version": "2.1",
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 2097,
+        "fact_precision": 0.3348,
+        "fact_recall": 0.3805,
+        "temporal_recall": 0.4842,
+        "n_temporal": 442,
+        "state_accuracy": 0.5345,
+        "n_state": 623,
+        "grounding_turn": 0.7835,
+        "grounding_span": null,
+        "n_grounded": 702
+      },
+      "after": {
+        "metrics_version": "2.1",
+        "n_calls": 383,
+        "n_gold_facts": 1845,
+        "n_pred_facts": 2097,
+        "fact_precision": 0.3348,
+        "fact_recall": 0.3805,
+        "temporal_recall": 0.4864,
+        "n_temporal": 442,
+        "state_accuracy": 0.5345,
+        "n_state": 623,
+        "grounding_turn": 0.7835,
+        "grounding_span": null,
+        "n_grounded": 702
+      },
+      "paired": {
+        "fixed": 1
+      },
+      "attributes": {
+        "service_state": {
+          "eligible": 65,
+          "before_correct": 26,
+          "after_correct": 26
+        },
+        "ticket_status": {
+          "eligible": 249,
+          "before_correct": 125,
+          "after_correct": 126,
+          "fixed": 1
+        },
+        "tariff": {
+          "eligible": 85,
+          "before_correct": 33,
+          "after_correct": 33
+        },
+        "agreement": {
+          "eligible": 43,
+          "before_correct": 30,
+          "after_correct": 30
+        }
+      }
+    }
+  },
+  "reproduced_003_recovery": {
+    "base_revision": "b2cfc1b",
+    "candidate_commit": "652a9c47baa54891e3442a90e86e1af06eab5058",
+    "gold_sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+    "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+    "predictions_sha256": "b86dbbcea653152ebb38cd0d8222fae0ecf4a679aa7d6643d317784a0578f049",
+    "base_layer_sha256": "11a94d41521925456af2f72bf97f40e2205a1c60cc431179b3d4408321c043ca",
+    "source_sha256": {
+      "benchmark.py": "364a5b330dd8a55421543f296a602cf50252e6f23632bbe088547d1bcda3d37d",
+      "case_evaluation.py": "4f6dd4698fe015156960f82604a025d9a35ccc114fc9931a8db1da56feb31cfb",
+      "case_io.py": "ecc8e9ad51fbfaaa5ffde8be5a1c4ab32580fde541d67cd6800ee483f7f05002",
+      "catalog_hints.py": "863f2320967db2859ae0d3b77777d42ac0207a784554bc971145fa1e499b7def",
+      "catalog_normalization.py": "7c6cff3e671c8e8acbfe037f6d3a8553b846d9fd0506986ea4bea5674d2dc48c",
+      "check_data.py": "36b31b35dd7d6e0105c96c9641bb211459ef97a37d3d2a75787102b6ce718b68",
+      "compare_runs.py": "1b1df4c689da58e2a401387a92c324dfae29d999648ca37ea72851947dad9a16",
+      "compare_temporal.py": "1c8bb5d695557c3bc16da6c1ff6be1811dfc2301171cd1239093eba6be7173a1",
+      "config.py": "b460e5eccac102a1f716e501de8125ca406e349d787cbb1bb3332f63cfcc4dcf",
+      "doctor.py": "7bc6cd333955d6463ef40716f0a8725b3d54d540de0d3526c9ee953822aebfcc",
+      "eval.py": "178d8e7e03ae5aa8d937896d8ed9b814f3c170e98af92524f0116af0e71a0dcc",
+      "extractor.py": "4965059113e0a7be40f4e5f2a3f5f60d1689b20ce5a0effd92272b0c3d95b066",
+      "fact_recovery.py": "651fd8c489930e85296df54ed1e539d4547e1cdb1586cd077e18596129d7e017",
+      "gpu_precision.py": "2974d10e37df0edf776337c9703e1d74aa3543d9a03761abdc5fe8f3ec7d0443",
+      "json_constraints.py": "d914864cff67953bbcd42f1804aa72048e4a4e4da0e8b1e47e4c5f7b37c01d47",
+      "llm_api.py": "1661611ae3d50ed0c7fc7cbcef0ad6a18620f181739c31a407b5f1ea11c06629",
+      "make_noisy_val.py": "353bafab553112a5742376bd7d9cd391f67dbb7bb77b171d7f2af4789fd1b6db",
+      "make_train_variants.py": "2f5274c1d25c7c8243ecfa65612d1541a0d7925227e3f1508ad0fa659bbc52cd",
+      "mcp_server.py": "aca25ba4fa753e4d79524670de3351c42546ce7c9da3a2c5f175e9d7bd7c1987",
+      "measurements.py": "d450dcafb3b99547071c4722770caed77e296b39b231d33cf2274f63b4f95908",
+      "merge.py": "11ecf0f688f22e6a4a97de165f13805ea07a86bef25a7d667f7723f852a3ff98",
+      "official_case_metrics.py": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+      "official_case_metrics_v21.py": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "postprocess_dates.py": "c7fe7cb7b703ebe64977010bd3191d844339e1e89a65843dccd15df25ac78a92",
+      "predict.py": "adcee6bd6828fbef940039a65fd9cf015b86d61fd3cadcd40792818e52aa9264",
+      "prediction.py": "cb138858b37fce5e3728c235af20aa2ecb711950274d6a3a4d9fdd7758e8105b",
+      "prepare_case.py": "d8beba714350541993183d52a526b11d48aac9953f61156fc2784a4fc7961e2d",
+      "run_context.py": "50df458ab80c2296f0459455058374d198802f19d6ac4c187cb4dc7ca5421b9f",
+      "run_experiment.py": "3de4a56f04af8e30f3db58afb1b318c05a4b8619fc1ab8643601a0d84584bb4a",
+      "schema.py": "cd7a03f5779c135b3fc76657657d42f38be3cd72030a92edec1cf4cd991e6064",
+      "scoring.py": "ba04bb1a2e17eca9631ad3d7ff40192243c6f55c258ac9e340683b5fc9c3662e",
+      "series_history.py": "43121086b68cf90eeb3626c90abd1a8824b2a3ed89370060f2fd2a45280472c5",
+      "serve.py": "c47bf4f634474f4b0d9ba9c536b8c385a11894dfa4618580527191c8820b7e40",
+      "serve_vllm.py": "3e930d020a176016d6c5849c9aaa65a9274945e9d54ab9f67d1b404ce94d9ab1",
+      "state_intervals.py": "44033255299238ab0a3e7f5b8b5eed6de6bdb095e8fb94fdcaac2a088c6027c6",
+      "temporal.py": "d4f95b742c83108b188524907898afdc15676f726750d610f486393fd83b47bf",
+      "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+      "temporal_case_v2.py": "15e3510d34b84b67b04c34abf98eb55fde01dfe411ae9e19ea5067747b41af8e",
+      "ticket_intervals.py": "5cb1c59348b5a4c7e153b61bbaa2e090985d84fbf9cc7443604d5f2fe1bd0613",
+      "train.py": "838cbdf9e166623361d9914dc1c28caf87610ee1fd2c82c08205df17a4c8e268",
+      "training_data.py": "b5262e154651266d1fa8aa83440bb787b48b426c3db793359ddd376c32957dac",
+      "training_observer.py": "60edd24721d032dec23f76447b1271d25973b9b575e840af35df315fdd73cdd6"
+    },
+    "scorer": {
+      "scorer_version": "2.1",
+      "official_metrics_version": "2.1",
+      "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "official_source_modified": false,
+      "local_patch": null,
+      "patch_adapter_sha256": null,
+      "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb"
+    },
+    "before": {
+      "metrics_version": "2.1",
+      "n_calls": 383,
+      "n_gold_facts": 1845,
+      "n_pred_facts": 1976,
+      "fact_precision": 0.4929,
+      "fact_recall": 0.5279,
+      "temporal_recall": 0.5135,
+      "n_temporal": 594,
+      "state_accuracy": 0.5104,
+      "n_state": 623,
+      "grounding_turn": 0.7023,
+      "grounding_span": null,
+      "n_grounded": 974
+    },
+    "after": {
+      "metrics_version": "2.1",
+      "n_calls": 383,
+      "n_gold_facts": 1845,
+      "n_pred_facts": 1976,
+      "fact_precision": 0.4929,
+      "fact_recall": 0.5279,
+      "temporal_recall": 0.5269,
+      "n_temporal": 594,
+      "state_accuracy": 0.512,
+      "n_state": 623,
+      "grounding_turn": 0.7023,
+      "grounding_span": null,
+      "n_grounded": 974
+    },
+    "paired": {
+      "fixed": 8
+    },
+    "attributes": {
+      "agreement": {
+        "eligible": 151,
+        "before_correct": 137,
+        "after_correct": 137
+      },
+      "ticket_status": {
+        "eligible": 259,
+        "before_correct": 120,
+        "after_correct": 127,
+        "fixed": 7
+      },
+      "tariff": {
+        "eligible": 75,
+        "before_correct": 16,
+        "after_correct": 17,
+        "fixed": 1
+      },
+      "service_state": {
+        "eligible": 109,
+        "before_correct": 32,
+        "after_correct": 32
+      }
+    },
+    "non_date_fields_unchanged": true,
+    "idempotent": true,
+    "gold_passed_to_rules": false,
+    "fresh_model_inference": false,
+    "qualification": "Frozen predictions on old inputs; reused development val, not a blind test."
+  },
+  "tests": {
+    "run": 279,
+    "passed": 278,
+    "skipped": 1,
+    "TMPDIR": "/private/tmp"
+  },
+  "fresh_inference": false,
+  "training_performed": false,
+  "source_hashes": {
+    "benchmark.py": "364a5b330dd8a55421543f296a602cf50252e6f23632bbe088547d1bcda3d37d",
+    "case_evaluation.py": "4f6dd4698fe015156960f82604a025d9a35ccc114fc9931a8db1da56feb31cfb",
+    "case_io.py": "ecc8e9ad51fbfaaa5ffde8be5a1c4ab32580fde541d67cd6800ee483f7f05002",
+    "catalog_hints.py": "863f2320967db2859ae0d3b77777d42ac0207a784554bc971145fa1e499b7def",
+    "catalog_normalization.py": "7c6cff3e671c8e8acbfe037f6d3a8553b846d9fd0506986ea4bea5674d2dc48c",
+    "check_data.py": "36b31b35dd7d6e0105c96c9641bb211459ef97a37d3d2a75787102b6ce718b68",
+    "compare_runs.py": "1b1df4c689da58e2a401387a92c324dfae29d999648ca37ea72851947dad9a16",
+    "compare_temporal.py": "1c8bb5d695557c3bc16da6c1ff6be1811dfc2301171cd1239093eba6be7173a1",
+    "config.py": "b460e5eccac102a1f716e501de8125ca406e349d787cbb1bb3332f63cfcc4dcf",
+    "doctor.py": "7bc6cd333955d6463ef40716f0a8725b3d54d540de0d3526c9ee953822aebfcc",
+    "eval.py": "178d8e7e03ae5aa8d937896d8ed9b814f3c170e98af92524f0116af0e71a0dcc",
+    "extractor.py": "4965059113e0a7be40f4e5f2a3f5f60d1689b20ce5a0effd92272b0c3d95b066",
+    "fact_recovery.py": "651fd8c489930e85296df54ed1e539d4547e1cdb1586cd077e18596129d7e017",
+    "gpu_precision.py": "2974d10e37df0edf776337c9703e1d74aa3543d9a03761abdc5fe8f3ec7d0443",
+    "json_constraints.py": "d914864cff67953bbcd42f1804aa72048e4a4e4da0e8b1e47e4c5f7b37c01d47",
+    "llm_api.py": "1661611ae3d50ed0c7fc7cbcef0ad6a18620f181739c31a407b5f1ea11c06629",
+    "make_noisy_val.py": "353bafab553112a5742376bd7d9cd391f67dbb7bb77b171d7f2af4789fd1b6db",
+    "make_train_variants.py": "2f5274c1d25c7c8243ecfa65612d1541a0d7925227e3f1508ad0fa659bbc52cd",
+    "mcp_server.py": "aca25ba4fa753e4d79524670de3351c42546ce7c9da3a2c5f175e9d7bd7c1987",
+    "measurements.py": "d450dcafb3b99547071c4722770caed77e296b39b231d33cf2274f63b4f95908",
+    "merge.py": "11ecf0f688f22e6a4a97de165f13805ea07a86bef25a7d667f7723f852a3ff98",
+    "official_case_metrics.py": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+    "official_case_metrics_v21.py": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+    "postprocess_dates.py": "c7fe7cb7b703ebe64977010bd3191d844339e1e89a65843dccd15df25ac78a92",
+    "predict.py": "adcee6bd6828fbef940039a65fd9cf015b86d61fd3cadcd40792818e52aa9264",
+    "prediction.py": "cb138858b37fce5e3728c235af20aa2ecb711950274d6a3a4d9fdd7758e8105b",
+    "prepare_case.py": "d8beba714350541993183d52a526b11d48aac9953f61156fc2784a4fc7961e2d",
+    "run_context.py": "50df458ab80c2296f0459455058374d198802f19d6ac4c187cb4dc7ca5421b9f",
+    "run_experiment.py": "3de4a56f04af8e30f3db58afb1b318c05a4b8619fc1ab8643601a0d84584bb4a",
+    "schema.py": "cd7a03f5779c135b3fc76657657d42f38be3cd72030a92edec1cf4cd991e6064",
+    "scoring.py": "ba04bb1a2e17eca9631ad3d7ff40192243c6f55c258ac9e340683b5fc9c3662e",
+    "series_history.py": "43121086b68cf90eeb3626c90abd1a8824b2a3ed89370060f2fd2a45280472c5",
+    "serve.py": "c47bf4f634474f4b0d9ba9c536b8c385a11894dfa4618580527191c8820b7e40",
+    "serve_vllm.py": "3e930d020a176016d6c5849c9aaa65a9274945e9d54ab9f67d1b404ce94d9ab1",
+    "state_intervals.py": "44033255299238ab0a3e7f5b8b5eed6de6bdb095e8fb94fdcaac2a088c6027c6",
+    "temporal.py": "d4f95b742c83108b188524907898afdc15676f726750d610f486393fd83b47bf",
+    "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+    "temporal_case_v2.py": "15e3510d34b84b67b04c34abf98eb55fde01dfe411ae9e19ea5067747b41af8e",
+    "ticket_intervals.py": "5cb1c59348b5a4c7e153b61bbaa2e090985d84fbf9cc7443604d5f2fe1bd0613",
+    "train.py": "838cbdf9e166623361d9914dc1c28caf87610ee1fd2c82c08205df17a4c8e268",
+    "training_data.py": "b5262e154651266d1fa8aa83440bb787b48b426c3db793359ddd376c32957dac",
+    "training_observer.py": "60edd24721d032dec23f76447b1271d25973b9b575e840af35df315fdd73cdd6"
+  }
+}
