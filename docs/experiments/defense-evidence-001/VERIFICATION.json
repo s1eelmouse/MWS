@@ -1,0 +1,883 @@
+{
+  "profiles": {
+    "off": {
+      "quality": {
+        "official": {
+          "metrics_version": "2.1",
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1840,
+          "fact_precision": 0.5,
+          "fact_recall": 0.4986,
+          "temporal_recall": 0.4688,
+          "n_temporal": 561,
+          "state_accuracy": 0.4318,
+          "n_state": 623,
+          "grounding_turn": 0.7141,
+          "grounding_span": null,
+          "n_grounded": 920
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 235,
+            "fact_precision": 0.6809,
+            "fact_recall": 0.3532,
+            "temporal_recall": 0.2936,
+            "n_temporal": 109,
+            "state_accuracy": 0.2751,
+            "n_state": 309,
+            "grounding_turn": 0.7875,
+            "matched_facts": 160,
+            "missed_facts": 293,
+            "extra_facts": 75,
+            "valid_from_errors": 126,
+            "valid_to_errors": 37,
+            "date_errors": 126,
+            "source_turn_errors": 34,
+            "temporal_eligible_matched_facts": 109,
+            "temporal_correct_pairs": 32,
+            "temporal_date_errors": 77
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 105,
+            "fact_precision": 0.7333,
+            "fact_recall": 0.5274,
+            "temporal_recall": 0.0678,
+            "n_temporal": 59,
+            "state_accuracy": 0.4057,
+            "n_state": 106,
+            "grounding_turn": 0.6234,
+            "matched_facts": 77,
+            "missed_facts": 69,
+            "extra_facts": 28,
+            "valid_from_errors": 64,
+            "valid_to_errors": 26,
+            "date_errors": 64,
+            "source_turn_errors": 29,
+            "temporal_eligible_matched_facts": 59,
+            "temporal_correct_pairs": 4,
+            "temporal_date_errors": 55
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 360,
+            "fact_precision": 0.8917,
+            "fact_recall": 0.8025,
+            "temporal_recall": 0.405,
+            "n_temporal": 242,
+            "state_accuracy": 0.6779,
+            "n_state": 208,
+            "grounding_turn": 0.7757,
+            "matched_facts": 321,
+            "missed_facts": 79,
+            "extra_facts": 39,
+            "valid_from_errors": 175,
+            "valid_to_errors": 97,
+            "date_errors": 204,
+            "source_turn_errors": 72,
+            "temporal_eligible_matched_facts": 242,
+            "temporal_correct_pairs": 98,
+            "temporal_date_errors": 144
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 194,
+            "fact_precision": 0.5773,
+            "fact_recall": 0.3043,
+            "temporal_recall": null,
+            "n_temporal": 0,
+            "state_accuracy": null,
+            "n_state": 0,
+            "grounding_turn": 1.0,
+            "matched_facts": 112,
+            "missed_facts": 256,
+            "extra_facts": 82,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 0,
+            "temporal_eligible_matched_facts": 0,
+            "temporal_correct_pairs": 0,
+            "temporal_date_errors": 0
+          },
+          "agreement": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 478,
+            "n_pred_facts": 946,
+            "fact_precision": 0.2643,
+            "fact_recall": 0.523,
+            "temporal_recall": 0.8543,
+            "n_temporal": 151,
+            "state_accuracy": null,
+            "n_state": 0,
+            "grounding_turn": 0.488,
+            "matched_facts": 250,
+            "missed_facts": 228,
+            "extra_facts": 696,
+            "valid_from_errors": 33,
+            "valid_to_errors": 0,
+            "date_errors": 33,
+            "source_turn_errors": 128,
+            "temporal_eligible_matched_facts": 151,
+            "temporal_correct_pairs": 129,
+            "temporal_date_errors": 22
+          }
+        },
+        "scorer_version": "2.1",
+        "official_metrics_version": "2.1",
+        "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+        "official_source_modified": false,
+        "local_patch": null,
+        "patch_adapter_sha256": null,
+        "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+        "known_scorer_issues": [
+          "Organizer v2.1 gold-vs-gold state_accuracy is not necessarily 1.0.",
+          "Temporal recall is conditional on matched facts and recoverable dates; action is excluded.",
+          "Official v2.1 has two known date-set.update TypeErrors; use explicitly labelled 2.1-datefix for those inputs."
+        ]
+      },
+      "cpu_postprocess_seconds": 6.48150391690433,
+      "gpu_seconds": null,
+      "new_generation": false
+    },
+    "v1": {
+      "quality": {
+        "official": {
+          "metrics_version": "2.1",
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1914,
+          "fact_precision": 0.501,
+          "fact_recall": 0.5198,
+          "temporal_recall": 0.4837,
+          "n_temporal": 583,
+          "state_accuracy": 0.4912,
+          "n_state": 623,
+          "grounding_turn": 0.7143,
+          "grounding_span": null,
+          "n_grounded": 959
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 235,
+            "fact_precision": 0.6809,
+            "fact_recall": 0.3532,
+            "temporal_recall": 0.2936,
+            "n_temporal": 109,
+            "state_accuracy": 0.2751,
+            "n_state": 309,
+            "grounding_turn": 0.7875,
+            "matched_facts": 160,
+            "missed_facts": 293,
+            "extra_facts": 75,
+            "valid_from_errors": 126,
+            "valid_to_errors": 37,
+            "date_errors": 126,
+            "source_turn_errors": 34,
+            "temporal_eligible_matched_facts": 109,
+            "temporal_correct_pairs": 32,
+            "temporal_date_errors": 77
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 165,
+            "fact_precision": 0.6182,
+            "fact_recall": 0.6986,
+            "temporal_recall": 0.1791,
+            "n_temporal": 67,
+            "state_accuracy": 0.6415,
+            "n_state": 106,
+            "grounding_turn": 0.6373,
+            "matched_facts": 102,
+            "missed_facts": 44,
+            "extra_facts": 63,
+            "valid_from_errors": 64,
+            "valid_to_errors": 26,
+            "date_errors": 64,
+            "source_turn_errors": 37,
+            "temporal_eligible_matched_facts": 67,
+            "temporal_correct_pairs": 12,
+            "temporal_date_errors": 55
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 374,
+            "fact_precision": 0.8957,
+            "fact_recall": 0.8375,
+            "temporal_recall": 0.4258,
+            "n_temporal": 256,
+            "state_accuracy": 0.7356,
+            "n_state": 208,
+            "grounding_turn": 0.7761,
+            "matched_facts": 335,
+            "missed_facts": 65,
+            "extra_facts": 39,
+            "valid_from_errors": 178,
+            "valid_to_errors": 99,
+            "date_errors": 207,
+            "source_turn_errors": 75,
+            "temporal_eligible_matched_facts": 256,
+            "temporal_correct_pairs": 109,
+            "temporal_date_errors": 147
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 194,
+            "fact_precision": 0.5773,
+            "fact_recall": 0.3043,
+            "temporal_recall": null,
+            "n_temporal": 0,
+            "state_accuracy": null,
+            "n_state": 0,
+            "grounding_turn": 1.0,
+            "matched_facts": 112,
+            "missed_facts": 256,
+            "extra_facts": 82,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 0,
+            "temporal_eligible_matched_facts": 0,
+            "temporal_correct_pairs": 0,
+            "temporal_date_errors": 0
+          },
+          "agreement": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 478,
+            "n_pred_facts": 946,
+            "fact_precision": 0.2643,
+            "fact_recall": 0.523,
+            "temporal_recall": 0.8543,
+            "n_temporal": 151,
+            "state_accuracy": null,
+            "n_state": 0,
+            "grounding_turn": 0.488,
+            "matched_facts": 250,
+            "missed_facts": 228,
+            "extra_facts": 696,
+            "valid_from_errors": 33,
+            "valid_to_errors": 0,
+            "date_errors": 33,
+            "source_turn_errors": 128,
+            "temporal_eligible_matched_facts": 151,
+            "temporal_correct_pairs": 129,
+            "temporal_date_errors": 22
+          }
+        },
+        "scorer_version": "2.1",
+        "official_metrics_version": "2.1",
+        "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+        "official_source_modified": false,
+        "local_patch": null,
+        "patch_adapter_sha256": null,
+        "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+        "known_scorer_issues": [
+          "Organizer v2.1 gold-vs-gold state_accuracy is not necessarily 1.0.",
+          "Temporal recall is conditional on matched facts and recoverable dates; action is excluded.",
+          "Official v2.1 has two known date-set.update TypeErrors; use explicitly labelled 2.1-datefix for those inputs."
+        ]
+      },
+      "cpu_postprocess_seconds": 6.107187665998936,
+      "gpu_seconds": null,
+      "new_generation": false
+    },
+    "v2": {
+      "quality": {
+        "official": {
+          "metrics_version": "2.1",
+          "n_calls": 383,
+          "n_gold_facts": 1845,
+          "n_pred_facts": 1998,
+          "fact_precision": 0.4955,
+          "fact_recall": 0.5366,
+          "temporal_recall": 0.49,
+          "n_temporal": 600,
+          "state_accuracy": 0.5345,
+          "n_state": 623,
+          "grounding_turn": 0.7111,
+          "grounding_span": 1.0,
+          "n_grounded": 990
+        },
+        "diagnostics": {
+          "invalid_or_failed_calls": 0,
+          "missing_calls": 0,
+          "format_valid_rate": 1.0,
+          "calls_with_invalid_sources": 0
+        },
+        "per_attribute": {
+          "service_state": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 453,
+            "n_pred_facts": 293,
+            "fact_precision": 0.6177,
+            "fact_recall": 0.3996,
+            "temporal_recall": 0.3277,
+            "n_temporal": 119,
+            "state_accuracy": 0.3269,
+            "n_state": 309,
+            "grounding_turn": 0.7624,
+            "matched_facts": 181,
+            "missed_facts": 272,
+            "extra_facts": 112,
+            "valid_from_errors": 134,
+            "valid_to_errors": 37,
+            "date_errors": 134,
+            "source_turn_errors": 43,
+            "temporal_eligible_matched_facts": 119,
+            "temporal_correct_pairs": 39,
+            "temporal_date_errors": 80
+          },
+          "tariff": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 146,
+            "n_pred_facts": 191,
+            "fact_precision": 0.5864,
+            "fact_recall": 0.7671,
+            "temporal_recall": 0.2297,
+            "n_temporal": 74,
+            "state_accuracy": 0.7453,
+            "n_state": 106,
+            "grounding_turn": 0.6429,
+            "matched_facts": 112,
+            "missed_facts": 34,
+            "extra_facts": 79,
+            "valid_from_errors": 66,
+            "valid_to_errors": 26,
+            "date_errors": 66,
+            "source_turn_errors": 40,
+            "temporal_eligible_matched_facts": 74,
+            "temporal_correct_pairs": 17,
+            "temporal_date_errors": 57
+          },
+          "ticket_status": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 400,
+            "n_pred_facts": 374,
+            "fact_precision": 0.8957,
+            "fact_recall": 0.8375,
+            "temporal_recall": 0.4258,
+            "n_temporal": 256,
+            "state_accuracy": 0.7356,
+            "n_state": 208,
+            "grounding_turn": 0.7761,
+            "matched_facts": 335,
+            "missed_facts": 65,
+            "extra_facts": 39,
+            "valid_from_errors": 178,
+            "valid_to_errors": 99,
+            "date_errors": 207,
+            "source_turn_errors": 75,
+            "temporal_eligible_matched_facts": 256,
+            "temporal_correct_pairs": 109,
+            "temporal_date_errors": 147
+          },
+          "action": {
+            "attribute_kind": "static",
+            "n_gold_facts": 368,
+            "n_pred_facts": 194,
+            "fact_precision": 0.5773,
+            "fact_recall": 0.3043,
+            "temporal_recall": null,
+            "n_temporal": 0,
+            "state_accuracy": null,
+            "n_state": 0,
+            "grounding_turn": 1.0,
+            "matched_facts": 112,
+            "missed_facts": 256,
+            "extra_facts": 82,
+            "valid_from_errors": 29,
+            "valid_to_errors": 0,
+            "date_errors": 29,
+            "source_turn_errors": 0,
+            "temporal_eligible_matched_facts": 0,
+            "temporal_correct_pairs": 0,
+            "temporal_date_errors": 0
+          },
+          "agreement": {
+            "attribute_kind": "temporal",
+            "n_gold_facts": 478,
+            "n_pred_facts": 946,
+            "fact_precision": 0.2643,
+            "fact_recall": 0.523,
+            "temporal_recall": 0.8543,
+            "n_temporal": 151,
+            "state_accuracy": null,
+            "n_state": 0,
+            "grounding_turn": 0.488,
+            "matched_facts": 250,
+            "missed_facts": 228,
+            "extra_facts": 696,
+            "valid_from_errors": 33,
+            "valid_to_errors": 0,
+            "date_errors": 33,
+            "source_turn_errors": 128,
+            "temporal_eligible_matched_facts": 151,
+            "temporal_correct_pairs": 129,
+            "temporal_date_errors": 22
+          }
+        },
+        "scorer_version": "2.1",
+        "official_metrics_version": "2.1",
+        "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+        "official_source_modified": false,
+        "local_patch": null,
+        "patch_adapter_sha256": null,
+        "catalog_sha256": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+        "known_scorer_issues": [
+          "Organizer v2.1 gold-vs-gold state_accuracy is not necessarily 1.0.",
+          "Temporal recall is conditional on matched facts and recoverable dates; action is excluded.",
+          "Official v2.1 has two known date-set.update TypeErrors; use explicitly labelled 2.1-datefix for those inputs."
+        ]
+      },
+      "cpu_postprocess_seconds": 24.44208012497984,
+      "gpu_seconds": null,
+      "new_generation": false
+    }
+  },
+  "rule_checks": {
+    "kind": "synthetic_rule_regression_not_model_adversarial_evaluation",
+    "tests": 89,
+    "passed": true,
+    "skipped": 0,
+    "records": [
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_a_hypothetical_recovery_does_not_open_a_closed_fact",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_acknowledged_tariff_correction_closes_the_explicit_old_plan",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_connection_noun_is_not_an_activation_predicate",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_device_already_identified_by_model_can_be_recovered_later",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_existing_current_state_is_not_overridden",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_existing_current_tariff_is_preserved_without_historical_evidence",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_explicit_symptom_start_keeps_timezone",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_future_and_proposal_do_not_create_a_current_plan",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_grammatical_tariff_case_is_not_a_new_plan_name",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_historical_hypothetical_and_future_states_are_not_current",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_incidental_new_equipment_later_in_call_is_not_a_new_primary_object",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_literal_activation_of_a_named_service_is_a_state",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_named_service_is_recovered_with_exact_source",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_negative_response_does_not_confirm_a_tariff",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_normalizer_reports_updates_separately_from_added_facts",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_one_object_does_not_block_another",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_question_about_effect_does_not_retract_a_tariff_assertion",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_recovery_is_idempotent",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_state_question_requires_affirmative_response",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_tariff_question_requires_confirmation",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_tariff_wrapper_does_not_change_the_named_plan",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_television_is_not_a_television_set_object",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_two_objects_in_one_assertion_are_not_guessed",
+        "status": "passed"
+      },
+      {
+        "test": "test_current_state_recovery.CurrentStateRecoveryTest.test_unacknowledged_tariff_conflict_is_not_resolved_by_last_mention",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_call_utc_offset_is_kept",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_catalog_agreement_takes_the_scheduled_day",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_chain_closure_is_opt_in_and_never_uses_a_future_start",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_cue_belongs_to_the_nearest_status",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_free_formulation_is_dated_by_the_call_and_open",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_mode_requires_the_catalog",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_multiple_objects_do_not_share_one_date_without_object_binding",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_negated_day_and_idiom_are_not_dates",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_nothing_is_dropped_reordered_or_mutated",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_paraphrase_and_negative_and_action_are_left_to_the_model",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_question_and_hypothesis_do_not_rewrite_catalog_agreement",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_result_always_satisfies_the_interval_contract",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_status_of_another_ticket_question_and_negation_set_no_date",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_status_start_end_and_still",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.BindingTest.test_symptom_onset_and_end_of_normal_state",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.CueTest.test_direction_comes_from_the_caller",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.CueTest.test_periods_are_not_reduced_to_a_day",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.CueTest.test_scorer_bank_single_days",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.CueTest.test_typical_asr_variants",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_case_v2.ValueLayerTest.test_exact_catalog_free_and_paraphrase",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_both_boundaries_and_successor_from_are_bound_to_own_events",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_closing_ticket_does_not_end_completed_status",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_comma_separated_time_adjunct_is_not_lost",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_conflicting_repeated_status_is_abstention",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_explicit_end_wins_over_inferred_transition",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_future_notification_does_not_date_status",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_historical_start_is_not_guessed_from_end",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_inputs_and_non_date_fields_are_preserved",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_observation_is_not_status_onset",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_partial_period_is_not_replaced_by_other_status_date",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_questions_hypotheses_and_negated_cues_do_not_supply_dates",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_rejection_does_not_confirm_previous_date",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_repeated_endpoint_does_not_become_start",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_short_confirmation_uses_only_previous_turns",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_temporal_answer_inherits_question_event",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_ticket_reference_mismatch_and_multiple_tickets_are_ambiguous",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_timezone_is_preserved_and_reapplication_is_idempotent",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_two_dates_of_same_status_have_different_roles",
+        "status": "passed"
+      },
+      {
+        "test": "test_temporal_binding.TemporalBindingTest.test_unrelated_action_time_does_not_date_ticket",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_closed_symptom_is_not_reopened_by_an_unrelated_date",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_explicit_symptom_end_keeps_start",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_explicit_transfer_dates_both_tariffs",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_month_period_does_not_become_an_arbitrary_day",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_ongoing_symptom_reopens_from_since_date",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_plus_tariff_is_not_the_same_value",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_tariff_activation_and_since",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_tariff_observation_proposal_and_question_are_not_activation",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_tariff_until_changes_end_only",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.StateIntervalsTest.test_unrelated_date_does_not_date_a_tariff",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_beginning_and_end_are_applied_together",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_conflicting_explicit_dates_are_not_resolved_by_first_or_last",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_explicit_other_turn_repairs_date_of_the_same_ticket",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_explicit_transition_gives_endpoint_and_next_start",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_model_dates_do_not_complete_a_chain",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_negative_fact_is_preserved",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_other_number_cannot_date_mine",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_previous_named_onset_can_explain_a_confirmation",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_question_elsewhere_does_not_erase_an_asserted_onset",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_questions_and_negation_do_not_supply_evidence",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_source_question_does_not_establish_a_new_symptom",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_still_normal_does_not_prove_end_of_normal_state",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_timezone_immutability_and_idempotence",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_unnumbered_evidence_cannot_cross_multiple_tickets",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_until_for_normal_is_not_until_for_the_following_symptom",
+        "status": "passed"
+      },
+      {
+        "test": "test_state_intervals.TicketEvidenceTest.test_visit_date_and_phone_call_date_do_not_date_a_status",
+        "status": "passed"
+      }
+    ]
+  },
+  "calls": 383,
+  "reference_reproduced": true,
+  "hashes": {
+    "gold": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+    "raw": "b35f068d974f8c1d8545aa6168e149610553f8498e39c4ae655ab8415573338e",
+    "catalog": "b7579c704e03e76e174e54bf7e7099171bc62301a2cfd8f5b3c7838b552701cb",
+    "base_recovery": "651fd8c489930e85296df54ed1e539d4547e1cdb1586cd077e18596129d7e017"
+  },
+  "source_hashes": {
+    "benchmark.py": "364a5b330dd8a55421543f296a602cf50252e6f23632bbe088547d1bcda3d37d",
+    "case_evaluation.py": "4f6dd4698fe015156960f82604a025d9a35ccc114fc9931a8db1da56feb31cfb",
+    "case_io.py": "ecc8e9ad51fbfaaa5ffde8be5a1c4ab32580fde541d67cd6800ee483f7f05002",
+    "catalog_hints.py": "863f2320967db2859ae0d3b77777d42ac0207a784554bc971145fa1e499b7def",
+    "catalog_normalization.py": "7c6cff3e671c8e8acbfe037f6d3a8553b846d9fd0506986ea4bea5674d2dc48c",
+    "check_data.py": "36b31b35dd7d6e0105c96c9641bb211459ef97a37d3d2a75787102b6ce718b68",
+    "compare_runs.py": "1b1df4c689da58e2a401387a92c324dfae29d999648ca37ea72851947dad9a16",
+    "compare_temporal.py": "1c8bb5d695557c3bc16da6c1ff6be1811dfc2301171cd1239093eba6be7173a1",
+    "config.py": "b460e5eccac102a1f716e501de8125ca406e349d787cbb1bb3332f63cfcc4dcf",
+    "defense_evidence.py": "bb0cb1d9f7b8404e242446f8347e28bb2be99600272bf996809258815e4f20ee",
+    "doctor.py": "7bc6cd333955d6463ef40716f0a8725b3d54d540de0d3526c9ee953822aebfcc",
+    "eval.py": "178d8e7e03ae5aa8d937896d8ed9b814f3c170e98af92524f0116af0e71a0dcc",
+    "extractor.py": "7f2f2d429af1c272ec72ea68f8f2e95d56d7efbfa6d3b4a115366d1906eaadf1",
+    "fact_recovery.py": "f90da601c810ae19622cef6f4157744e04e110974d4df7dbf89dc3ca61af3577",
+    "gpu_precision.py": "2974d10e37df0edf776337c9703e1d74aa3543d9a03761abdc5fe8f3ec7d0443",
+    "json_constraints.py": "d914864cff67953bbcd42f1804aa72048e4a4e4da0e8b1e47e4c5f7b37c01d47",
+    "llm_api.py": "1661611ae3d50ed0c7fc7cbcef0ad6a18620f181739c31a407b5f1ea11c06629",
+    "make_noisy_val.py": "353bafab553112a5742376bd7d9cd391f67dbb7bb77b171d7f2af4789fd1b6db",
+    "make_train_variants.py": "2f5274c1d25c7c8243ecfa65612d1541a0d7925227e3f1508ad0fa659bbc52cd",
+    "mcp_server.py": "aca25ba4fa753e4d79524670de3351c42546ce7c9da3a2c5f175e9d7bd7c1987",
+    "measurements.py": "d450dcafb3b99547071c4722770caed77e296b39b231d33cf2274f63b4f95908",
+    "merge.py": "11ecf0f688f22e6a4a97de165f13805ea07a86bef25a7d667f7723f852a3ff98",
+    "official_case_metrics.py": "dffec9b8b20c5a8a101a33a27b1672f2b6195f00ab60f021a1c14b31eeeacabd",
+    "official_case_metrics_v21.py": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+    "postprocess_dates.py": "75822e385b8201aa742152d565dd5b40ef9b9623ced6ff9340387f697e8d4406",
+    "predict.py": "adcee6bd6828fbef940039a65fd9cf015b86d61fd3cadcd40792818e52aa9264",
+    "prediction.py": "15e847db05a4ab1483339d3acc71db059919e7341522be0a7606029454fd6732",
+    "prepare_case.py": "d8beba714350541993183d52a526b11d48aac9953f61156fc2784a4fc7961e2d",
+    "resource_matrix.py": "2fa1f3c5189929e8cfc9e18aaab4245125cad2da9162b65fd1c876a07128e8b0",
+    "run_context.py": "50df458ab80c2296f0459455058374d198802f19d6ac4c187cb4dc7ca5421b9f",
+    "run_experiment.py": "3de4a56f04af8e30f3db58afb1b318c05a4b8619fc1ab8643601a0d84584bb4a",
+    "schema.py": "cd7a03f5779c135b3fc76657657d42f38be3cd72030a92edec1cf4cd991e6064",
+    "scoring.py": "ba04bb1a2e17eca9631ad3d7ff40192243c6f55c258ac9e340683b5fc9c3662e",
+    "series_history.py": "43121086b68cf90eeb3626c90abd1a8824b2a3ed89370060f2fd2a45280472c5",
+    "serve.py": "c47bf4f634474f4b0d9ba9c536b8c385a11894dfa4618580527191c8820b7e40",
+    "serve_vllm.py": "3e930d020a176016d6c5849c9aaa65a9274945e9d54ab9f67d1b404ce94d9ab1",
+    "service_recovery.py": "7eedf8dd22bb97812b428b58b8748eb7f3dce19fe29a8f4d8a4e9ac700f60d5c",
+    "state_intervals.py": "44033255299238ab0a3e7f5b8b5eed6de6bdb095e8fb94fdcaac2a088c6027c6",
+    "tariff_recovery.py": "bb207ad7b0500f1eaafda68f72060c21263560095917691cb888dde9dbb557ce",
+    "temporal.py": "d4f95b742c83108b188524907898afdc15676f726750d610f486393fd83b47bf",
+    "temporal_binding.py": "b49a9d69857c6f74d5fb0ed1962ddbdd5f059db99f3cfc55398cd39e44102b6f",
+    "temporal_case_v2.py": "15e3510d34b84b67b04c34abf98eb55fde01dfe411ae9e19ea5067747b41af8e",
+    "ticket_intervals.py": "5cb1c59348b5a4c7e153b61bbaa2e090985d84fbf9cc7443604d5f2fe1bd0613",
+    "train.py": "838cbdf9e166623361d9914dc1c28caf87610ee1fd2c82c08205df17a4c8e268",
+    "training_data.py": "b5262e154651266d1fa8aa83440bb787b48b426c3db793359ddd376c32957dac",
+    "training_observer.py": "60edd24721d032dec23f76447b1271d25973b9b575e840af35df315fdd73cdd6"
+  },
+  "training": false,
+  "gold_passed_to_rules": false,
+  "gpu_resource_curve_proven": false
+}
