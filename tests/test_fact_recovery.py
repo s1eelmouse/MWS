@@ -202,19 +202,21 @@ class FactRecoveryTest(unittest.TestCase):
         self.assertEqual(facts, [client_fact()])
         self.assertFalse(decisions)
 
-    def test_switch_target_is_last_tariff_in_text(self):
+    def test_explicit_switch_closes_history_at_stated_day(self):
         with tempfile.TemporaryDirectory() as temp:
             catalog = Path(temp) / 'catalog.json'
             catalog.write_text(json.dumps({'tariffs': ['Смарт', 'Мой максимум']}), encoding='utf-8')
             old = {**client_fact(), 'attribute': 'tariff', 'value': 'Смарт',
                    'valid_from': '2026-02-01T00:00:00'}
             facts, decisions = recover_facts(
-                [old], call('Был у меня Смарт, ну я и перешла на Мой максимум.'), str(catalog))
+                [old], call('Был у меня Смарт, а сегодня я перешла на Мой максимум.'), str(catalog))
         current = [fact for fact in facts if fact['attribute'] == 'tariff'
                    and not fact.get('valid_to')]
         self.assertEqual(len(current), 1)
         self.assertEqual(current[0]['value'], 'Мой максимум')
-        self.assertEqual(facts[0]['valid_to'], '2026-03-11T10:00:00')
+        # The contract/scorer compare days; do not invent a stated clock time.
+        self.assertEqual(facts[0]['valid_to'][:10], '2026-03-11')
+        self.assertEqual(facts[0]['valid_to'], current[0]['valid_from'])
         self.assertEqual(decisions[0]['reason'], 'explicit_current_tariff_correction')
 
     def test_confirmation_after_operator_question_recovers_tariff(self):
@@ -243,18 +245,18 @@ class FactRecoveryTest(unittest.TestCase):
         self.assertEqual(facts, [client_fact()])
         self.assertFalse(decisions)
 
-    def test_explicit_current_status_corrects_existing_current(self):
+    def test_operator_current_status_removes_unsupported_prediction(self):
         current = {'object': {'name': 'заявка 42', 'type': 'ticket', 'id': None},
                    'attribute': 'ticket_status', 'value': 'принята', 'polarity': 1,
                    'valid_from': '2026-03-10T00:00:00', 'valid_to': None,
                    'source': {'turn_idx': 0}, 'speaker': 'operator'}
         facts, decisions = recover_facts(
-            [current], call('Сейчас статус по заявке 42 — в работе.'), None)
+            [current], turns_call(('operator', 'Сейчас статус по заявке 42 — в работе.')), None)
         statuses = [fact for fact in facts if fact['attribute'] == 'ticket_status']
-        self.assertEqual(len(statuses), 2)
-        self.assertEqual(statuses[0]['valid_to'], '2026-03-11T10:00:00')
+        self.assertEqual(len(statuses), 1)
+        self.assertIsNone(statuses[0]['valid_to'])
         self.assertEqual(statuses[-1]['value'], 'в работе')
-        self.assertEqual(decisions[0]['reason'], 'explicit_current_status_correction')
+        self.assertEqual(decisions[0]['reason'], 'unsupported_current_status')
 
 
 if __name__ == '__main__':

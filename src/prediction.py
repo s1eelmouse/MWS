@@ -104,7 +104,12 @@ def normalize_prediction(raw: RawFacts, call: CallInput, *, temporal_mode=None,
         from fact_recovery import recover_facts
         items, recovered = recover_facts(items, call, catalog_path)
         if recovered:
-            summary['recovered_facts'] = len(recovered)
+            summary['recovered_facts'] = sum(d.get('action', 'add') == 'add' for d in recovered)
+            summary['fact_recovery_decisions'] = len(recovered)
+            for decision in recovered:
+                action = decision.get('action', 'add')
+                key = 'fact_recovery_' + action
+                summary[key] = summary.get(key, 0) + 1
             if temporal_decisions is not None:
                 temporal_decisions.extend(recovered)
     for item in items:

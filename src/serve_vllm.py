@@ -21,7 +21,8 @@ class VLLMExtractor:
         self.model_contract = {'target_signature': contract_signature(), 'policy': 'external-backend-unverified'}
         self.temporal_normalization = TEMPORAL_NORMALIZATION
         self.fact_recovery = FACT_RECOVERY
-        self.fact_recovery_policy = 'explicit-current-per-object-v2' if FACT_RECOVERY else None
+        from fact_recovery import RECOVERY_POLICY
+        self.fact_recovery_policy = RECOVERY_POLICY if FACT_RECOVERY else None
         self.temporal_catalog_sha256 = None
         if TEMPORAL_NORMALIZATION == 'case_v2':
             from pathlib import Path

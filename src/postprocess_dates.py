@@ -54,7 +54,10 @@ def process_predictions(calls, predictions, *, mode='conservative', catalog=None
             from fact_recovery import recover_facts
             items, decisions = recover_facts(items, call, recovery_catalog_path)
             audit.extend({'call_id': call.call_id, **decision} for decision in decisions)
-            counts['recovered_facts'] += len(decisions)
+            counts['recovered_facts'] += sum(d.get('action', 'add') == 'add' for d in decisions)
+            counts['fact_recovery_decisions'] += len(decisions)
+            for decision in decisions:
+                counts['fact_recovery_' + decision.get('action', 'add')] += 1
         turns = {turn.idx: turn for turn in call.turns}
         seen, final = set(), []
         for index, item in enumerate(items):
@@ -138,7 +141,8 @@ def main():
         'recovery_catalog_sha256': hashlib.sha256(Path(args.recovery_catalog or args.catalog).read_bytes()).hexdigest()
                                    if args.recovery_catalog or args.catalog else None,
         'source_sha256': {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                          for name in ['temporal.py', 'temporal_binding.py', 'temporal_case_v2.py', 'fact_recovery.py', 'series_history.py',
+                          for name in ['temporal.py', 'temporal_binding.py', 'temporal_case_v2.py',
+                                       'state_intervals.py', 'ticket_intervals.py', 'fact_recovery.py', 'ticket_recovery.py', 'series_history.py',
                                        'catalog_normalization.py', 'postprocess_dates.py']},
         'gold_fields_passed_to_rules': False,
         'history_scope': 'earlier_same_account_ticket' if args.allow_series_history else 'single_call',

@@ -15,9 +15,11 @@ therefore adds what the `task` mode does not read:
   of 4 133 gold facts in train and 393 of 393 in val (package v2.1); schema.md states
   the same rule ("дата не названа — дата звонка"). Values that merely resemble a
   catalog entry are left to the model, because the scorer matches them to catalog gold;
-* structure: agreements and symptoms are open intervals. Closing a ticket status at
-  the start of the next one is available (close_chains) but off: it depends on the
-  other predicted statuses being right and lowered the baseline predictions' score.
+* explicit tariff activation/termination and service onset/end, retaining an
+  unmentioned historical boundary; only an explicitly ongoing symptom is reopened;
+* explicit status boundaries elsewhere in the same identified ticket's call.
+  Unnumbered evidence is used only for a single-ticket transcript. Completing a
+  chain from predicted status dates (close_chains) remains off by default.
 
 Week/month periods («на прошлой неделе», «месяц назад», «в прошлом месяце») are
 deliberately not converted: in the supplied gold they map to a random day of the
@@ -289,7 +291,7 @@ def _bind_status(item, call_day, turn, changes, stamp):
             nearest = min(mentions, key=lambda m: min(abs(position - m[0]), abs(position - m[1])))
             if nearest[2] != key:
                 continue
-            if STILL.search(lower[max(0, position - 6):position + 22]):
+            if role != 'until' and STILL.search(lower[max(0, position - 6):position + 22]):
                 continue
             if role == 'until' or (change and nearest[1] <= change.start() and position > nearest[1]):
                 ends.add(day)
@@ -317,17 +319,19 @@ def _bind_free(item, call, changes):
     _change(item, 'valid_from', call.started_at, changes)
 
 
-def _bind_state(item, call, call_day, turn, changes, stamp):
-    if _status_key(item['value']) == NORMAL:
-        # «до пятницы работало», «ещё вчера работало»: the normal state ends at the onset.
-        day, _named = _nearby_day(call, turn, item['value'], call_day, future=False, reach=0)
-        if day and day < call_day and _ordered(item.get('valid_from'), stamp(day)):
-            _change(item, 'valid_to', stamp(day), changes)
-        return
-    _open(item, changes)
-    day, _named = _nearby_day(call, turn, item['value'], call_day, future=False)
-    if day and day < call_day:
-        _change(item, 'valid_from', stamp(day), changes)
+def _bind_state(item, call, call_day, turn, changes, stamp, layers):
+    from state_intervals import bind_explicit_interval, service_onset_context
+    entries = [' '.join(words) for words in layers.entries['service_state']]
+    evidence = bind_explicit_interval(item, turn, call_day, entries, changes, stamp)
+    if not evidence:
+        onset = service_onset_context(item, call, turn, call_day, entries)
+        if onset:
+            day, source = onset
+            _open(item, changes)
+            _change(item, 'valid_from', stamp(day), changes)
+            evidence = [{'source_turn_idx': source, 'field': 'valid_from', 'day': day.isoformat(),
+                         'reason': 'named_symptom_onset'}]
+    return evidence
 
 
 def _bind_agreement(item, call, call_day, turn, changes, stamp):
@@ -436,7 +440,12 @@ def repair_case_v2_dates(facts, call, layers, *, close_chains=False):
         elif fact['attribute'] == 'ticket_status':
             _bind_status(item, call_day, turn, decision['changes'], stamp)
         elif fact['attribute'] == 'service_state':
-            _bind_state(item, call, call_day, turn, decision['changes'], stamp)
+            decision['evidence'] = _bind_state(item, call, call_day, turn, decision['changes'], stamp, layers)
+        elif fact['attribute'] == 'tariff':
+            from state_intervals import bind_explicit_interval
+            entries = [' '.join(words) for words in layers.entries['tariff']]
+            decision['evidence'] = bind_explicit_interval(item, turn, call_day, entries,
+                                                        decision['changes'], stamp)
         elif fact['attribute'] == 'agreement':
             # A question can become a confirmed appointment in the next answer.
             following = sorted((t for t in call.turns if t.idx > turn.idx), key=lambda t: t.idx)[:2]
@@ -448,6 +457,8 @@ def repair_case_v2_dates(facts, call, layers, *, close_chains=False):
                 _bind_agreement(item, call, call_day, turn, decision['changes'], stamp)
         items.append(item)
         decisions.append(decision)
+    from ticket_intervals import bind_ticket_evidence
+    bind_ticket_evidence(items, call, decisions, stamp, _bind_status)
     if close_chains:
         _close_ticket_chains(items, decisions, call_day, stamp)
     for fact, item, decision in zip(facts, items, decisions):
