@@ -51,6 +51,9 @@ class CascadeTest(unittest.TestCase):
     def test_mix_is_scored_and_bounds_are_reported(self):
         gold = [call("u1:call0000", ["у меня тариф Смарт"], [fact("tariff", "Смарт")]),
                 call("u2:call0000", ["перезагрузил роутер"], [fact("action", "перезагрузка роутера")])]
+        for row in gold:  # organizer gold carries object ids; predictions do not
+            for item in row["facts"]:
+                item["object"] = {**item["object"], "id": row["call_id"] + ":client"}
         small = [{"call_id": "u1:call0000", "facts": []},
                  {"call_id": "u2:call0000", "facts": [fact("action", "перезагрузка роутера")]}]
         large = [{"call_id": "u1:call0000", "facts": [fact("tariff", "Смарт")]},
