@@ -175,7 +175,7 @@ S **0.5201**, P/R 0.4965 / 0.5328, G 0.7121, 0 отказов и 100 % форм�
   `compare_runs.py`).
 - Review queue для выборочной проверки спорных фактов без gold:
   `src/review_queue.py`, детали — [docs/REVIEW_QUEUE.md](docs/REVIEW_QUEUE.md).
-- Полный набор: **271 тест, 266 прошли, 5 skipped**; `compileall` проходит.
+- Полный набор: **272 теста, 267 прошли, 5 skipped**; `compileall` проходит.
   См. [docs/VALIDATION.md](docs/VALIDATION.md).
 
 Замеры 14.11.2026 на Windows 10, RTX 4060 8 ГБ, torch 2.14.1+cu130:

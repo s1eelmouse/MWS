@@ -56,6 +56,8 @@ class ReviewQueueTest(unittest.TestCase):
         self.assertEqual(queue[0]['reasons'], ['source_turn_missing'])
         self.assertEqual(queue[0]['priority'], 3)
         self.assertIsNone(queue[0]['source'])
+        self.assertEqual(queue[0]['candidate_turns'][0]['turn_idx'], 0)
+        self.assertFalse(queue[0]['candidate_turns'][0]['is_current'])
 
     def test_speaker_mismatch_is_high_priority(self):
         c = call(('client', 'У меня тариф Пятёрочка.'))
@@ -106,6 +108,15 @@ class ReviewQueueTest(unittest.TestCase):
         queue, summary = build_queue([c], [pred(c, error='invalid_json')])
         self.assertEqual(queue, [])
         self.assertEqual(summary['failed_calls'], 1)
+
+    def test_candidate_turns_rank_support_and_mark_current(self):
+        c = call(('client', 'У меня проблемы с интернетом.'),
+                 ('client', 'У меня тариф Пятёрочка.'))
+        queue, _ = build_queue([c], [pred(c, fact('Пятёрочка', turn_idx=0))])
+        candidates = queue[0]['candidate_turns']
+        self.assertEqual(candidates[0]['turn_idx'], 1)
+        self.assertFalse(candidates[0]['is_current'])
+        self.assertTrue(any(item['is_current'] for item in candidates))
 
     def test_max_items_keeps_summary_and_selects_top(self):
         c = call(('client', 'У меня тариф Пятёрочка.'))

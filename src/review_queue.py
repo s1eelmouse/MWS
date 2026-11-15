@@ -102,6 +102,23 @@ def _turn_window(call, turn_idx):
     }
 
 
+def _candidate_turns(call, fact, current_idx, limit=3):
+    """Top turns by lexical support; the current source is marked, never replaced."""
+    value = fact.get('value') or ''
+    candidates = []
+    for turn in sorted(call.turns, key=lambda item: item.idx):
+        candidates.append({
+            'turn_idx': turn.idx,
+            'speaker': turn.speaker,
+            'support': round(_value_support(value, turn.text), 4),
+            'is_current': turn.idx == current_idx,
+            'text': turn.text,
+        })
+    candidates.sort(key=lambda item: (-item['support'], 0 if item['is_current'] else 1,
+                                      item['turn_idx']))
+    return candidates[:limit]
+
+
 def build_queue(calls, predictions, *, support_threshold=0.5, long_agreement_tokens=8,
                 max_items=0):
     by_id = {call.call_id: call for call in calls}
@@ -165,6 +182,9 @@ def build_queue(calls, predictions, *, support_threshold=0.5, long_agreement_tok
                 2 if {'date_not_supported_by_source', 'low_value_support',
                       'possible_offer_or_hypothesis'} & set(reasons) else 1)
             fact = facts[index]
+            source_idx = (fact.get('source') or {}).get('turn_idx')
+            source_reasons = {'source_turn_missing', 'source_speaker_mismatch',
+                              'low_value_support'}
             item = {
                 'call_id': call_id,
                 'fact_index': index,
@@ -173,7 +193,9 @@ def build_queue(calls, predictions, *, support_threshold=0.5, long_agreement_tok
                 'value_support': round(support_by_index[index], 4),
                 'attribute': fact.get('attribute'),
                 'fact': fact,
-                'source': _turn_window(call, (fact.get('source') or {}).get('turn_idx')),
+                'source': _turn_window(call, source_idx),
+                'candidate_turns': (_candidate_turns(call, fact, source_idx)
+                                    if source_reasons & set(reasons) else []),
                 'call_started_at': call.started_at,
             }
             queued.append(item)

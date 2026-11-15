@@ -7,7 +7,7 @@
 
 | Артефакт | Где | Статус |
 |---|---|---|
-| Код | GitHub `main`, последний коммит | 271 тест (266 OK, 5 skipped), `compileall` |
+| Код | GitHub `main`, последний коммит | 272 теста (267 OK, 5 skipped), `compileall` |
 | Адаптер 002 (старый fallback) | `out/4090-continue-002`, `experiment.json` | подтверждён на старом пакете |
 | Адаптер 003 (кандидат) | `out/4090-continue-003`, `experiment.json` | 003+recovery v2: чистый val T 0.4807 / S 0.5201, 0 отказов; шумный val T 0.4582 / S 0.4141 |
 | Merged-модель 002/003 | локально `/home/user/hackathon/artifacts-4090/` | скопированы с 4090 |
@@ -19,7 +19,7 @@
 
 ## 2. Перед загрузкой
 
-- [x] `python -m unittest discover -s tests`: **271 тест, 266 прошли, 5 skipped**.
+- [x] `python -m unittest discover -s tests`: **272 теста, 267 прошли, 5 skipped**.
 - [x] `python -m compileall -q src tests`.
 - [x] `sha256sum src/official_case_metrics.py` совпадает с `official_case_metrics.sha256`
       (2.1: `863f8773…59c3`).
