@@ -30,9 +30,6 @@
 | [docs/MODEL.md](docs/MODEL.md) | Финальная модель: рецепт, конфиг инференса, качество, ограничения |
 | [docs/DEFENSE.md](docs/DEFENSE.md) | Как решали проблемы и улучшали модель: хронология, числа, отвергнутые гипотезы, Q&A |
 | [docs/EXAMPLES.md](docs/EXAMPLES.md) | Небольшие синтетические примеры: подтверждение, отказ, смена состояния, относительные даты |
-| [docs/SLIDES.md](docs/SLIDES.md) | Структура презентации на 10 слайдов с финальными числами |
-| [docs/SPEECH.md](docs/SPEECH.md) | Текст выступления по слайдам, Q&A и чего не говорить |
-| [docs/defense-deck.pdf](docs/defense-deck.pdf) | Готовый deck на 10 слайдов; редактируемый исходник — `docs/defense-deck.pptx` |
 | [docs/DEMO.md](docs/DEMO.md) | Сценарий живого демо, curl-команды и резервный план |
 | [docs/SUBMISSION.md](docs/SUBMISSION.md) | Чек-лист сдачи: артефакты, проверки, ответственные |
 | [docs/SCORER_BUG_V2_1.md](docs/SCORER_BUG_V2_1.md) | Воспроизведённый баг оценщика 2.1 (`TypeError` на «через две недели») и что с ним делать |
