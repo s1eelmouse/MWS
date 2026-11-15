@@ -22,8 +22,10 @@
 
 - [x] `python -m unittest discover -s tests`: **277 тестов, 272 прошли, 5 skipped**.
 - [x] `python -m compileall -q src tests`.
-- [x] `sha256sum -c src/official_case_metrics.sha256` (legacy 1, `dffec9b8…`)
-      и `sha256sum -c src/official_case_metrics_v21.sha256` (2.1, `863f8773…59c3`).
+- [x] `sha256sum src/official_case_metrics.py` = `dffec9b8…` (сверено с
+      `src/official_case_metrics.sha256`) и `sha256sum src/official_case_metrics_v21.py`
+      = `863f8773…59c3` (сверено с `src/official_case_metrics_v21.sha256`).
+      Файлы `.sha256` содержат только хеш, поэтому `sha256sum -c` к ним неприменим.
 - [x] Старый контракт `3ee403f3…a274` всё ещё принимается; новый — `40e9c449…2654`.
 - [x] В `predictions.jsonl`/`report.json` нет gold: `facts` не уходят в prompt и HTTP;
       `postprocess_dates` получает `CallInput` без gold. Проверено на отчёте 003.
