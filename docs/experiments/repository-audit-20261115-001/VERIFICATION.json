@@ -107,5 +107,13 @@
   "noisy_005_report_in_reviewed_tree": false,
   "compatible_clean_resource_points": 2,
   "teacher_parameter_ratio_proven": false,
-  "teacher_gpu_speedup_proven": false
+  "teacher_gpu_speedup_proven": false,
+  "main_reviewed_commit": "a759fd995de6acc96409b512903435a3c0b89807",
+  "main_tracked_files": 401,
+  "main_tests_canonical_tmp_with_isolated_xgrammar": {
+    "run": 277,
+    "failures": 0,
+    "skipped": 0,
+    "source_modified": false
+  }
 }
