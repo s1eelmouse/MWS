@@ -1,0 +1,9 @@
+{
+  "bundle_sha256": "a7310c6350b8f1fed3df6e318511a04791fc90103c78b5af0da3778118b5bb3c",
+  "bundle_bytes": 9634796,
+  "files": 114,
+  "installer_round_trip": true,
+  "installer_idempotent": true,
+  "wrong_hash_rejected": true,
+  "runner_preflight_on_real_files_and_model_sha256": true
+}

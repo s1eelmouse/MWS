@@ -1,0 +1,42 @@
+{
+  "parent_model_batch2": {
+    "metrics_version": "2.1",
+    "n_calls": 383,
+    "n_gold_facts": 1845,
+    "n_pred_facts": 2117,
+    "fact_precision": 0.5073,
+    "fact_recall": 0.5821,
+    "temporal_recall": 0.5152,
+    "n_temporal": 656,
+    "state_accuracy": 0.5602,
+    "n_state": 623,
+    "grounding_turn": 0.7924,
+    "grounding_span": null,
+    "n_grounded": 1074
+  },
+  "targeted_model_batch4": {
+    "metrics_version": "2.1",
+    "n_calls": 383,
+    "n_gold_facts": 1845,
+    "n_pred_facts": 2194,
+    "fact_precision": 0.4973,
+    "fact_recall": 0.5913,
+    "temporal_recall": 0.5158,
+    "n_temporal": 663,
+    "state_accuracy": 0.5682,
+    "n_state": 623,
+    "grounding_turn": 0.8002,
+    "grounding_span": null,
+    "n_grounded": 1091
+  },
+  "delta_percentage_points": {
+    "fact_precision": -1.0,
+    "fact_recall": 0.92,
+    "temporal_recall": 0.06,
+    "state_accuracy": 0.8,
+    "grounding_turn": 0.78
+  },
+  "comparison_caveat": "Weights and batch size both differ; not a controlled speedup measurement.",
+  "failed_calls": 0,
+  "automatic_promotion": false
+}

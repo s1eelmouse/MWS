@@ -1,0 +1,475 @@
+C:\Users\Tripozik\Documents\Codex\2026-11-13\qwen-3-1-7b-tesla-v100-6\work\test-deps\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+........................................................................................usage: run_experiment.py [-h] --output-dir OUTPUT_DIR [--train-new]
+                         [--model MODEL] [--train TRAIN] [--val VAL]
+                         [--baseline-pred BASELINE_PRED]
+                         [--allow-legacy-contract] [--epochs EPOCHS]
+                         [--train-limit TRAIN_LIMIT] [--max-steps MAX_STEPS]
+                         [--eval-limit EVAL_LIMIT]
+                         [--init-adapter-dir INIT_ADAPTER_DIR]
+                         [--learning-rate LEARNING_RATE]
+                         [--modes MODES [MODES ...]]
+run_experiment.py: error: --learning-rate must be finite and positive
+.usage: run_experiment.py [-h] --output-dir OUTPUT_DIR [--train-new]
+                         [--model MODEL] [--train TRAIN] [--val VAL]
+                         [--baseline-pred BASELINE_PRED]
+                         [--allow-legacy-contract] [--epochs EPOCHS]
+                         [--train-limit TRAIN_LIMIT] [--max-steps MAX_STEPS]
+                         [--eval-limit EVAL_LIMIT]
+                         [--init-adapter-dir INIT_ADAPTER_DIR]
+                         [--learning-rate LEARNING_RATE]
+                         [--modes MODES [MODES ...]]
+run_experiment.py: error: Choose --model EXISTING_MERGED_MODEL or --train-new
+Completed 1/1; failed: 1
+Completed 1/1; failed: 0
+{
+  "protocol": "local-inference-v2",
+  "settings": {
+    "input": "C:\\Users\\Tripozik\\AppData\\Local\\Temp\\tmpncvk27sc\\gold.jsonl",
+    "model": "fake",
+    "device": "cpu",
+    "batch_size": 1,
+    "warmup_batches": 1,
+    "limit": 1,
+    "failures": "C:\\Users\\Tripozik\\AppData\\Local\\Temp\\tmpncvk27sc\\old-errors.jsonl",
+    "with_schema": false,
+    "output_dir": "C:\\Users\\Tripozik\\AppData\\Local\\Temp\\tmpncvk27sc\\new"
+  },
+  "dataset_sha256": "e4689e017c4c01f12604f7fdd1488a4a6bab02486228773286f63271b0905eb9",
+  "selected_calls_sha256": "91f3a258123d318d367dd013e0f4e6849f19fa7e1086e5d76b7d9c6ecaa4672c",
+  "contract_signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+  "diagnostic_subset": true,
+  "failures_sha256": "41bf0ae325e94e988d1d89b4f645472eed293e18b95d0016d6fabfe9bb4b3d77",
+  "limits": {
+    "input": 12288,
+    "output": 4096
+  },
+  "prompt_lookup_tokens": 0,
+  "grammar_backend": "auto",
+  "grammar_threads": 8,
+  "save_raw_responses": false,
+  "retry_on_token_limit": true,
+  "retry_repetition_penalty": 1.2,
+  "run_context": {
+    "contract": {
+      "signature": "43666ebeed4459ce492ba224670921624bffb72f8e4a85011c71d5e08f7206ad",
+      "contract_version": "2.1",
+      "target_version": 2
+    },
+    "json_schema_sha256": "6b7d699659e4f92e3e552263de980e4093d06dd5a0d66fc1ba177df7cc8cddd7",
+    "scoring": {
+      "scorer_version": "2.1",
+      "official_metrics_version": "2.1",
+      "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+      "official_source_modified": false,
+      "local_patch": null,
+      "patch_adapter_sha256": null,
+      "catalog_sha256": null
+    },
+    "train": null,
+    "val": {
+      "path": "C:\\Users\\Tripozik\\AppData\\Local\\Temp\\tmpncvk27sc\\gold.jsonl",
+      "sha256": "e4689e017c4c01f12604f7fdd1488a4a6bab02486228773286f63271b0905eb9",
+      "bytes": 1830,
+      "recognized_version": "custom-or-different-bytes"
+    },
+    "catalog": null,
+    "context_sha256": "d69ba6d776ec48ecf4edf6750e00c45eefb4563f86407dd29758afd106c27ca8"
+  },
+  "hardware": {
+    "cpu": "fake"
+  },
+  "model_artifacts": null,
+  "model_weights_bytes": null,
+  "model_load_seconds": 7.6299998909235e-05,
+  "constrained_json": false,
+  "model_contract": null,
+  "temporal_normalization": "off",
+  "temporal_catalog_sha256": null,
+  "fact_recovery": false,
+  "fact_recovery_policy": null,
+  "series_history_enabled": false,
+  "series_history_max_entries": null,
+  "catalog_sha256": null,
+  "grammar_compile_seconds": null,
+  "model_parameters": 123,
+  "dtype": "float32",
+  "torch_threads": 8,
+  "model_revision": null,
+  "calls": 1,
+  "failed_calls": 0,
+  "error_counts": {
+    "invalid_json": 0,
+    "invalid_source": 0,
+    "invalid_schema": 0,
+    "output_token_limit": 0,
+    "input_too_long": 0,
+    "out_of_memory": 0,
+    "missing_prediction": 0
+  },
+  "normalization_counts": {},
+  "history_settings": null,
+  "history": null,
+  "temporal_postprocess": {
+    "stage": "backend.extract",
+    "included_in_measurement": true,
+    "mode": "off",
+    "series_history_enabled": false
+  },
+  "warmup_batches": 1,
+  "warmup_seconds": 1.720000000204891e-05,
+  "warmup_errors": [],
+  "measurement_seconds": 2.600000152597204e-05,
+  "calls_per_hour": 138461530.33506063,
+  "successful_calls_per_hour": 138461530.33506063,
+  "gpu_seconds_per_1000_calls": null,
+  "gpu_seconds_definition": "one allocated GPU * measured local processing seconds; not CUDA kernel time",
+  "latency_definition": "local end-to-end batch completion, shared by calls in batch; excludes queue, network and file I/O",
+  "percentile_method": "nearest_rank",
+  "call_completion_seconds": {
+    "count": 1,
+    "unknown": 0,
+    "p50": 2.600000152597204e-05,
+    "p95": 2.600000152597204e-05,
+    "max": 2.600000152597204e-05
+  },
+  "batch_seconds": {
+    "count": 1,
+    "unknown": 0,
+    "p50": 2.600000152597204e-05,
+    "p95": 2.600000152597204e-05,
+    "max": 2.600000152597204e-05
+  },
+  "input_tokens": {
+    "count": 0,
+    "unknown": 1,
+    "p50": null,
+    "p95": null,
+    "max": null
+  },
+  "output_tokens": {
+    "count": 0,
+    "unknown": 1,
+    "p50": null,
+    "p95": null,
+    "max": null
+  },
+  "output_token_definition": "generated token IDs through first EOS inclusive; excludes padding",
+  "memory": {
+    "process_rss_sampled_peak_bytes": 61435904,
+    "rss_sample_interval_seconds": 0.05,
+    "rss_samples": 2,
+    "sampling_error": null,
+    "cuda_peak_allocated_bytes": null,
+    "cuda_peak_reserved_bytes": null
+  },
+  "quality": {
+    "official": {
+      "metrics_version": "2.1",
+      "n_calls": 1,
+      "n_gold_facts": 1,
+      "n_pred_facts": 0,
+      "fact_precision": 0.0,
+      "fact_recall": 0.0,
+      "temporal_recall": null,
+      "n_temporal": 0,
+      "state_accuracy": null,
+      "n_state": 0,
+      "grounding_turn": null,
+      "grounding_span": null,
+      "n_grounded": 0
+    },
+    "diagnostics": {
+      "invalid_or_failed_calls": 0,
+      "missing_calls": 0,
+      "format_valid_rate": 1.0,
+      "calls_with_invalid_sources": 0
+    },
+    "per_attribute": {
+      "service_state": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "tariff": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "ticket_status": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "action": {
+        "attribute_kind": "static",
+        "n_gold_facts": 1,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 1,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      },
+      "agreement": {
+        "attribute_kind": "temporal",
+        "n_gold_facts": 0,
+        "n_pred_facts": 0,
+        "fact_precision": 0.0,
+        "fact_recall": 0.0,
+        "temporal_recall": null,
+        "n_temporal": 0,
+        "state_accuracy": null,
+        "n_state": 0,
+        "grounding_turn": null,
+        "matched_facts": 0,
+        "missed_facts": 0,
+        "extra_facts": 0,
+        "valid_from_errors": 0,
+        "valid_to_errors": 0,
+        "date_errors": 0,
+        "source_turn_errors": 0,
+        "temporal_eligible_matched_facts": 0,
+        "temporal_correct_pairs": 0,
+        "temporal_date_errors": 0
+      }
+    },
+    "grounding_diagnostics": {
+      "scope": "officially_matched_facts_only",
+      "matched_facts": 0,
+      "correct_source_turn": 0,
+      "wrong_source_turn": 0,
+      "grounding_turn": null,
+      "per_attribute": {
+        "service_state": {
+          "matched_facts": 0,
+          "correct_source_turn": 0,
+          "wrong_source_turn": 0,
+          "unmatched_predictions": 0,
+          "adjacent_turn": 0,
+          "two_turns_apart": 0,
+          "farther_than_two_turns": 0,
+          "missing_or_invalid_source_turn": 0,
+          "different_speaker": 0,
+          "pred_source_is_short_confirmation": 0,
+          "gold_source_is_short_confirmation": 0,
+          "grounding_turn": null,
+          "share_of_all_source_errors": null
+        },
+        "tariff": {
+          "matched_facts": 0,
+          "correct_source_turn": 0,
+          "wrong_source_turn": 0,
+          "unmatched_predictions": 0,
+          "adjacent_turn": 0,
+          "two_turns_apart": 0,
+          "farther_than_two_turns": 0,
+          "missing_or_invalid_source_turn": 0,
+          "different_speaker": 0,
+          "pred_source_is_short_confirmation": 0,
+          "gold_source_is_short_confirmation": 0,
+          "grounding_turn": null,
+          "share_of_all_source_errors": null
+        },
+        "ticket_status": {
+          "matched_facts": 0,
+          "correct_source_turn": 0,
+          "wrong_source_turn": 0,
+          "unmatched_predictions": 0,
+          "adjacent_turn": 0,
+          "two_turns_apart": 0,
+          "farther_than_two_turns": 0,
+          "missing_or_invalid_source_turn": 0,
+          "different_speaker": 0,
+          "pred_source_is_short_confirmation": 0,
+          "gold_source_is_short_confirmation": 0,
+          "grounding_turn": null,
+          "share_of_all_source_errors": null
+        },
+        "action": {
+          "matched_facts": 0,
+          "correct_source_turn": 0,
+          "wrong_source_turn": 0,
+          "unmatched_predictions": 0,
+          "adjacent_turn": 0,
+          "two_turns_apart": 0,
+          "farther_than_two_turns": 0,
+          "missing_or_invalid_source_turn": 0,
+          "different_speaker": 0,
+          "pred_source_is_short_confirmation": 0,
+          "gold_source_is_short_confirmation": 0,
+          "grounding_turn": null,
+          "share_of_all_source_errors": null
+        },
+        "agreement": {
+          "matched_facts": 0,
+          "correct_source_turn": 0,
+          "wrong_source_turn": 0,
+          "unmatched_predictions": 0,
+          "adjacent_turn": 0,
+          "two_turns_apart": 0,
+          "farther_than_two_turns": 0,
+          "missing_or_invalid_source_turn": 0,
+          "different_speaker": 0,
+          "pred_source_is_short_confirmation": 0,
+          "gold_source_is_short_confirmation": 0,
+          "grounding_turn": null,
+          "share_of_all_source_errors": null
+        }
+      }
+    },
+    "scorer_version": "2.1",
+    "official_metrics_version": "2.1",
+    "scorer_sha256": "863f87737dd1108e772250967f43697fa2411b3394c190d192b7ff66666259c3",
+    "official_source_modified": false,
+    "local_patch": null,
+    "patch_adapter_sha256": null,
+    "catalog_sha256": null,
+    "known_scorer_issues": [
+      "Organizer v2.1 gold-vs-gold state_accuracy is not necessarily 1.0.",
+      "Temporal recall is conditional on matched facts and recoverable dates; action is excluded.",
+      "Official v2.1 has two known date-set.update TypeErrors; use explicitly labelled 2.1-datefix for those inputs."
+    ]
+  },
+  "status": "complete"
+}
+Completed 1/1; failed: 0
+Completed 1/1; failed: 0
+Completed 1/1; failed: 0
+Completed 1/1; failed: 0
+Completed 1/8; failed: 1
+Completed 2/8; failed: 2
+Completed 3/8; failed: 3
+Completed 4/8; failed: 4
+Completed 5/8; failed: 5
+Completed 6/8; failed: 6
+Completed 7/8; failed: 7
+Completed 8/8; failed: 8
+Completed 2/3; failed: 0
+Completed 3/3; failed: 1
+Completed 1/1; failed: 0
+Completed 1/1; failed: 1
+Completed 1/1; failed: 0
+Starting failed-test: C:\Program Files\WindowsApps\OpenAI.CodexPrimaryRuntime.v26-1112-737-0_26.1112.737.0_x64__3k8sg7r9htsxt\dependencies\python\python.exe -c raise SystemExit(7)
+Preparing: models/continue-002/case_contract.json
+Preparing: models/continue-002/config.json
+Preparing: models/continue-002/model.safetensors
+Preparing: models/continue-002/tokenizer_config.json
+Preparing: data/organizer/val.jsonl
+Preparing: data/organizer/catalog.json
+Preparing: data/organizer/train.jsonl
+Preparing: adapters/continue-002/adapter_config.json
+Preparing: adapters/continue-002/adapter_model.safetensors
+{
+  "archive": "C:\\Users\\Tripozik\\AppData\\Local\\Temp\\tmp5g8andb7\\transfer.tar.gz",
+  "manifest": "C:\\Users\\Tripozik\\AppData\\Local\\Temp\\tmp5g8andb7\\transfer.tar.gz.manifest.json",
+  "bytes": 1484,
+  "files": 9
+}
+Preparing: models/continue-002/case_contract.json
+Preparing: models/continue-002/config.json
+Preparing: models/continue-002/model.safetensors
+Preparing: models/continue-002/tokenizer_config.json
+Preparing: data/organizer/val.jsonl
+Preparing: data/organizer/catalog.json
+Preparing: data/organizer/train.jsonl
+Preparing: adapters/continue-002/adapter_config.json
+Preparing: adapters/continue-002/adapter_model.safetensors
+{
+  "archive": "C:\\Users\\Tripozik\\AppData\\Local\\Temp\\tmppsmzj6yc\\transfer.tar.gz",
+  "manifest": "C:\\Users\\Tripozik\\AppData\\Local\\Temp\\tmppsmzj6yc\\transfer.tar.gz.manifest.json",
+  "bytes": 1448,
+  "files": 9
+}
+MODEL AND DATA INSTALLED AND VERIFIED: C:\Users\Tripozik\AppData\Local\Temp\tmppsmzj6yc\team_shpana
+...........................s.................ssss..usage: make_noisy_val.py [-h] [--input INPUT] --output OUTPUT [--level LEVEL]
+                         [--seed SEED] [--limit LIMIT]
+make_noisy_val.py: error: Output directory contains a different catalog; choose a fresh directory
+{
+  "input": "C:\\Users\\Tripozik\\AppData\\Local\\Temp\\tmp9qhouc7h\\val.jsonl",
+  "input_sha256": "5c45d0c89610caf3adb33ebcc3451d9ce4d3ba7cd3d9815c276f2b10b400b1fe",
+  "output_sha256": "205f68743f6555498119c835841563c21b0b7ad153a322889ef56ab899046ebb",
+  "calls": 1,
+  "level": 0.15,
+  "seed": 42,
+  "limit": null,
+  "changed_word_share": 0.0,
+  "note": "Turn texts only; facts unchanged; source span/quote set to null.",
+  "catalog_next_to_output": true,
+  "catalog_sha256": "b7b08691a432d9b7966b8813d4c1ecfab83c9c1178e45e5fdaa4e79b80527f94"
+}
+Installing merged files from: experiment/merged
+Installing merged files from: experiment/merged
+................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 348 tests in 2.215s
+
+OK (skipped=5)
+005 INSTALLED AND VERIFIED: C:\Users\Tripozik\AppData\Local\Temp\tmpvgmgo3kw\models\005
+005 ALREADY INSTALLED AND VERIFIED: C:\Users\Tripozik\AppData\Local\Temp\tmpvgmgo3kw\models\005
+RELEASE INSTALLED AND VERIFIED: C:\Users\Tripozik\AppData\Local\Temp\tmp6t3ki44d\team_shpana\releases\case-v21-002
+Existing .venv-v100, models/continue-002, data and prior results preserved.
+ALREADY INSTALLED AND VERIFIED: C:\Users\Tripozik\AppData\Local\Temp\tmp6t3ki44d\team_shpana\releases\case-v21-002

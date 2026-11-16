@@ -1,0 +1,97 @@
+{
+  "branch_commit": "61c278034aa984e027227c3c815199c62b33f7f3",
+  "dataset_sha256": "f2945be92091219e47fc1d334aa5e3e79689187f7c795e3319303f4df7226617",
+  "bytes": 40875161,
+  "rows": 5000,
+  "unique_original_calls": 3364,
+  "repetition_histogram": {
+    "2": 1636,
+    "1": 1728
+  },
+  "missing_original_calls": 562,
+  "validation_errors": [],
+  "unknown_originals": [],
+  "modified_gold": [],
+  "metadata_changed": [],
+  "source_evidence_text_changed_calls": 3153,
+  "changed_turn_texts": 71245,
+  "val_accounts_overlap": 0,
+  "source_stats": {
+    "calls": 3926,
+    "facts": {
+      "action": 3732,
+      "agreement": 5021,
+      "service_state": 4400,
+      "tariff": 1839,
+      "ticket_status": 3483
+    },
+    "fact_share": {
+      "action": 0.202,
+      "agreement": 0.2718,
+      "service_state": 0.2382,
+      "tariff": 0.0995,
+      "ticket_status": 0.1885
+    },
+    "calls_with_attribute": {
+      "agreement": 3168,
+      "action": 2456,
+      "tariff": 1351,
+      "service_state": 2622,
+      "ticket_status": 1879
+    }
+  },
+  "focus_stats": {
+    "calls": 5000,
+    "facts": {
+      "service_state": 6560,
+      "action": 4717,
+      "ticket_status": 5101,
+      "tariff": 2702,
+      "agreement": 6350
+    },
+    "fact_share": {
+      "service_state": 0.258,
+      "action": 0.1855,
+      "ticket_status": 0.2006,
+      "tariff": 0.1063,
+      "agreement": 0.2497
+    },
+    "calls_with_attribute": {
+      "tariff": 1911,
+      "service_state": 3527,
+      "ticket_status": 2680,
+      "action": 3123,
+      "agreement": 4046
+    }
+  },
+  "suffix_counts": {
+    "~f20": 1101,
+    "~c": 1787,
+    "~f30": 1059,
+    "~f10": 1053
+  },
+  "missing_original_attribute_counts": {
+    "calls": 562,
+    "facts": {
+      "action": 565,
+      "agreement": 660,
+      "service_state": 435,
+      "ticket_status": 160,
+      "tariff": 114
+    },
+    "fact_share": {
+      "action": 0.2921,
+      "agreement": 0.3413,
+      "service_state": 0.2249,
+      "ticket_status": 0.0827,
+      "tariff": 0.0589
+    },
+    "calls_with_attribute": {
+      "agreement": 419,
+      "action": 361,
+      "service_state": 399,
+      "ticket_status": 132,
+      "tariff": 114
+    }
+  }
+}

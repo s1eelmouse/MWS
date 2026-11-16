@@ -1,0 +1,49 @@
+{
+  "run": "005-targeted-001-val-clean-b4-001",
+  "dataset": "clean",
+  "input_sha256": "e12610354aa69dff83e1d7c1e8c94736c97d5761d20af58790435f4be1941808",
+  "model": "/home/ubuntu/mws-v21/out/005-targeted-001/merged",
+  "weights_sha256": "6b4e1f2d2c48284188714ad0acb31e6a1aac89d63b660a65c8bfce0e64557617",
+  "batch_size": 4,
+  "gpu_free_bytes": 24914100224,
+  "gpu_total_bytes": 25336807424,
+  "stress_selection": [
+    {
+      "call_id": "u2027_00303:call0000",
+      "input_tokens": 10095
+    },
+    {
+      "call_id": "u2027_00304:call0002",
+      "input_tokens": 9549
+    },
+    {
+      "call_id": "u2027_00188:call0000",
+      "input_tokens": 6844
+    },
+    {
+      "call_id": "u2027_00020:call0000",
+      "input_tokens": 6083
+    },
+    {
+      "call_id": "u2027_00241:call0000",
+      "input_tokens": 5994
+    },
+    {
+      "call_id": "u2027_00196:call0000",
+      "input_tokens": 5366
+    },
+    {
+      "call_id": "u2027_00223:call0000",
+      "input_tokens": 5287
+    },
+    {
+      "call_id": "u2027_00262:call0000",
+      "input_tokens": 5282
+    }
+  ],
+  "stress_is_diagnostic_only": true,
+  "full_input_order_preserved": true,
+  "requested_batch_not_silently_reduced": true,
+  "script_sha256": "40d6b65c31e7c9fa292476c53b04ee0718ebf76c64eed3a5dd07051cd402600c",
+  "training_unchanged": true
+}

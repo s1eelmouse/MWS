@@ -1,0 +1,18 @@
+{
+  "own": {
+    "case_contract.json": "7431a4b51f8f26d47b3f952daf61158765d3f9762c45f2a895d85b4e29e95a7c",
+    "config.json": "474b4ae0ba806d6a4087ed76c8c970bf75cacf58ac8af34505bf79676438443b",
+    "generation_config.json": "7282475ae39d47247987be44195964496c6ac015888007f9ed830fd31287f682",
+    "model.safetensors": "193691230bba18d7c772d70e94651c425ca494081a42570a8b948cbc6175c044",
+    "tokenizer.json": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506",
+    "tokenizer_config.json": "2e3bd3cb5055f7a903a54e7062b2fd14d21b70f4174c3ffcd9fc81ec50a25631"
+  },
+  "005": {
+    "case_contract.json": "7431a4b51f8f26d47b3f952daf61158765d3f9762c45f2a895d85b4e29e95a7c",
+    "config.json": "474b4ae0ba806d6a4087ed76c8c970bf75cacf58ac8af34505bf79676438443b",
+    "generation_config.json": "7282475ae39d47247987be44195964496c6ac015888007f9ed830fd31287f682",
+    "model.safetensors": "cef9fcde9f1f2a812e42c6122a0f5094fbaa456f6077596cf03ebb86e4d552f6",
+    "tokenizer.json": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506",
+    "tokenizer_config.json": "2e3bd3cb5055f7a903a54e7062b2fd14d21b70f4174c3ffcd9fc81ec50a25631"
+  }
+}

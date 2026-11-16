@@ -1,0 +1,9 @@
+{
+  "status": "FILES AND DATA VERIFIED",
+  "run": "005-targeted-001",
+  "rows": 5962,
+  "steps": 373,
+  "training_started": false,
+  "model": "C:\\Users\\Tripozik\\Documents\\Codex\\2026-11-13\\qwen-3-1-7b-tesla-v100-6\\work\\targeted-005-prep\\server-layout-test\\out\\005-plain-epoch-001\\merged",
+  "learning_rate": 1e-05
+}
