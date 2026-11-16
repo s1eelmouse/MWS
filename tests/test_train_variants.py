@@ -7,7 +7,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from case_io import validate_gold
 from catalog_hints import build_hints, coverage, find_hints
-from make_train_variants import build_variants, resampling_reasons
+from make_train_variants import (build_focus, build_variants, evidence_safe_noisy_copies,
+                                 focus_reasons, resampling_reasons, _evidence_kept)
 
 CATALOG = {"tariffs": ["Стандарт", "Смарт"], "symptoms": ["нет гудков", "слабый сигнал вай-фай"],
            "statuses": ["принята", "в работе"], "actions": ["перезагрузка роутера"],
@@ -67,6 +68,52 @@ class VariantTest(unittest.TestCase):
         self.assertEqual(variants, build_variants(rows, CATALOG["tariffs"], seed=7)[0])  # reproducible
 
 
+class FocusTest(unittest.TestCase):
+    def test_focus_reasons_are_about_current_states(self):
+        self.assertEqual(focus_reasons(PLAIN, CATALOG["tariffs"], CATALOG["symptoms"]), [])
+        found = set(focus_reasons(BUSY, CATALOG["tariffs"], CATALOG["symptoms"]))
+        self.assertIn("state_change", found)
+        self.assertNotIn("many_actions", found)  # actions are not scored by the two targets
+        chain = call("u5:call0000", ["заявка принята, потом в работе"],
+                     [fact("ticket_status", "принята"), fact("ticket_status", "в работе")])
+        self.assertIn("ticket_status_chain", focus_reasons(chain, [], []))
+        free = call("u6:call0000", ["интернет отваливается каждый вечер"],
+                    [fact("service_state", "отваливается каждый вечер")])
+        self.assertEqual(focus_reasons(free, [], CATALOG["symptoms"]), ["free_form_current_service_state"])
+        fixed = call("u7:call0000", ["у меня тариф не Стандарт, а Смарт"], [fact("tariff", "Смарт")])
+        self.assertIn("tariff_correction", focus_reasons(fixed, CATALOG["tariffs"], []))
+
+    def test_noise_never_removes_the_basis_of_a_fact(self):
+        self.assertTrue(_evidence_kept("гудков нет совсем", "гутков нед савсем", "нет гудков"))
+        self.assertTrue(_evidence_kept("гудков нет совсем", "гудковнет", "нет гудков"))   # glued words
+        self.assertFalse(_evidence_kept("гудков нет совсем", "совсем —", "нет гудков"))
+        self.assertTrue(_evidence_kept("телефон молчит", "—", "нет гудков"))  # paraphrase in gold
+        rows = [call(f"u{i}:call0000", ["вчера перезагрузил роутер, гудков нет совсем уже неделю"],
+                     [fact("service_state", "гудков нет")]) for i in range(40)]
+        copies, _stats = evidence_safe_noisy_copies(rows, 3, "f")
+        for original, noisy in zip(rows, copies):
+            self.assertTrue(_evidence_kept(original["turns"][0]["text"], noisy["turns"][0]["text"], "гудков нет"))
+            self.assertEqual(noisy["facts"][0]["value"], "гудков нет")
+
+    def test_focus_set_fits_the_budget_and_keeps_gold(self):
+        rows = [PLAIN, BUSY] + [call(f"u{i}:call0000", ["заявка принята, потом в работе"],
+                                     [fact("ticket_status", "принята"), fact("ticket_status", "в работе")])
+                                for i in range(10, 16)]
+        selected, info = build_focus(rows, CATALOG["tariffs"], CATALOG["symptoms"], seed=7, target=9)
+        self.assertEqual((len(selected), info["calls"], info["problem_calls"]), (9, 9, 7))
+        ids = [row["call_id"] for row in selected]
+        self.assertEqual(len(ids), len(set(ids)))
+        source = {row["call_id"]: row for row in rows}
+        for row in selected:
+            validate_gold(row)
+            original = source[row["call_id"].split("~")[0]]
+            self.assertEqual([(f["attribute"], f["value"], f["valid_from"], f["valid_to"], f["source"]["turn_idx"])
+                              for f in row["facts"]],
+                             [(f["attribute"], f["value"], f["valid_from"], f["valid_to"], f["source"]["turn_idx"])
+                              for f in original["facts"]])
+        self.assertEqual(selected, build_focus(rows, CATALOG["tariffs"], CATALOG["symptoms"], seed=7, target=9)[0])
+
+
 class TrainOptionTest(unittest.TestCase):
     def test_train_builds_the_variant_in_memory(self):
         import contextlib
@@ -82,7 +129,8 @@ class TrainOptionTest(unittest.TestCase):
             write("train.jsonl", [PLAIN, BUSY])
             write("val.jsonl", [call("u9:call0000", ["спасибо"], [])])
             (root / "catalog.json").write_text(json.dumps(CATALOG, ensure_ascii=False), encoding="utf-8")
-            for variant, expected in (("plain", 2), ("noise", 4), ("resampled", 4), ("noise_resampled", 6)):
+            for variant, expected in (("plain", 2), ("noise", 4), ("resampled", 4), ("noise_resampled", 6),
+                                      ("focus", 2)):
                 out = io.StringIO()
                 argv = ["train.py", "--check-data", "--train", str(root / "train.jsonl"),
                         "--val", str(root / "val.jsonl"), "--catalog", str(root / "catalog.json"),

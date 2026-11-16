@@ -69,7 +69,7 @@ def main():
     parser.add_argument("--no-4bit", action="store_true")
     parser.add_argument("--max-steps", type=int, default=-1)
     parser.add_argument("--train-variant", default="plain",
-                        choices=["plain", "noise", "resampled", "noise_resampled"],
+                        choices=["plain", "noise", "resampled", "noise_resampled", "focus"],
                         help="build ASR-noise copies and/or attribute resampling from --train in memory "
                              "(src/make_train_variants.py); nothing is written to disk or to Git")
     parser.add_argument("--seed", type=int, default=42)
@@ -106,8 +106,13 @@ def main():
         if not catalog_path:
             parser.error("--train-variant needs catalog.json: pass --catalog or keep it next to --val")
         catalog = json.loads(Path(catalog_path).read_text(encoding="utf-8"))
-        variants, _reasons = build_variants(train_rows, catalog.get("tariffs", []), args.seed)
-        train_rows = variants[f"train_{args.train_variant}.jsonl"]
+        if args.train_variant == "focus":
+            from make_train_variants import build_focus
+            train_rows, _info = build_focus(train_rows, catalog.get("tariffs", []),
+                                            catalog.get("symptoms", []), args.seed)
+        else:
+            variants, _reasons = build_variants(train_rows, catalog.get("tariffs", []), args.seed)
+            train_rows = variants[f"train_{args.train_variant}.jsonl"]
         ensure_training_splits(train_rows, val_rows)
         for row in train_rows:
             validate_gold(row)
