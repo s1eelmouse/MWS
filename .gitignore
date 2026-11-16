@@ -14,3 +14,8 @@ data/*
 .DS_Store
 .pytest_cache/
 case_data/
+
+# веса модели и архивы (монтируются в Docker, в git не попадают)
+models/
+*.bundle
+*.tar.gz

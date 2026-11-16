@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1.7
-
 # HTTP contract from src/serve.py and src/serve_vllm.py.
 # Model weights and organizer data are never copied into the image; they are mounted.
 #   api       -> FastAPI client for an external vLLM backend (small CPU image)

@@ -7,20 +7,23 @@
 
 | Артефакт | Где | Статус |
 |---|---|---|
-| Код | GitHub `main`, последний коммит | 277 тестов (272 OK, 5 skipped), `compileall` |
+| **Финальная модель 005 v2** | Release `final-005-v2`, `005-v2-final-merged.tar.gz` → `merged/` | полный val 2.1: T 0.5158 / S 0.5682, P/R 0.4973/0.5913, G 0.8002, 0 отказов; SHA256 весов `6b4e1f2d…7617`; noisy не измерен |
+| Кривая «ресурсы × качество» | `RESULTS.md` §3.0, `resources-quality-final.svg` | 3 режима 005 v2 на 4090; качество от batch не зависит (b1 = b4 на 20 звонках); ресурсы b2 — замер на 005 v1 |
+| Docker GPU (финальный профиль) | `docker-compose.yml` + `docker-compose.gpu.yml`, `DOCKER_SUBMISSION.md` | профиль = финальный прогон; GPU-образ собрать и проверить `/health` |
+| Код | GitHub `main`, последний коммит | 331 тест (326 OK, 5 skipped), `compileall` |
 | Адаптер 002 (старый fallback) | `out/4090-continue-002`, `experiment.json` | подтверждён на старом пакете |
 | Адаптер 003 (история) | `out/4090-continue-003`, `experiment.json` | 003+recovery v2: чистый val T 0.4807 / S 0.5201, 0 отказов; шумный val T 0.4582 / S 0.4141 |
 | Адаптер 005 (шумный train) | `out/continue-005-noise-001`, `experiment.json` | чистый val T 0.4900 / S 0.5522, шумный T 0.4751 / S 0.4639, 0 отказов |
 | Merged-модели 002/003/005 | локально `artifacts-4090/` и архив 005 вне Git | скопированы с 4090, SHA256 сверены |
 | Параллельный эксперимент v21 | `docs/experiments/4090-continue-v21-001/` | clean T 0.4859 / S 0.5056; с интервалами и статусами T 0.5049 / S 0.5297; шумный val не измерен |
-| Конфиг инференса | `README.md`, `MODEL.md` | 12288/16384/4096, XGrammar, `case_v2`, recovery v2 |
+| Конфиг инференса | `MODEL.md` (паспорт 005 v2), `docker-compose.yml` | 12288/16384/4096, XGrammar `torch_native`, FP16, batch 4, `case_v2`, recovery `unified-v1-guarded-tariffs-explicit`, история серий |
 | Docker CPU | `compactfactextraction:cpu` | образ собран; `/health` и короткий `/extract` проверены; полный датовый звонок на CPU >240 с |
 | Отчёт | `MODEL.md`, `RESULTS.md`, `DEFENSE.md`, `TRAINING_REPORT.md` | готово |
 | Демо/видео | `DEMO.md` | сценарий; записать видео |
 
 ## 2. Перед загрузкой
 
-- [x] `python -m unittest discover -s tests`: **277 тестов, 272 прошли, 5 skipped**.
+- [x] `python -m unittest discover -s tests`: **331 тест, 326 прошли, 5 skipped** (`main` e4ae75e, 16.11).
 - [x] `python -m compileall -q src tests`.
 - [x] `sha256sum -c src/official_case_metrics.sha256` (legacy 1, `dffec9b8…`)
       и `sha256sum -c src/official_case_metrics_v21.sha256` (2.1, `863f8773…59c3`).
@@ -36,14 +39,17 @@
 - [x] Docker CPU: `/health` 200, короткий `/extract` возвращает `call_id` и
       валидные `facts`; модель смонтирована read-only. GPU/vLLM не проверялись.
 - [x] Merged-модели 002/003 и их отчёты скачаны локально; SHA256 записаны.
-- [ ] Ссылка на репозиторий и веса доступна всем членам команды и жюри.
+- [x] Финальная 005 v2: полный val 2.1, 0 отказов, формат 100 %, T 0.5158 / S 0.5682.
+- [ ] Docker GPU с финальным профилем: `up --build`, `/health`, один `/extract`.
+- [ ] Ссылка на репозиторий и веса доступна всем членам команды и жюри
+      (репозиторий и Release сейчас **приватные**).
 
 ## 3. Что нельзя делать перед сдачей
 
 - Менять `val`, `official_case_metrics.py` или `official_case_metrics_v21.py`.
 - Тренировать 1.7B без письменного разрешения ментора и проверки лимита 1,5B.
-- Запускать новый эксперимент без fallback: измеренное решение — `005`;
-  старый подтверждённый fallback — `continue-002`.
+- Запускать новый эксперимент без fallback: финал — `005 v2`;
+  резерв — `005 v1` (`005-plain-epoch-001`) и исходная `005`.
 - Обещать 100 % на скрытом тесте: проверен только известный val и локальный
   шумный стресс.
 

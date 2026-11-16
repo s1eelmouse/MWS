@@ -26,3 +26,6 @@ __pycache__
 .vscode
 README.md
 AGENTS.md
+models
+*.bundle
+*.tar.gz
