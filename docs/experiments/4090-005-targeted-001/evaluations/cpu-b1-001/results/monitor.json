@@ -1,0 +1,11 @@
+{
+  "status": "complete",
+  "exit_code": 0,
+  "requested_calls": 20,
+  "cpu_threads": 4,
+  "cuda_visible_devices": "",
+  "gpu_seconds_per_1000_calls": null,
+  "wall_seconds_including_load_and_warmup": 1178.3027110459989,
+  "process_rss_observed_peak_bytes": 5575462912,
+  "timeout_seconds": 1500
+}
