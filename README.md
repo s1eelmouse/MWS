@@ -70,6 +70,53 @@
 модели добавьте `--model /path/to/merged-model`. Отдельная Docker-среда обучения:
 `Dockerfile.train` и `docker-compose.train.yml`.
 
+## Как проверить решение (для жюри)
+
+**1. Результат и финальная модель — 005 v2.**
+[docs/MODEL.md](docs/MODEL.md) — паспорт: веса и SHA256, рецепт обучения, конфигурация
+инференса, качество и ресурсы. Полный отчёт финальной модели —
+[docs/experiments/4090-005-targeted-001/REPORT.md](docs/experiments/4090-005-targeted-001/REPORT.md).
+Веса — GitHub Release `final-005-v2`, файл `005-v2-final-merged.tar.gz`.
+
+**2. Отчёт по кейсу** — [docs/RESULTS.md](docs/RESULTS.md):
+§3.0 — кривая «ресурсы × качество» (GPU batch 1/2/4 и CPU, задержка и память);
+§5.0 — разбор ошибок по типам фактов (изменения состояния отдельно от статических).
+Защита, хронология решений и ограничения — [docs/DEFENSE.md](docs/DEFENSE.md).
+
+**3. Эксперименты.** Все обучения в одной таблице —
+[docs/TRAINING_REPORT.md](docs/TRAINING_REPORT.md); каждый прогон — отдельная папка
+в [docs/experiments/](docs/experiments/README.md) с README/REPORT, настройками,
+сырыми `report.json`/`metrics.json`/предсказаниями и снимком кода. Методика замеров —
+[docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
+
+**4. Запуск сервиса в Docker одной командой** (подробно —
+[docs/DOCKER_SUBMISSION.md](docs/DOCKER_SUBMISSION.md)). Положите
+`005-v2-final-merged.tar.gz` в корень репозитория:
+
+    bash scripts/start.sh
+
+Скрипт распаковывает и сверяет веса, собирает образ (GPU при наличии `nvidia-smi`,
+иначе CPU) и ждёт `/health`. Затем: `POST http://127.0.0.1:8000/extract` — один звонок
+без поля `facts`, `POST /extract_batch` — `{"calls": [...]}`, Swagger — `/docs`.
+
+**5. Запуск без Docker и проверка качества на val 2.1** (Python 3.12, установка — §5):
+
+    uv pip install torch --torch-backend=auto
+    uv pip install -r requirements.txt
+    # финальный профиль, как в docker-compose.yml
+    export MODEL_DIR=models/005-v2-final/merged CATALOG_PATH=<пакет 2.1>/catalog.json \
+      TEMPORAL_CATALOG_PATH=<пакет 2.1>/catalog.json TEMPORAL_NORMALIZATION=case_v2 \
+      FACT_RECOVERY=1 TARIFF_BOUNDARY_POLICY=explicit TEMPORAL_SERIES_HISTORY=1 \
+      JSON_GRAMMAR_BACKEND=torch_native JSON_GRAMMAR_THREADS=4
+    python src/predict.py --input <пакет 2.1>/val.jsonl --model $MODEL_DIR --batch-size 4 --output out/pred-005-v2.jsonl
+    python src/eval.py --gold <пакет 2.1>/val.jsonl --pred out/pred-005-v2.jsonl --catalog <пакет 2.1>/catalog.json --json out/eval-005-v2.json
+
+Ожидаемо на полном val 2.1 (383 звонка): T 0.5158, S 0.5682, P/R 0.4973/0.5913,
+G 0.8002, 0 отказов (RTX 4090, ~26 мин). Оценщик — официальный 2.1, не изменён
+(`sha256sum -c src/official_case_metrics_v21.sha256`).
+
+**6. Тесты без GPU:** `python -m unittest discover -s tests` — 331 тест, 5 пропущено.
+
 ## 1. Что требует кейс
 
 Нужна модель на **0,5–1,5 млрд параметров**, которая держит качество базового
@@ -419,18 +466,16 @@ train и val не перемешиваются и не переразбиваю�
 ## 11. Docker
 
 Образ только для инференса. Веса и данные в образ не попадают: merged-модель
-монтируется в `/models/merged` только для чтения.
+монтируется в `/models/merged` только для чтения. Профиль в `docker-compose.yml`
+совпадает с финальным прогоном 005 v2.
 
-    docker compose up --build -d
+    bash scripts/start.sh                                   # одной командой
+    docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build -d   # вручную, GPU
     curl -fsS http://127.0.0.1:8000/health
 
-GPU (нужен NVIDIA Container Toolkit):
-
-    docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build -d
-
-По умолчанию берётся `out/merged-4090-continue-002`, другой каталог — `MODEL_PATH`.
-Подробности и vLLM: [docs/DOCKER.md](docs/DOCKER.md). CPU-образ собран и проверен
-на `/health` и коротком `/extract`; GPU- и vLLM-образы не проверялись.
+По умолчанию модель берётся из `models/005-v2-final/merged`, другой каталог — `MODEL_PATH`.
+Подробности — [docs/DOCKER_SUBMISSION.md](docs/DOCKER_SUBMISSION.md), vLLM —
+[docs/DOCKER.md](docs/DOCKER.md).
 
 ## 12. Правила работы
 
